@@ -126,8 +126,10 @@ img{max-width:100%;display:block}
 
 /* ---------- hero ---------- */
 .hero{position:relative;min-height:92vh;display:flex;align-items:center;overflow:hidden;background:var(--night);color:var(--on-night)}
-.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.5}
-.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,15,.45),rgba(6,8,15,.92))}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.62}
+.hero-bg::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,rgba(6,8,15,.94) 0%,rgba(6,8,15,.6) 48%,rgba(6,8,15,.28) 100%),
+  linear-gradient(180deg,rgba(6,8,15,.25),rgba(6,8,15,.82))}
 .hero-glow{position:absolute;width:760px;height:760px;border-radius:50%;filter:blur(120px);
   background:radial-gradient(circle,rgba(45,156,255,.35),transparent 65%);top:-15%;right:-10%;pointer-events:none}
 .hero .wrap{position:relative;z-index:2;width:100%;padding-top:80px;padding-bottom:90px}
