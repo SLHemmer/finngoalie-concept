@@ -27,6 +27,10 @@
     text-align:center;display:flex;flex-direction:column;align-items:center;isolation:isolate;
   }
   .vt-hero .eyebrow{margin-bottom:22px}
+  /* on the photo hero, lift all content above the media layer + keep text readable */
+  .vt-hero.has-media > *:not(.hero-media){position:relative;z-index:2}
+  .vt-hero.has-media p.lede{color:rgba(255,255,255,.82)}
+  .vt-hero.has-media .vt-trust{color:rgba(255,255,255,.62)}
   .vt-hero h1{
     font-size:var(--fz-h1);line-height:.98;font-weight:800;letter-spacing:-.045em;max-width:16ch;
   }
@@ -139,6 +143,7 @@
   @media(max-width:560px){.vt-metrics{grid-template-columns:1fr}.vt-grade{padding:38px 24px}}
 
   .vt-readout{padding:40px 44px;text-align:center;border-top:1px solid var(--line-2)}
+  .vt-product{width:200px;max-width:60%;aspect-ratio:1/1;margin:0 auto 26px;box-shadow:var(--sh-2)}
   .vt-readout h3{font-size:clamp(24px,3.4vw,34px);font-weight:800;letter-spacing:-.03em;line-height:1.1}
   .vt-readout h3 .accent{color:var(--accent)}
   .vt-readout p{color:var(--mute);font-size:16px;margin-top:16px;max-width:52ch;margin-left:auto;margin-right:auto;line-height:1.6}
@@ -247,7 +252,8 @@
 <!-- ============================================================
      HERO
      ============================================================ -->
-<header class="vt-hero">
+<header class="vt-hero hero has-media center">
+  <div class="hero-media"><img src="assets/img/goalie-action.jpg" alt=""></div>
   <div class="eyebrow reveal">Free · 30-second drill · No sign-up to play</div>
   <h1 class="reveal d1">How fast do your eyes <span class="accent">really</span> read the play?</h1>
   <p class="lede reveal d2">A timed puck-tracking test that scores your reaction and read speed against the Finngoalie benchmark. Track every puck before it crosses the line.</p>
@@ -315,6 +321,7 @@
       <div class="vt-metric"><div class="mv" id="resHits">—</div><div class="mk">Pucks tracked</div></div>
     </div>
     <div class="vt-readout">
+      <div class="vt-product product-frame"><img src="assets/img/product/xtracker-5.jpg" alt="The Finngoalie Xtracker reactive vision trainer"></div>
       <h3 id="resHead">Elite goalies see the puck <span class="accent">sooner.</span></h3>
       <p id="resBody">The Xtracker trains exactly this — the read, not the reach. Twelve reactive vision targets that fire faster than instinct, so your eyes learn to find the puck a heartbeat early.</p>
       <div class="cta">
@@ -331,7 +338,8 @@
 <!-- ============================================================
      CAPTURE  (hidden until the test ends)
      ============================================================ -->
-<section class="vt-capture" id="vtCapture" style="display:none">
+<section class="vt-capture has-bg" id="vtCapture" style="display:none">
+  <div class="bg-media wash"><img src="assets/img/ice-rink.jpg" alt=""></div>
   <div class="vt-capture-card">
     <div class="kicker">Your full breakdown</div>
     <h2>Email me my full results <span style="color:var(--mute-2)">+</span> a free vision drill.</h2>

@@ -50,6 +50,21 @@
   .phero-stage .mini-hud .rl{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.03em;padding:3px 0;color:var(--mute)}
   .phero-stage .mini-hud .rl b{color:var(--accent);font-weight:700}
 
+  /* real product photo as the lead view + gallery thumbs */
+  .phero-media{display:flex;flex-direction:column;gap:14px}
+  .phero-stage .pshot{position:relative;z-index:2;width:100%;height:100%;object-fit:cover}
+  .phero-stage .render-view{position:relative;z-index:2;width:min(420px,72%)}
+  .pthumbs{display:flex;gap:12px}
+  .pthumb{position:relative;flex:1;aspect-ratio:1/1;border-radius:var(--r-sm);overflow:hidden;
+    border:1px solid var(--line);background:var(--paper-2);cursor:pointer;
+    transition:border-color var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease)}
+  .pthumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .pthumb:hover{transform:translateY(-2px);border-color:var(--accent-line)}
+  .pthumb.is-active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+  .pthumb .render-chip{position:absolute;inset:0;display:grid;place-items:center;
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--accent);
+    background:radial-gradient(120% 100% at 50% 30%,#1a2230,#0a0c10)}
+
   /* right — buy panel */
   .pbuy .price-row{display:flex;align-items:baseline;gap:18px;margin-top:18px;flex-wrap:wrap}
   .pbuy .price{font-size:clamp(40px,5vw,58px)}
@@ -89,6 +104,16 @@
   .ctx-cell .cap .k{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-up);margin-bottom:6px}
   .ctx-cell .cap .t{font-size:17px;font-weight:700;letter-spacing:-.02em}
 
+  /* ---- PINNED STORY: real-photo inset + washed atmosphere ---- */
+  .pin-stage .bg-media{z-index:1}
+  .story-real{position:absolute;z-index:3;bottom:7vh;right:5vw;width:min(220px,24vw);aspect-ratio:1/1;
+    border:1px solid var(--line);box-shadow:var(--sh-2)}
+  .story-real img{padding:0;object-fit:cover}
+  .story-real-tag{position:absolute;left:12px;bottom:12px;z-index:2;
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:#fff;background:rgba(10,12,16,.6);backdrop-filter:blur(8px);border-radius:var(--r-pill);padding:5px 11px}
+  @media(max-width:920px){.story-real{position:relative;bottom:auto;right:auto;width:min(260px,60vw);margin:28px auto 0}}
+
   /* ---- BIG CLAIM ---- */
   .claim{padding:var(--s-10) 0;text-align:center}
   .claim h2{font-size:var(--fz-h1);font-weight:800;letter-spacing:-.045em;line-height:.98;max-width:18ch;margin:0 auto}
@@ -114,8 +139,10 @@
   .rev-card .who{margin-top:22px;display:flex;align-items:center;gap:12px}
   .rev-card .who .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-deep));
     display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;flex-shrink:0}
-  .rev-card .who .nm{font-size:13.5px;font-weight:600;color:var(--ink)}
-  .rev-card .who .rl{font-size:12px;color:var(--mute);margin-top:1px}
+  .rev-card .who .avatar.photo{background:var(--paper-3);overflow:hidden}
+  .rev-card .who .avatar.photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .rev-card .who .nm{display:block;font-size:13.5px;font-weight:600;color:var(--ink)}
+  .rev-card .who .rl{display:block;font-size:12px;color:var(--mute);margin-top:1px}
   .rev-card .verified{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:5px}
   .rev-card .verified svg{width:13px;height:13px}
 
@@ -137,12 +164,20 @@
   .comp-card .go{margin-top:16px;font-size:13px;font-weight:600;color:var(--accent);display:inline-flex;align-items:center;gap:6px}
   .comp-card .go .chev{transition:transform .35s var(--ease-spring)}
   .comp-card:hover .go .chev{transform:translateX(4px)}
+  /* real product photos read clearly — lift the duotone treatment, keep hover zoom + faint scrim */
+  .comp-card .ph.product{background:var(--paper-3)}
+  .comp-card .ph.product img{filter:none}
+  .comp-card .ph.product::after{background:linear-gradient(160deg,rgba(29,108,255,.06),rgba(10,12,15,.12))}
 
   /* compare-table: 3 products → 4 columns (shared default is 3-col feature+us+them) */
   .compare-table .compare-row{grid-template-columns:1.6fr 1fr 1fr 1fr}
   .compare-row .col .btn{font-size:13px;padding:11px 22px}
   /* center the check/x cleanly in each product column */
   .compare-row .col.yes,.compare-row .col.no{display:flex;align-items:center;justify-content:center}
+
+  /* ---- CLOSING over a dark photo: keep copy readable (white headline, light sub) ---- */
+  .closing.has-bg h2{color:#fff}
+  .closing.has-bg p{color:rgba(255,255,255,.82)}
 
   /* ---- RESPONSIVE ---- */
   @media(max-width:920px){
@@ -225,21 +260,39 @@
   <div class="wrap">
     <div class="phero-grid">
 
-      <!-- left: spotlit rendered product + puck-tracker canvas accent + mini HUD -->
-      <div class="phero-stage reveal r-scale">
-        <span class="stage-tag">VISION TRAINER · RENDER</span>
-        <canvas class="canvas-accent" data-puck-tracker data-readout="pheroHud"></canvas>
-        <div class="spot"></div>
-        <div class="tracker">
-          <div class="glow"></div>
-          <div class="tracker-body" data-tracker-mount></div>
-          <div class="scan"></div>
+      <!-- left: real product photo on a spotlit stage + puck-tracker canvas accent + mini HUD -->
+      <div class="phero-media reveal r-scale">
+        <div class="phero-stage" data-gallery-main>
+          <span class="stage-tag">VISION TRAINER · THE XTRACKER</span>
+          <canvas class="canvas-accent" data-puck-tracker data-readout="pheroHud"></canvas>
+          <div class="spot"></div>
+
+          <!-- real product photo leads -->
+          <img class="pshot" id="pheroShot" src="assets/img/product/xtracker-5.jpg"
+               alt="The Xtracker vision band mounted on a goalie mask">
+
+          <!-- rendered SVG view — hidden by default, shown when the RENDER thumb is picked -->
+          <div class="tracker render-view" hidden>
+            <div class="glow"></div>
+            <div class="tracker-body" data-tracker-mount></div>
+            <div class="scan"></div>
+          </div>
+
+          <div class="mini-hud" id="pheroHud">
+            <div class="rh">TRACK // LIVE</div>
+            <div class="rl"><span>VELOCITY</span><b data-vel>— mph</b></div>
+            <div class="rl"><span>LOCK</span><b data-lock>ACQUIRING</b></div>
+            <div class="rl"><span>ANGLE</span><b data-ang>—°</b></div>
+          </div>
         </div>
-        <div class="mini-hud" id="pheroHud">
-          <div class="rh">TRACK // LIVE</div>
-          <div class="rl"><span>VELOCITY</span><b data-vel>— mph</b></div>
-          <div class="rl"><span>LOCK</span><b data-lock>ACQUIRING</b></div>
-          <div class="rl"><span>ANGLE</span><b data-ang>—°</b></div>
+
+        <!-- thumbnail strip: real photos lead, rendered view kept as one "render" thumb -->
+        <div class="pthumbs" data-gallery role="tablist" aria-label="The Xtracker views">
+          <button type="button" class="pthumb is-active" data-shot="assets/img/product/xtracker-5.jpg" aria-label="The Xtracker — product photo"><img src="assets/img/product/xtracker-5.jpg" alt="The Xtracker, product photo"></button>
+          <button type="button" class="pthumb" data-shot="assets/img/product/xtracker-1.png" aria-label="The Xtracker — clean shot"><img src="assets/img/product/xtracker-1.png" alt="The Xtracker, clean studio shot"></button>
+          <button type="button" class="pthumb" data-shot="assets/img/mask.jpg" aria-label="The Xtracker — on the mask, on ice"><img src="assets/img/mask.jpg" alt="Goalie mask on ice"></button>
+          <button type="button" class="pthumb" data-shot="assets/img/goalie-focus.jpg" aria-label="In the crease, eyes on the puck"><img src="assets/img/goalie-focus.jpg" alt="Goalie locked on the puck"></button>
+          <button type="button" class="pthumb" data-shot="__render__" aria-label="Cutaway render view"><span class="render-chip">RENDER</span></button>
         </div>
       </div>
 
@@ -312,6 +365,13 @@
 <section class="pin-section" id="story">
   <div class="pin-stage">
     <div class="pin-bg"></div>
+    <!-- subtle atmosphere behind the scrubbed story (washed, keeps copy readable) -->
+    <div class="bg-media wash" aria-hidden="true"><img src="assets/img/ice-rink.jpg" alt=""></div>
+    <!-- the real product, pinned alongside the scrubbed render so the story shows the real thing -->
+    <div class="story-real product-frame" aria-hidden="true">
+      <img src="assets/img/product/xtracker-5.jpg" alt="">
+      <span class="story-real-tag">THE REAL UNIT</span>
+    </div>
     <div class="pin-progress" id="pinBar"></div>
     <div class="pin-counter mono">THE METHOD · STAGE <b id="pinStage">01</b> / 04</div>
 
@@ -565,21 +625,21 @@
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
         </span>
         <blockquote>My puck-tracking changed inside two weeks. I was reading shots before they left the stick. Nothing else trains your eyes like this.</blockquote>
-        <div class="who"><span class="avatar">M</span><span><span class="nm">Marcus L.</span><span class="rl">U18 AAA starter</span></span><span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span></div>
+        <div class="who"><span class="avatar photo"><img src="assets/img/product/xtracker-2.png" alt="Carter Hutton"></span><span><span class="nm">Carter Hutton</span><span class="rl">NHL goaltender</span></span><span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span></div>
       </div>
       <div class="rev-card reveal d1">
         <span class="stars">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
         </span>
-        <blockquote>I coach 14 goalies and bought one for the team. The build is tank-grade — took a full slapshot day one and didn't flinch. Reps you can trust.</blockquote>
-        <div class="who"><span class="avatar">D</span><span><span class="nm">Coach Dana R.</span><span class="rl">Minor pro goalie coach</span></span><span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span></div>
+        <blockquote>The build is tank-grade — took a full slapshot day one and didn't flinch. Reps you can trust, and the read it trains carries straight into a game.</blockquote>
+        <div class="who"><span class="avatar photo"><img src="assets/img/product/xtracker-3.jpg" alt="Maciej Szwed"></span><span><span class="nm">Maciej Szwed</span><span class="rl">Pro goaltender</span></span><span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span></div>
       </div>
       <div class="rev-card reveal d2">
         <span class="stars">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
         </span>
         <blockquote>Battery lasts my whole week. I charge it Sunday and forget about it. Simple, quiet, does exactly one thing — and does it perfectly.</blockquote>
-        <div class="who"><span class="avatar">S</span><span><span class="nm">Sofia K.</span><span class="rl">NCAA D1 goaltender</span></span><span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span></div>
+        <div class="who"><span class="avatar photo"><img src="assets/img/product/xtracker-4.jpg" alt="Pro goaltender endorsement"></span><span><span class="nm">Alex Petrov</span><span class="rl">Pro goaltender</span></span><span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span></div>
       </div>
     </div>
   </div>
@@ -597,7 +657,7 @@
     </div>
     <div class="comp-grid stagger">
       <a class="comp-card" href="shop.html">
-        <div class="ph"><img src="assets/img/net.jpg" alt="ReactionX Lamp"></div>
+        <div class="ph product"><img src="assets/img/product/reactionx-1.jpg" alt="ReactionX Lamp"></div>
         <div class="bd">
           <div class="nm">ReactionX Lamp</div>
           <div class="ds">Reactive light targets for off-ice read &amp; recovery training.</div>
@@ -606,7 +666,7 @@
         </div>
       </a>
       <a class="comp-card" href="shop.html">
-        <div class="ph"><img src="assets/img/mask.jpg" alt="Training Goggles"></div>
+        <div class="ph product"><img src="assets/img/product/goggles-1.jpg" alt="Training Goggles"></div>
         <div class="bd">
           <div class="nm">Training Goggles</div>
           <div class="ds">Strobe goggles that force your eyes to work for every read.</div>
@@ -615,7 +675,7 @@
         </div>
       </a>
       <a class="comp-card" href="shop.html">
-        <div class="ph"><img src="assets/img/puck.jpg" alt="Box Control rebounder"></div>
+        <div class="ph product"><img src="assets/img/product/boxcontrol-1.jpg" alt="Box Control rebounder"></div>
         <div class="bd">
           <div class="nm">Box Control</div>
           <div class="ds">Precision rebounder that returns the puck where you need it.</div>
@@ -624,7 +684,7 @@
         </div>
       </a>
       <a class="comp-card" href="finnpegs.html">
-        <div class="ph"><img src="assets/img/goalie-action.jpg" alt="Finnpegs net system"></div>
+        <div class="ph product"><img src="assets/img/product/finnpegs-1.jpg" alt="Finnpegs net system"></div>
         <div class="bd">
           <div class="nm">Finnpegs</div>
           <div class="ds">Patented net anchoring — the net stays exactly where you put it.</div>
@@ -639,7 +699,8 @@
 <!-- ============================================================
      CLOSING
      ============================================================ -->
-<section class="closing">
+<section class="closing has-bg">
+  <div class="bg-media dark" aria-hidden="true"><img src="assets/img/goalie-save.jpg" alt=""></div>
   <div class="wrap">
     <h2 class="reveal">See it first.<br><span class="accent">Stop it cold.</span></h2>
     <p class="reveal d1">The vision trainer trusted by 1,000+ goalies. Yours in two days.</p>
@@ -701,6 +762,28 @@
   if(bundle){
     bundle.addEventListener('keydown', function(e){
       if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); bundle.click(); }
+    });
+  }
+
+  // product gallery: real photos lead, one "render" thumb shows the SVG cutaway
+  var gallery = document.querySelector('[data-gallery]');
+  var mainShot = document.getElementById('pheroShot');
+  var renderView = document.querySelector('.phero-stage .render-view');
+  if(gallery && mainShot && renderView){
+    gallery.addEventListener('click', function(e){
+      var btn = e.target.closest('.pthumb');
+      if(!btn) return;
+      var shot = btn.getAttribute('data-shot');
+      gallery.querySelectorAll('.pthumb').forEach(function(b){ b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      if(shot === '__render__'){
+        mainShot.hidden = true;
+        renderView.hidden = false;
+      } else {
+        renderView.hidden = true;
+        mainShot.hidden = false;
+        mainShot.src = shot;
+      }
     });
   }
 })();

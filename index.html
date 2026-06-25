@@ -60,7 +60,8 @@
 <!-- ============================================================
      HERO  —  live puck-tracker is the signature
      ============================================================ -->
-<header class="hero">
+<header class="hero has-media">
+  <div class="hero-media"><img src="assets/img/goalie-save.jpg" alt=""></div>
   <canvas class="hero-tracker" data-puck-tracker data-readout="heroReadout"></canvas>
   <div class="hero-veil"></div>
 
@@ -125,7 +126,8 @@
     <div class="stage-prod" id="stageProd">
       <div class="tracker">
         <div class="glow"></div>
-        <div class="tracker-body" data-tracker-mount></div>
+        <div class="product-frame stage-real"><img src="assets/img/product/xtracker-5.jpg" alt="The Xtracker — vision band on a goalie mask"></div>
+        <div class="tracker-body stage-render" data-tracker-mount></div>
         <div class="scan"></div>
         <div class="reflection" data-tracker-mount></div>
       </div>
@@ -159,7 +161,8 @@
 <!-- ============================================================
      SPECS
      ============================================================ -->
-<section class="specs">
+<section class="specs has-bg">
+  <div class="bg-media dark"><img src="assets/img/mask.jpg" alt=""></div>
   <div class="glow-blob"></div>
   <div class="wrap">
     <div class="section-head">
@@ -180,6 +183,7 @@
      ============================================================ -->
 <section class="buy" data-buy-trigger>
   <div class="wrap">
+    <div class="product-frame buy-shot reveal"><img src="assets/img/product/xtracker-1.png" alt="The Xtracker vision band"></div>
     <div class="section-head">
       <div class="kicker reveal">The Xtracker</div>
       <div class="price reveal d1"><small>$</small>99<small>.99</small></div>
@@ -195,7 +199,8 @@
 <!-- ============================================================
      VISION SPORT — statement
      ============================================================ -->
-<section class="founder" style="padding-bottom:0">
+<section class="founder has-bg" style="padding-bottom:0">
+  <div class="bg-media wash"><img src="assets/img/goalie-focus.jpg" alt=""></div>
   <div class="wrap">
     <div class="section-head" style="max-width:840px">
       <div class="kicker reveal">Goaltending is a vision sport</div>
@@ -272,7 +277,8 @@
 <!-- ============================================================
      STATS
      ============================================================ -->
-<section class="stats">
+<section class="stats has-bg">
+  <div class="bg-media wash"><img src="assets/img/ice-rink.jpg" alt=""></div>
   <div class="wrap">
     <div class="section-head">
       <div class="kicker reveal">The record</div>
@@ -293,9 +299,22 @@
 <section class="testi">
   <div class="glow-blob"></div>
   <div class="wrap">
-    <div class="mark">"</div>
-    <blockquote class="reveal">My puck-tracking changed inside two weeks. I was reading shots before they left the stick. Nothing else trains your eyes like the Xtracker.</blockquote>
-    <div class="who reveal d1"><span class="avatar">M</span> <span>— <b>Marcus L.</b> · U18 AAA starter</span></div>
+    <div class="kicker reveal" style="color:var(--accent-up)">Trusted by the pros</div>
+    <h2 class="reveal d1" style="color:#fff;font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-.03em;margin-top:14px">Endorsed in the <span class="accent">crease.</span></h2>
+    <div class="endorse-grid stagger">
+      <figure class="endorse-card card-photo reveal">
+        <img src="assets/img/product/xtracker-2.png" alt="Carter Hutton training with the Xtracker">
+        <figcaption><b>Carter Hutton</b><span>NHL Goalie</span></figcaption>
+      </figure>
+      <figure class="endorse-card card-photo reveal d1">
+        <img src="assets/img/product/xtracker-3.jpg" alt="Maciej Szwed training with the Xtracker">
+        <figcaption><b>Maciej Szwed</b><span>Pro Goalie</span></figcaption>
+      </figure>
+      <figure class="endorse-card card-photo reveal d2">
+        <img src="assets/img/product/xtracker-4.jpg" alt="Pro goaltender training with the Xtracker">
+        <figcaption><b>Pro Endorsed</b><span>Trusted on the ice</span></figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
@@ -322,7 +341,8 @@
 <!-- ============================================================
      PROMO BAND  —  the money feature (Free Tools funnels)
      ============================================================ -->
-<section class="promo">
+<section class="promo has-bg">
+  <div class="bg-media dark"><img src="assets/img/training.jpg" alt=""></div>
   <div class="wrap">
     <div class="section-head">
       <div class="kicker reveal">Free for goalies</div>
@@ -330,7 +350,8 @@
       <p class="reveal d2">Start training your vision today — these tools are on us.</p>
     </div>
     <div class="promo-grid stagger">
-      <a class="promo-card" href="plan.html">
+      <a class="promo-card card-photo" href="plan.html">
+        <img src="assets/img/goalie-focus.jpg" alt="">
         <span class="free-tag">Free</span>
         <span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h16M4 12h16M4 19h10" stroke-linecap="round"/><circle cx="18" cy="19" r="2.5"/></svg></span>
         <div class="pt">Personalized</div>
@@ -338,7 +359,8 @@
         <p>Answer 6 questions, get a goalie-specific vision &amp; movement plan built around your level and schedule.</p>
         <span class="go">Build my plan <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
-      <a class="promo-card" href="vision-test.html">
+      <a class="promo-card card-photo" href="vision-test.html">
+        <img src="assets/img/goalie-action.jpg" alt="">
         <span class="free-tag">Free</span>
         <span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></span>
         <div class="pt">60-second drill</div>
@@ -346,7 +368,8 @@
         <p>A timed puck-tracking test that scores your reaction and read speed against the Finngoalie benchmark.</p>
         <span class="go">Take the test <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </a>
-      <a class="promo-card" href="club.html">
+      <a class="promo-card card-photo" href="club.html">
+        <img src="assets/img/youth.jpg" alt="">
         <span class="free-tag">Free</span>
         <span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.5a3.2 3.2 0 0 1 0 6M21 20c0-2.6-1.4-4.4-3.5-5.2" stroke-linecap="round"/></svg></span>
         <div class="pt">Community</div>
@@ -361,7 +384,8 @@
 <!-- ============================================================
      CLOSING
      ============================================================ -->
-<section class="closing">
+<section class="closing has-bg">
+  <div class="bg-media wash-soft"><img src="assets/img/goalie-action.jpg" alt=""></div>
   <div class="wrap">
     <h2 class="reveal">See it first.<br><span class="accent">Stop it cold.</span></h2>
     <p class="reveal d1">The vision trainer trusted by 1,000+ goalies. Yours in two days.</p>

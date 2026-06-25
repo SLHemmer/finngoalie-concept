@@ -22,21 +22,6 @@
     align-items:center;justify-content:center;text-align:center;
     padding:140px 28px 96px;overflow:hidden;isolation:isolate;
   }
-  .train-hero .hero-photo{
-    position:absolute;inset:0;z-index:0;background-size:cover;background-position:center 30%;
-    /* duotone: desaturate + cool toward the brand ink/blue */
-    filter:grayscale(.62) contrast(1.06) brightness(.92);
-  }
-  .train-hero .hero-photo::after{
-    content:"";position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(29,108,255,.20),transparent 42%),
-               linear-gradient(0deg,var(--paper) 4%,rgba(246,247,249,.4) 38%,rgba(246,247,249,.12) 70%);
-  }
-  /* radial vignette so the copy sits on calm paper, photo breathes at the edges */
-  .train-hero .hero-veil{
-    position:absolute;inset:0;z-index:1;pointer-events:none;
-    background:radial-gradient(120% 78% at 50% 46%,transparent 30%,var(--paper) 86%);
-  }
   .train-hero .hero-in{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center}
   .train-hero h1{
     font-size:var(--fz-display);line-height:.94;font-weight:800;letter-spacing:-.045em;max-width:13ch;
@@ -284,9 +269,8 @@
 <!-- ============================================================
      HERO  —  "Find your ice. Pick your level."
      ============================================================ -->
-<header class="train-hero">
-  <div class="hero-photo" style="background-image:url(assets/img/training.jpg)"></div>
-  <div class="hero-veil"></div>
+<header class="train-hero hero has-media center">
+  <div class="hero-media"><img src="assets/img/training.jpg" alt=""></div>
   <div class="hero-in">
     <div class="hero-eyebrow mono">CAMPS · PROGRAMS · PRIVATE ICE</div>
     <h1>
@@ -313,7 +297,8 @@
 <!-- ============================================================
      CONVERSION LADDER
      ============================================================ -->
-<section class="ladder">
+<section class="ladder has-bg">
+  <div class="bg-media wash"><img src="assets/img/goalie-focus.jpg" alt=""></div>
   <div class="wrap">
     <div class="section-head">
       <div class="kicker reveal">One path, three rungs</div>
@@ -350,7 +335,8 @@
 <!-- ============================================================
      PROGRAMS  —  filter chips + camp list (data-filter wiring)
      ============================================================ -->
-<section class="programs" id="programs">
+<section class="programs has-bg" id="programs">
+  <div class="bg-media wash"><img src="assets/img/ice-rink.jpg" alt=""></div>
   <div class="wrap">
     <div class="section-head">
       <div class="kicker reveal">Camps &amp; programs · 2026</div>
@@ -581,7 +567,8 @@
 <!-- ============================================================
      PARENT REASSURANCE TRIO
      ============================================================ -->
-<section class="reassure">
+<section class="reassure has-bg">
+  <div class="bg-media wash-soft"><img src="assets/img/youth.jpg" alt=""></div>
   <div class="wrap">
     <div class="section-head">
       <div class="kicker reveal">For the parents</div>
@@ -590,17 +577,17 @@
     </div>
     <div class="reassure-grid stagger">
       <div class="recard">
-        <div class="ri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2c-2.2 1.5-4.6 2.3-7 2.4 0 5.6 1.9 9.9 7 12.2 5.1-2.3 7-6.6 7-12.2-2.4-.1-4.8-.9-7-2.4Z"/><path d="m9.3 11.4 1.9 1.9 3.5-3.8"/></svg></div>
         <h4>13 years in the crease</h4>
         <p>Every session is run by goalie-specific coaches who have lived the position — not general skills coaches filling a slot.</p>
       </div>
       <div class="recard">
-        <div class="ri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.5a3.2 3.2 0 0 1 0 6M21 20c0-2.6-1.4-4.4-3.5-5.2" stroke-linecap="round"/></svg></div>
+        <div class="ri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="2.6"/><path d="M3.5 18.5c0-2.6 2-4.4 4.5-4.4s4.5 1.8 4.5 4.4"/><circle cx="16.6" cy="7.4" r="2.1"/><path d="M14.4 13.1c2.2-.5 4.3.6 5 2.6"/></svg></div>
         <h4>Small groups, real attention</h4>
         <p>Tight goalie-to-coach ratios so your kid gets seen, corrected and encouraged every single rep — never lost in a crowd.</p>
       </div>
       <div class="recard">
-        <div class="ri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h7l2 2h7v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z"/><path d="M9 14l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3.2v3.4M16 3.2v3.4"/><path d="m9 14.4 1.9 1.9 3.6-3.9"/></svg></div>
         <h4>Clear dates &amp; easy booking</h4>
         <p>No mystery schedules. Every program shows its real dates, ages and price up front, and checks out in a couple of taps.</p>
       </div>

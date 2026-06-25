@@ -27,6 +27,20 @@
   @keyframes screenOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-14px)}}
 
   /* ---- intro hero ---- */
+  /* media-backed intro: contained photo card behind the centered hero copy */
+  .screen.fn-intro{position:relative;isolation:isolate;border-radius:var(--r-lg);overflow:hidden;padding:64px 40px}
+  .screen.fn-intro .hero-media{border-radius:inherit}
+  /* readability: force white text over the photo for the funnel-specific elements
+     (the page-scoped .fn-hero rules below would otherwise win on specificity/source-order) */
+  .screen.fn-intro .fn-eyebrow{color:var(--accent-up)}
+  .screen.fn-intro .fn-hero h1{color:#fff}
+  .screen.fn-intro .fn-hero .sub{color:rgba(255,255,255,.86)}
+  .screen.fn-intro .fn-hero .meta-line{color:rgba(255,255,255,.78)}
+  .screen.fn-intro .fn-hero .meta-line svg{color:var(--accent-up)}
+  .screen.fn-intro .fn-trust-row{color:rgba(255,255,255,.82)}
+  .screen.fn-intro .fn-trust-row .faces .f{border-color:rgba(255,255,255,.25)}
+  .screen.fn-intro .fn-trust-row b{color:#fff}
+  @media(max-width:560px){.screen.fn-intro{padding:48px 24px}}
   .fn-hero{text-align:center}
   .fn-eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:24px;display:inline-flex;align-items:center;gap:8px}
   .fn-eyebrow .pip{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulseDot 1.4s infinite}
@@ -43,6 +57,11 @@
   .fn-trust-row .faces .f:first-child{margin-left:0}
   .fn-trust-row .stars{display:inline-flex;gap:1px;color:var(--gold)}
   .fn-trust-row .stars svg{width:14px;height:14px}
+
+  /* subtle ice texture behind the quiz card */
+  .screen.has-bg{border-radius:var(--r-lg);padding:36px 34px}
+  .screen.has-bg .bg-media{border-radius:inherit}
+  @media(max-width:560px){.screen.has-bg{padding:24px 18px}}
 
   /* ---- quiz progress bar ---- */
   .quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
@@ -173,6 +192,11 @@
   .day-card.rest .d-title{color:var(--mute)}
   .day-card.rest .d-tag{color:var(--mute-2)}
 
+  /* atmosphere banners inside result sections (tasteful, slim) */
+  .week-banner,.drill-banner{display:flex;align-items:flex-end;height:150px;border-radius:var(--r);margin-bottom:20px;box-shadow:var(--sh-1)}
+  .week-banner .db-cap,.drill-banner .db-cap{padding:20px 24px;color:#fff;font-size:13.5px;font-weight:600;letter-spacing:.01em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.08em}
+  @media(max-width:560px){.week-banner,.drill-banner{height:120px}}
+
   /* drills list */
   .drill-list{display:grid;gap:14px}
   .drill{
@@ -201,6 +225,7 @@
   .vision-mod .vm-price{font-size:14px;color:rgba(255,255,255,.55);font-family:'JetBrains Mono',monospace}
   .vision-mod .vm-art{display:flex;justify-content:center;align-items:center}
   .vision-mod .vm-art .tracker{width:min(260px,70%)}
+  .vision-mod .vm-art .vm-frame{width:min(320px,90%);aspect-ratio:1/1;box-shadow:var(--sh-2)}
   .vision-mod.is-product .vm-tag{color:var(--signal)}
 
   /* recommended camp banner */
@@ -208,7 +233,7 @@
     background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;
     display:grid;grid-template-columns:.9fr 1.1fr;align-items:stretch;box-shadow:var(--sh-2);
   }
-  .camp-rec .cr-photo{background-size:cover;background-position:center;min-height:240px;position:relative}
+  .camp-rec .cr-photo{background-size:cover;background-position:center;min-height:240px;position:relative;background-image:url('assets/img/training.jpg')}
   .camp-rec .cr-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--paper-2))}
   .camp-rec .cr-photo .cr-badge{position:absolute;top:20px;left:20px;z-index:1;display:inline-flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-2);background:rgba(246,247,249,.92);backdrop-filter:blur(8px);border-radius:var(--r-pill);padding:7px 14px}
   .camp-rec .cr-badge .pulse{width:7px;height:7px;border-radius:50%;background:var(--signal);box-shadow:0 0 0 0 rgba(255,207,107,.6);animation:pulse 2s infinite}
@@ -354,8 +379,9 @@
   <div class="funnel-stage">
 
     <!-- ===== INTRO ===== -->
-    <section class="screen is-active" data-screen="intro">
-      <div class="fn-hero">
+    <section class="screen is-active hero has-media center fn-intro" data-screen="intro">
+      <div class="hero-media"><img src="assets/img/goalie-focus.jpg" alt=""></div>
+      <div class="fn-hero hero-content">
         <div class="fn-eyebrow"><span class="pip"></span>Free · 90 seconds · built by our coaches</div>
         <h1>Your free personalized goalie <span class="accent">training plan.</span></h1>
         <p class="sub">Answer six quick questions. Our coaches build you a real weekly plan — vision drills, movement, and the mental game — dialled to your level and schedule. No cost.</p>
@@ -377,7 +403,8 @@
     </section>
 
     <!-- ===== QUIZ SHELL (steps injected here) ===== -->
-    <section class="screen" data-screen="quiz">
+    <section class="screen has-bg" data-screen="quiz">
+      <div class="bg-media wash"><img src="assets/img/ice-rink.jpg" alt=""></div>
       <div class="quiz-top">
         <button class="quiz-back" data-back disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>Back
@@ -428,6 +455,10 @@
         </div>
         <div class="rn" data-week-note></div>
       </div>
+      <div class="card-photo week-banner">
+        <img src="assets/img/training.jpg" alt="">
+        <span class="db-cap">Built around your real week</span>
+      </div>
       <div class="week-grid" data-week-grid></div>
     </div>
 
@@ -439,6 +470,10 @@
           <h2 data-drills-title>Your focus drills</h2>
         </div>
         <div class="rn" data-drills-note></div>
+      </div>
+      <div class="card-photo drill-banner">
+        <img src="assets/img/goalie-save.jpg" alt="">
+        <span class="db-cap">In the crease · every rep with intent</span>
       </div>
       <div class="drill-list" data-drill-list></div>
     </div>
@@ -464,9 +499,8 @@
           </div>
         </div>
         <div class="vm-art">
-          <div class="tracker">
-            <div class="glow"></div>
-            <div class="tracker-body" data-tracker-mount></div>
+          <div class="product-frame vm-frame">
+            <img src="assets/img/product/xtracker-5.jpg" alt="The Xtracker vision trainer">
           </div>
         </div>
       </div>

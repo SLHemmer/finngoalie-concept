@@ -33,8 +33,9 @@
 .about-hero .ah-veil{
   position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
-    linear-gradient(180deg,rgba(10,12,15,.55) 0%,rgba(10,12,15,.35) 40%,rgba(10,12,15,.92) 100%),
-    radial-gradient(110% 80% at 18% 30%,rgba(29,108,255,.22),transparent 58%);
+    linear-gradient(90deg,rgba(6,8,15,.88) 0%,rgba(6,8,15,.62) 46%,rgba(6,8,15,.30) 100%),
+    linear-gradient(180deg,rgba(6,8,15,.55) 0%,rgba(6,8,15,.30) 42%,rgba(6,8,15,.92) 100%),
+    radial-gradient(110% 80% at 18% 30%,rgba(29,108,255,.20),transparent 58%);
 }
 .about-hero .wrap{position:relative;z-index:2;max-width:var(--max);width:100%}
 .about-hero .ah-in{max-width:18ch}
@@ -116,6 +117,14 @@
 .tl-step .yr{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--accent);font-weight:500;text-transform:uppercase}
 .tl-step h3{font-size:21px;font-weight:700;letter-spacing:-.02em;margin-top:8px;line-height:1.15}
 .tl-step p{color:var(--mute);font-size:15px;line-height:1.6;margin-top:10px;max-width:54ch}
+.tl-step .tl-thumb{
+  margin-top:18px;width:160px;aspect-ratio:16/11;border-radius:var(--r-sm);overflow:hidden;
+  border:1px solid var(--line-2);box-shadow:var(--sh-2);background:var(--ink);
+}
+.tl-step .tl-thumb img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.2) contrast(1.04);transition:transform 1s var(--ease)}
+.tl-step:hover .tl-thumb img{transform:scale(1.05)}
+.tl-step.tl-product .tl-thumb{background:radial-gradient(120% 100% at 50% 30%,#1a2230,#0a0c10)}
+.tl-step.tl-product .tl-thumb img{object-fit:contain;padding:8%;filter:none}
 
 /* — philosophy (3 values) — */
 .about-values{padding:var(--s-10) 0}
@@ -334,12 +343,12 @@
       <h2 class="reveal d1">From one rink<br><span class="mute">to a vision-first </span><span class="accent">method.</span></h2>
     </div>
     <div class="tl-rail">
-      <div class="tl-step reveal r-left"><span class="node"></span><div class="yr">The beginning</div><h3>Rink roots in Nova Scotia</h3><p>A goalie growing up on East Coast ice, obsessed with one question — why do some goalies always seem to see it first?</p></div>
-      <div class="tl-step reveal r-left d1"><span class="node"></span><div class="yr">The first camps</div><h3>Coaching the position properly</h3><p>Private sessions turned into camps. Word spread across Atlantic Canada that this was vision-led goaltending, not generic drills.</p></div>
-      <div class="tl-step reveal r-left d2"><span class="node"></span><div class="yr">The invention</div><h3>The Xtracker is born</h3><p>To teach the read, the founder built the tool that didn't exist — a vision trainer that drills the eyes to pick up the puck early.</p></div>
-      <div class="tl-step reveal r-left d3"><span class="node"></span><div class="yr">The patent</div><h3>Finnpegs P3G, patented</h3><p>A net-anchoring system engineered so the net never shifts on contact — patented, and trusted across rinks for true, repeatable reps.</p></div>
-      <div class="tl-step reveal r-left d4"><span class="node"></span><div class="yr">The gathering</div><h3>East Coast Goaltender Coaches Convention</h3><p>Finngoalie began hosting the region's goalie coaches — on-ice sessions and classroom breakdowns for the people who develop goalies.</p></div>
-      <div class="tl-step reveal r-left d4"><span class="node"></span><div class="yr">Today</div><h3>Finngoalie Europe &amp; beyond</h3><p>The method — and the Xtracker — now reach goalies past the East Coast, with Finngoalie Europe extending the vision-first approach overseas.</p></div>
+      <div class="tl-step reveal r-left"><span class="node"></span><div class="yr">The beginning</div><h3>Rink roots in Nova Scotia</h3><p>A goalie growing up on East Coast ice, obsessed with one question — why do some goalies always seem to see it first?</p><div class="tl-thumb"><img src="assets/img/ice-rink.jpg" alt="" loading="lazy"></div></div>
+      <div class="tl-step reveal r-left d1"><span class="node"></span><div class="yr">The first camps</div><h3>Coaching the position properly</h3><p>Private sessions turned into camps. Word spread across Atlantic Canada that this was vision-led goaltending, not generic drills.</p><div class="tl-thumb"><img src="assets/img/training.jpg" alt="" loading="lazy"></div></div>
+      <div class="tl-step reveal r-left d2 tl-product"><span class="node"></span><div class="yr">The invention</div><h3>The Xtracker is born</h3><p>To teach the read, the founder built the tool that didn't exist — a vision trainer that drills the eyes to pick up the puck early.</p><div class="tl-thumb"><img src="assets/img/product/xtracker-5.jpg" alt="" loading="lazy"></div></div>
+      <div class="tl-step reveal r-left d3 tl-product"><span class="node"></span><div class="yr">The patent</div><h3>Finnpegs P3G, patented</h3><p>A net-anchoring system engineered so the net never shifts on contact — patented, and trusted across rinks for true, repeatable reps.</p><div class="tl-thumb"><img src="assets/img/product/finnpegs-1.jpg" alt="" loading="lazy"></div></div>
+      <div class="tl-step reveal r-left d4"><span class="node"></span><div class="yr">The gathering</div><h3>East Coast Goaltender Coaches Convention</h3><p>Finngoalie began hosting the region's goalie coaches — on-ice sessions and classroom breakdowns for the people who develop goalies.</p><div class="tl-thumb"><img src="assets/img/coach.jpg" alt="" loading="lazy"></div></div>
+      <div class="tl-step reveal r-left d4"><span class="node"></span><div class="yr">Today</div><h3>Finngoalie Europe &amp; beyond</h3><p>The method — and the Xtracker — now reach goalies past the East Coast, with Finngoalie Europe extending the vision-first approach overseas.</p><div class="tl-thumb"><img src="assets/img/hero-arena.jpg" alt="" loading="lazy"></div></div>
     </div>
   </div>
 </section>
@@ -419,7 +428,8 @@
 <!-- ============================================================
      7 · TRUSTED BY  —  signal row
      ============================================================ -->
-<section class="about-trusted">
+<section class="about-trusted has-bg">
+  <div class="bg-media wash"><img src="assets/img/ice-rink.jpg" alt="" loading="lazy"></div>
   <div class="wrap">
     <div class="section-head">
       <div class="kicker reveal">Trusted in the crease</div>

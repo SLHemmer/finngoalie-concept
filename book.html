@@ -17,7 +17,12 @@
      ============================================================ -->
 <style>
   /* ---- booking shell ---- */
-  .book-head{padding:calc(var(--nav-h) + 78px) 0 0;text-align:center}
+  .book-head{padding:calc(var(--nav-h) + 78px) 0 64px;text-align:center}
+  /* compact media hero: photo + shared scrim (has-media) sits behind, white text */
+  .book-head.has-media{min-height:auto;display:block;border-radius:0}
+  /* keep the trust line legible on the dark scrim */
+  .book-head.has-media .book-trust{color:rgba(255,255,255,.78)}
+  .book-head.has-media .book-trust svg{color:var(--accent-up)}
   .book-head .kicker{margin-bottom:18px}
   .book-head h1{
     font-size:clamp(40px,6.4vw,82px);line-height:.96;font-weight:800;
@@ -60,8 +65,14 @@
     background:var(--paper);padding:18px 18px 16px;position:relative;cursor:pointer;
     transition:border-color var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease),
                transform var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease);
-    display:flex;flex-direction:column;gap:4px;
+    display:flex;flex-direction:column;gap:4px;overflow:hidden;
   }
+  /* small program thumbnail — sits at the top of each card, full-bleed */
+  .program .pg-thumb{
+    width:calc(100% + 36px);margin:-18px -18px 14px;height:96px;border-radius:0;
+    aspect-ratio:auto;
+  }
+  .program:hover .pg-thumb{filter:none}
   .program:hover{border-color:var(--accent-line);transform:translateY(-3px);box-shadow:var(--sh-2)}
   .program.sel{
     border-color:var(--accent);background:var(--accent-soft);
@@ -128,6 +139,10 @@
   }
   .upsell.on .us-ico{background:var(--accent)}
   .upsell .us-ico svg{width:21px;height:21px}
+  /* product thumbnail variant of the upsell icon — real photo on a clean dark frame */
+  .upsell .us-ico.us-thumb{padding:0;overflow:hidden;background:var(--ink)}
+  .upsell .us-ico.us-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .upsell.on .us-ico.us-thumb{background:var(--ink)}
   .upsell .us-body{flex:1;min-width:0}
   .upsell .us-name{font-size:15px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
   .upsell .us-name .us-price{font-size:13.5px;font-weight:700;color:var(--accent)}
@@ -366,7 +381,8 @@
 <!-- ============================================================
      BOOKING HEADER
      ============================================================ -->
-<header class="book-head">
+<header class="book-head hero has-media center">
+  <div class="hero-media"><img src="assets/img/goalie-save.jpg" alt=""></div>
   <div class="wrap">
     <div class="kicker reveal">Camps &amp; private training</div>
     <h1 class="reveal d1">Reserve your <span class="accent">spot.</span></h1>
@@ -399,6 +415,7 @@
         <div class="program-grid" id="programGrid">
           <!-- data-* drive the live total; price is cents-free dollars -->
           <button type="button" class="program sel" data-program="pro-week" data-name="Pro Week 2026" data-price="175" data-from="1" data-spots="9" data-tag="Flagship · Jun 25–28">
+            <img class="card-img pg-thumb" src="assets/img/training.jpg" alt="">
             <span class="pg-tag">Flagship · 4-day</span>
             <span class="pg-name">Pro Week 2026</span>
             <span class="pg-desc">Elite crease development with the full staff. Xtracker blocks daily.</span>
@@ -406,6 +423,7 @@
             <span class="pg-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
           <button type="button" class="program" data-program="high-perf" data-name="High Performance Camp" data-price="299.99" data-from="1" data-spots="12" data-tag="U13–U20 · Jul 27–30">
+            <img class="card-img pg-thumb" src="assets/img/goalie-action.jpg" alt="">
             <span class="pg-tag">High Performance</span>
             <span class="pg-name">High Performance Camp</span>
             <span class="pg-desc">Four days, U13–U20. Built for the next level of compete.</span>
@@ -413,6 +431,7 @@
             <span class="pg-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
           <button type="button" class="program" data-program="warrior" data-name="Warrior Week 2026" data-price="379.99" data-from="0" data-spots="6" data-tag="U9/U11/U13 · Aug 11–14">
+            <img class="card-img pg-thumb" src="assets/img/youth.jpg" alt="">
             <span class="pg-tag">Young guns · Aug 11–14</span>
             <span class="pg-name">Warrior Week 2026</span>
             <span class="pg-desc">U9–U13. The foundation week that builds fearless goalies.</span>
@@ -420,6 +439,7 @@
             <span class="pg-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
           <button type="button" class="program" data-program="foundational" data-name="Foundational Camp 2026" data-price="250" data-from="1" data-spots="15" data-tag="Foundational camp">
+            <img class="card-img pg-thumb" src="assets/img/goalie-focus.jpg" alt="">
             <span class="pg-tag">Foundational</span>
             <span class="pg-name">Foundational Camp 2026</span>
             <span class="pg-desc">The core mechanics, dialed in. Where great goalies start.</span>
@@ -427,6 +447,7 @@
             <span class="pg-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
           <button type="button" class="program" data-program="private-ice" data-name="Private On-Ice Session" data-price="140" data-from="0" data-spots="4" data-tag="1-on-1 · single session">
+            <img class="card-img pg-thumb" src="assets/img/goalie-save.jpg" alt="">
             <span class="pg-tag">Private · 1-on-1</span>
             <span class="pg-name">Private On-Ice Session</span>
             <span class="pg-desc">One goalie, one coach, on the ice. Every rep dialed to you.</span>
@@ -434,6 +455,7 @@
             <span class="pg-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
           <button type="button" class="program" data-program="private-syn" data-name="Private Synthetic Session" data-price="49.99" data-from="1" data-spots="8" data-tag="Off-ice synthetic">
+            <img class="card-img pg-thumb" src="assets/img/mask.jpg" alt="">
             <span class="pg-tag">Private · synthetic</span>
             <span class="pg-name">Private Synthetic Session</span>
             <span class="pg-desc">Off-ice synthetic-ice work. Year-round reps, zero rink wait.</span>
@@ -501,7 +523,7 @@
         </div>
         <div class="upsells" id="upsells">
           <button type="button" class="upsell" data-upsell="xtracker" data-name="The Xtracker" data-price="99.99">
-            <span class="us-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2"/></svg></span>
+            <span class="us-ico us-thumb"><img src="assets/img/product/xtracker-5.jpg" alt=""></span>
             <span class="us-body">
               <span class="us-name">The Xtracker <span class="us-price">+$99.99</span></span>
               <span class="us-benefit">Train your eyes at home between sessions. The reps compound.</span>
@@ -509,7 +531,7 @@
             <span class="us-toggle"></span>
           </button>
           <button type="button" class="upsell" data-upsell="finnpegs" data-name="Finnpegs P3G" data-price="189">
-            <span class="us-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M4 12h16M4 17h10" stroke-linecap="round"/></svg></span>
+            <span class="us-ico us-thumb"><img src="assets/img/product/finnpegs-1.jpg" alt=""></span>
             <span class="us-body">
               <span class="us-name">Finnpegs P3G <span class="us-price">+$189</span></span>
               <span class="us-benefit">The patented net system. Run true drills at your home rink.</span>

@@ -30,24 +30,28 @@
 .navlinks a.active{opacity:1;color:var(--ink)}
 .navlinks a.active::after{transform:scaleX(1)}
 
-/* ---- cinematic-but-clean coaches hero ---- */
+/* ---- cinematic-but-clean coaches hero (photo + readable scrim, white text) ---- */
 .chero{
   position:relative;min-height:92svh;display:flex;align-items:center;
   padding:148px 28px 92px;overflow:hidden;isolation:isolate;
+  background:var(--night);color:var(--on-night);
 }
-.chero-media{position:absolute;inset:0;z-index:0}
-.chero-media .a,.chero-media .b{position:absolute;inset:0;background-size:cover;background-position:center;filter:grayscale(.32) contrast(1.06)}
-.chero-media .a{background-image:url(assets/img/coach.jpg);opacity:.9}
-.chero-media .b{
-  left:auto;right:0;width:42%;background-image:url(assets/img/training.jpg);
-  opacity:.5;-webkit-mask-image:linear-gradient(90deg,transparent,#000 55%);mask-image:linear-gradient(90deg,transparent,#000 55%);
+/* media layer: real coach photo, graded to match the brand, with a guaranteed
+   readability scrim (dark left + dark bottom) so the white headline always reads */
+.chero .hero-media{position:absolute;inset:0;z-index:0;overflow:hidden}
+.chero .hero-media img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;filter:grayscale(.28) contrast(1.05)}
+.chero .hero-media::after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(105deg,rgba(6,8,15,.88) 0%,rgba(6,8,15,.6) 46%,rgba(6,8,15,.32) 100%),
+    linear-gradient(0deg,rgba(6,8,15,.85) 0%,rgba(6,8,15,.18) 44%,rgba(6,8,15,.42) 100%);
 }
-.chero-veil{
-  position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(105deg,var(--paper) 8%,rgba(246,247,249,.86) 40%,rgba(246,247,249,.45) 70%,rgba(246,247,249,.78) 100%);
-}
-.chero-veil::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 12% 50%,transparent 30%,var(--paper) 92%)}
 .chero-in{position:relative;z-index:3;max-width:var(--max);margin:0 auto;width:100%}
+/* white-on-photo text (the photo replaces the old light veil) */
+.chero h1{color:#fff}
+.chero .sub{color:rgba(255,255,255,.82)}
+.chero .btn-ghost{color:#fff;border-color:rgba(255,255,255,.5)}
+.chero .btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,.08)}
 .chero-eyebrow{
   font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--accent);font-weight:600;margin-bottom:26px;display:inline-flex;align-items:center;gap:10px;
@@ -93,6 +97,20 @@
   padding:34px 30px;position:relative;overflow:hidden;display:flex;flex-direction:column;
   transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease);will-change:transform;
 }
+/* photo band — a framed image strip at the top of each card so they read rich,
+   not flat. Sits above the existing content, layout untouched. */
+.prog-card .pc-media{
+  position:relative;margin:-34px -30px 26px;height:168px;overflow:hidden;background:var(--ink);
+}
+.prog-card .pc-media img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(.22) contrast(1.04);transition:transform .7s var(--ease);
+}
+.prog-card:hover .pc-media img{transform:scale(1.05)}
+.prog-card .pc-media::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(6,8,15,.12) 0%,rgba(20,24,31,.55) 100%)}
+.prog-card.feat .pc-media{margin-bottom:26px}
+.prog-card.feat .pc-media::after{background:linear-gradient(180deg,rgba(6,8,15,.20) 0%,rgba(10,12,15,.78) 100%)}
 .prog-card:hover{transform:translateY(-6px);box-shadow:var(--sh-3);border-color:var(--accent-line)}
 .prog-card .pc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
 .prog-card .pc-ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
@@ -210,7 +228,6 @@
 }
 @media(max-width:680px){
   .chero{min-height:auto;padding:120px 20px 64px}
-  .chero-media .b{display:none}
   .apply-form{padding:26px 22px}
   .apply-form .frow.two{grid-template-columns:1fr}
 }
@@ -269,12 +286,10 @@
 <!-- ============================================================
      HERO  —  cinematic-but-clean, authority / B2B
      ============================================================ -->
-<header class="chero">
-  <div class="chero-media">
-    <div class="a"></div>
-    <div class="b"></div>
+<header class="chero has-media">
+  <div class="hero-media">
+    <img src="assets/img/coach.jpg" alt="">
   </div>
-  <div class="chero-veil"></div>
 
   <!-- authority chip (mirrors the homepage HUD readout) -->
   <div class="chero-chip">
@@ -308,10 +323,10 @@
   <div class="wrap">
     <span class="lbl">The authority layer</span>
     <div class="marks">
-      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/></svg>13 years running camps</span>
-      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>2 patented training tools</span>
-      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z" fill="currentColor"/></svg>Host · East Coast Convention</span>
-      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Finngoalie Europe arm</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9.5a1 1 0 0 1 .5-.87l8-4.6a1 1 0 0 1 1 0l8 4.6a1 1 0 0 1 .5.87V21"/><path d="M3 21h18"/><path d="M8 21v-5.5h8V21"/><path d="M9.5 11.5h5"/></svg>13 years running camps</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 4.5 6 8l-2.6-.6a.6.6 0 0 0-.6.95l3.3 3.3-2.1 5.4a1 1 0 0 0 1.3 1.3l5.4-2.1 3.3 3.3a.6.6 0 0 0 .95-.6L17 14l3.5-3.5a2.1 2.1 0 0 0-3-3L14 11"/><path d="m9 15 2.5-2.5"/></svg>2 patented training tools</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0V4Z"/><path d="M17 5h2.5a1.5 1.5 0 0 1 0 5H17"/><path d="M7 5H4.5a1.5 1.5 0 0 0 0 5H7"/></svg>Host · East Coast Convention</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z"/></svg>Finngoalie Europe arm</span>
     </div>
   </div>
 </div>
@@ -332,6 +347,7 @@
     <div class="prog-grid stagger">
       <!-- card 1 — Season Academy -->
       <div class="prog-card" data-tilt>
+        <div class="pc-media"><img src="assets/img/training.jpg" alt="Season-long goalie mentorship on the ice"></div>
         <div class="pc-top">
           <span class="pc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z"/><path d="M5 10v5c0 1.5 3.1 3 7 3s7-1.5 7-3v-5" stroke-linecap="round"/></svg></span>
           <span class="tag">Season-long</span>
@@ -352,6 +368,7 @@
 
       <!-- card 2 — Convention (featured dark) -->
       <div class="prog-card feat" data-tilt>
+        <div class="pc-media"><img src="assets/img/coach.jpg" alt="Goalie coaches gathered at the East Coast convention"></div>
         <div class="pc-top">
           <span class="pc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.4 2.9-5.6 6.5-5.6S15.5 16.6 15.5 20"/><path d="M16 5.6a3.2 3.2 0 0 1 0 6M22 20c0-2.7-1.6-4.6-3.8-5.4" stroke-linecap="round"/></svg></span>
           <span class="tag">June 2026</span>
@@ -372,6 +389,7 @@
 
       <!-- card 3 — Certified Partner -->
       <div class="prog-card" id="partner" data-tilt>
+        <div class="pc-media"><img src="assets/img/goalie-focus.jpg" alt="Certified partner program — the Finngoalie method at your rink"></div>
         <div class="pc-top">
           <span class="pc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg></span>
           <span class="tag">B2B · Program</span>
@@ -415,7 +433,8 @@
 <!-- ============================================================
      COMPARE  —  which program is right for you
      ============================================================ -->
-<section class="compare">
+<section class="compare has-bg">
+  <div class="bg-media wash"><img src="assets/img/goalie-action.jpg" alt=""></div>
   <div class="wrap">
     <div class="section-head">
       <div class="kicker reveal">Which program fits</div>
@@ -494,7 +513,7 @@
         <a class="btn btn-primary magnetic" href="finnpegs.html#dealer">See dealer pricing <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
       <div class="dealer-visual reveal r-right">
-        <img src="assets/img/net.jpg" alt="Finnpegs patented net system locked to the ice">
+        <img src="assets/img/product/finnpeg-net-1.jpg" alt="Finnpegs patented P3G net system locked to the ice">
         <span class="badge">Patented · P3G</span>
         <div class="spot"><b>50+ rinks</b><span>Trusted on the ice</span></div>
       </div>
@@ -505,7 +524,8 @@
 <!-- ============================================================
      SPONSORSHIP TIERS  —  3 cards
      ============================================================ -->
-<section class="sponsor" id="sponsor">
+<section class="sponsor has-bg" id="sponsor">
+  <div class="bg-media wash"><img src="assets/img/ice-rink.jpg" alt=""></div>
   <div class="wrap">
     <div class="head-row reveal">
       <div class="h-l">

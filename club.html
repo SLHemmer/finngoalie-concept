@@ -17,12 +17,33 @@
      sparingly, for the "Most popular" badge. No new colors.
      ============================================================ */
 
-  /* — HERO: calm paper, ink veil, live readout chip reused from system — */
+  /* — HERO: photo behind, ink veil over it, live readout chip reused from system — */
   .club-hero{
     position:relative;min-height:88svh;display:flex;flex-direction:column;
     align-items:center;justify-content:center;text-align:center;
-    padding:140px 28px 96px;overflow:hidden;isolation:isolate;
+    padding:140px 28px 96px;overflow:hidden;isolation:isolate;background:var(--night);
   }
+  /* hero photo layer sits beneath veil/aura/content (composes shared .hero-media) */
+  .club-hero .hero-media{z-index:0}
+  /* with a photo behind, the veil darkens toward the edges instead of washing to paper,
+     and the headline + sub + proof read white-on-photo for contrast */
+  .club-hero.has-media .hero-veil{
+    background:
+      radial-gradient(120% 90% at 50% 46%,transparent 30%,rgba(6,8,15,.78) 86%),
+      linear-gradient(0deg,rgba(6,8,15,.55),rgba(6,8,15,.18) 46%,rgba(6,8,15,.45));
+  }
+  .club-hero.has-media h1{color:#fff;text-shadow:0 2px 30px rgba(6,8,15,.5)}
+  .club-hero.has-media h1 .accent{color:var(--accent-up)}
+  .club-hero.has-media p.sub{color:rgba(255,255,255,.86)}
+  .club-hero.has-media .club-proof .pt{color:rgba(255,255,255,.78)}
+  .club-hero.has-media .club-proof .pt b{color:#fff}
+  .club-hero.has-media .club-proof .faces span{border-color:rgba(255,255,255,.4)}
+  .club-hero.has-media .hero-cta .free-note{color:rgba(255,255,255,.78)}
+  .club-hero.has-media .hero-cta .free-note svg{color:var(--accent-up)}
+  .club-hero.has-media .club-badge{
+    color:#fff;border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.08);
+  }
+  .club-hero.has-media .club-badge svg{color:var(--accent-up)}
   .club-hero .hero-veil{
     position:absolute;inset:0;z-index:1;pointer-events:none;
     background:radial-gradient(120% 80% at 50% 44%,transparent 36%,var(--paper) 88%);
@@ -81,6 +102,20 @@
 
   /* — VALUE: what members get — stagger grid of feature cards — */
   .value{padding:var(--s-10) 0 var(--s-9)}
+  /* a split image strip under the section head — two atmosphere shots, one frame */
+  .value-strip{
+    display:grid;grid-template-columns:1.25fr .75fr;gap:14px;margin-top:54px;
+    height:clamp(220px,30vw,340px);
+  }
+  .value-strip figure{position:relative;border-radius:var(--r-lg);overflow:hidden;margin:0;background:var(--ink)}
+  .value-strip figure img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--ease)}
+  .value-strip figure:hover img{transform:scale(1.05)}
+  .value-strip figure::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(6,8,15,.05) 0%,rgba(6,8,15,.32) 100%)}
+  .value-strip figcaption{
+    position:absolute;left:0;right:0;bottom:0;z-index:1;padding:20px 22px;color:#fff;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  }
   .value-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:64px}
   .value-card{
     background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);
@@ -180,6 +215,21 @@
   .member-card .who .meta b{display:block;font-size:14.5px;font-weight:700;letter-spacing:-.01em}
   .member-card .who .meta span{font-size:12.5px;color:var(--mute)}
   .member-card .tenure{position:absolute;top:30px;right:36px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mute-2);letter-spacing:.04em}
+  /* photo-backed member card — quote reads white over a crafted goalie image */
+  .member-card.card-photo{min-height:360px;justify-content:flex-end;color:#fff;border-color:transparent}
+  /* full-card scrim so the TOP quote + bottom meta both stay readable on bright ice */
+  .member-card.card-photo::after{
+    background:linear-gradient(180deg,rgba(6,8,15,.72) 0%,rgba(6,8,15,.45) 38%,rgba(6,8,15,.72) 100%);
+  }
+  /* lift the quote/meta above the scrim (the shared .card-photo content rule uses an
+     invalid :not(::after) and is dropped by the browser, so set z-index explicitly) */
+  .member-card.card-photo > *:not(img){position:relative;z-index:2}
+  .member-card.card-photo .qmark{color:var(--accent-up)}
+  .member-card.card-photo blockquote{color:#fff}
+  .member-card.card-photo .tenure{color:rgba(255,255,255,.7)}
+  .member-card.card-photo .who .meta b{color:#fff}
+  .member-card.card-photo .who .meta span{color:rgba(255,255,255,.72)}
+  .member-card.card-photo .who .avatar{border:2px solid rgba(255,255,255,.4)}
 
   /* — FAQ accordion section wrapper — */
   .faq{padding:var(--s-9) 0;background:var(--paper-2);border-top:1px solid var(--line-2)}
@@ -266,7 +316,8 @@
 <!-- ============================================================
      HERO
      ============================================================ -->
-<header class="club-hero">
+<header class="club-hero has-media center">
+  <div class="hero-media"><img src="assets/img/goalie-save.jpg" alt=""></div>
   <div class="hero-aura"></div>
   <div class="hero-veil"></div>
   <div class="hero-in">
@@ -315,52 +366,56 @@
       <h2 class="reveal d1">Everything a goalie needs<br><span class="mute">to keep getting </span><span class="accent">better.</span></h2>
       <p class="reveal d2">Seven membership pillars, renewed every month. No plateaus — just the next rep, dialed to you.</p>
     </div>
+    <div class="value-strip reveal d2">
+      <figure><img src="assets/img/training.jpg" alt="A goalie working through a vision-and-movement training block"><figcaption>The monthly work</figcaption></figure>
+      <figure><img src="assets/img/goalie-action.jpg" alt="A goalie reading the play live in the crease"><figcaption>Where it shows up</figcaption></figure>
+    </div>
     <div class="value-grid stagger">
 
       <div class="value-card">
-        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h11M4 10h11M4 15h7" stroke-linecap="round"/><path d="M17 13l2.5 2.5L24 11" stroke-linecap="round" stroke-linejoin="round" transform="translate(-2 0)"/><circle cx="19.5" cy="6" r="2.2"/></svg></div>
+        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v3M17 3v3"/><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17"/><path d="M8 14.5l2 2 4-4.5"/></svg></div>
         <div class="vtag">Monthly</div>
         <h4>A new personalized plan</h4>
         <p>Every month, a fresh vision-and-movement program built around your level, position habits and schedule — so the work never goes stale.</p>
       </div>
 
       <div class="value-card">
-        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg></div>
+        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="14" height="13" rx="2.5"/><path d="M16.5 10l5-3v10l-5-3z"/><path d="M7 12l2 2 3.5-4"/></svg></div>
         <div class="vtag">Weekly</div>
         <h4>Video review of your film</h4>
         <p>Send a clip of your game. A coach breaks down your reads, depth and tracking frame by frame, every single week.</p>
       </div>
 
       <div class="value-card">
-        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.6-6.5 9.5-6.5S21.5 12 21.5 12s-3.6 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></svg></div>
         <div class="vtag">Exclusive</div>
         <h4>Vision &amp; Xtracker drills</h4>
         <p>Members-only puck-tracking and reaction drills built for the Xtracker — released first, and only, inside the Club.</p>
       </div>
 
       <div class="value-card">
-        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2.5"/><circle cx="9" cy="12" r="2.4"/></svg></div>
+        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></svg></div>
         <div class="vtag">Live</div>
         <h4>Members-only coaching calls</h4>
         <p>Monthly live group sessions with Finngoalie coaches. Ask anything, watch live breakdowns, get answers in real time.</p>
       </div>
 
       <div class="value-card">
-        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8l8-4 8 4-8 4-8-4z" stroke-linejoin="round"/><path d="M7 17l-3-2.2M17 17l3-2.2" stroke-linecap="round"/><path d="M3.5 9.5v4.3l8.5 4.7 8.5-4.7V9.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 3.5h7l5 5-8.5 11.5L3.5 8.5z"/><path d="M3.5 8.5h17"/><path d="M9.5 8.5L12 20M14.5 8.5L12 20"/><path d="M8.5 3.5L9.5 8.5M15.5 3.5L14.5 8.5"/></svg></div>
         <div class="vtag">Perks</div>
         <h4>15% off all gear &amp; camps</h4>
         <p>A standing member discount on the Xtracker, Finnpegs systems and every camp. The membership pays for itself by the first order.</p>
       </div>
 
       <div class="value-card">
-        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.5a3.2 3.2 0 0 1 0 6M21 20c0-2.6-1.4-4.4-3.5-5.2" stroke-linecap="round"/></svg></div>
+        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.4 2.9-5.7 6.5-5.7s6.5 2.3 6.5 5.7"/><path d="M16.5 5.2a3.2 3.2 0 0 1 0 6.1"/><path d="M18.5 14.7c2.1.8 3.5 2.6 3.5 5.3"/></svg></div>
         <div class="vtag">Community</div>
         <h4>A private goalie crew</h4>
         <p>A members-only community of goalies chasing the same edge — film swaps, gear talk, and people who actually get the position.</p>
       </div>
 
       <div class="value-card">
-        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19V5M4 19h16" stroke-linecap="round"/><path d="M8 15l3.5-4 3 2.5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4M4 20h16"/><path d="M7.5 15.5l3.5-4 3 2.5 5-6.5"/><path d="M19 4v3.5h-3.5"/></svg></div>
         <div class="vtag">Tracking</div>
         <h4>Progress tracking</h4>
         <p>Log your reaction scores and reps. Watch your read speed climb month over month against the Finngoalie benchmark.</p>
@@ -460,7 +515,8 @@
 <!-- ============================================================
      COMPARE TABLE  —  detailed tier matrix
      ============================================================ -->
-<section class="compare">
+<section class="compare has-bg">
+  <div class="bg-media wash"><img src="assets/img/ice-rink.jpg" alt=""></div>
   <div class="wrap">
     <div class="section-head">
       <div class="kicker reveal">The fine detail</div>
@@ -547,7 +603,8 @@
       <h2 class="reveal d1">Goalies who stopped <span class="mute">guessing.</span></h2>
     </div>
     <div class="member-grid">
-      <div class="member-card reveal">
+      <div class="member-card card-photo reveal">
+        <img src="assets/img/goalie-action.jpg" alt="">
         <span class="tenure">Member · 8 mo</span>
         <div class="qmark">&ldquo;</div>
         <blockquote>The weekly film review is the part I never knew I needed. A coach catches things in my depth I'd never see myself. My save percentage is up two weeks running.</blockquote>
@@ -556,7 +613,8 @@
           <div class="meta"><b>Jordan R.</b><span>U16 AA · Pro tier</span></div>
         </div>
       </div>
-      <div class="member-card reveal d1">
+      <div class="member-card card-photo reveal d1">
+        <img src="assets/img/goalie-focus.jpg" alt="">
         <span class="tenure">Member · 1 yr</span>
         <div class="qmark">&ldquo;</div>
         <blockquote>A fresh plan every month means I'm never bored and never plateaued. The community keeps me honest — there's always someone training harder. Best money I spend on hockey.</blockquote>
