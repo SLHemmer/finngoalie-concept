@@ -353,7 +353,7 @@ section{position:relative}
 /* ============================================================
    9. PRODUCT STAGE  (pinned scroll-scrub sequence)
    ============================================================ */
-.pin-section{height:300vh;position:relative}  /* was 560vh — too much scroll/image before content arrived */
+.pin-section{height:240vh;position:relative}  /* tightened 560→300→240vh — minimize image-before-content */
 .pin-stage{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .pin-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(120% 90% at 50% 30%,#fff 0%,var(--paper) 55%,var(--paper-3) 100%)}
 .pin-progress{position:absolute;top:0;left:0;height:2px;background:var(--accent);z-index:8;width:0%;box-shadow:0 0 12px rgba(29,108,255,.5)}
@@ -367,6 +367,14 @@ section{position:relative}
 .stage-copy p{font-size:clamp(15px,1.8vw,19px);color:var(--mute);margin-top:18px;font-weight:400;max-width:30ch;margin-left:auto;margin-right:auto}
 .copy-top{top:11%}
 .copy-bottom{bottom:12%}
+/* the beat copy overlaps the product photo (dark goalie mask) → ensure it stays readable
+   over ANY underlying area with a soft light halo + stronger ink (was washed-out gray). */
+.stage-copy{ }
+.stage-copy::before{ content:""; position:absolute; inset:-30px -56px; z-index:-1;
+  background:radial-gradient(58% 62% at 50% 50%, rgba(246,247,249,.94) 0%, rgba(246,247,249,.7) 55%, transparent 100%);
+  filter:blur(8px); border-radius:50%; }
+.stage-copy h3{ text-shadow:0 1px 16px rgba(246,247,249,.9); }
+.stage-copy p{ color:var(--ink-2); text-shadow:0 1px 12px rgba(246,247,249,.95); }
 
 /* call-out spec lines — SVG draw-in */
 .calls{position:absolute;inset:0;z-index:4;pointer-events:none}
