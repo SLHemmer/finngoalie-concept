@@ -810,8 +810,14 @@ footer{background:var(--paper-2);border-top:1px solid var(--line);padding:70px 0
 }
 .hero.has-media > .wrap,
 .hero.has-media > .hero-inner,
-.hero.has-media .hero-content{ position:relative; z-index:2; }
-.hero.has-media canvas{ position:relative; z-index:1; }
+.hero.has-media .hero-content,
+.hero.has-media .hero-in{ position:relative; z-index:3; }
+/* keep the puck-tracker canvas FULL-BLEED (absolute) — just lift it above the photo
+   scrim. (Do NOT set position:relative, or it drops into flow and pushes the hero tall.) */
+.hero.has-media .hero-tracker{ position:absolute; inset:0; z-index:1; }
+/* the old light-hero radial veil washes the photo to white at the edges — kill it
+   on media heroes; the .hero-media scrim handles readability instead. */
+.hero.has-media .hero-veil{ display:none; }
 
 /* --- section background media (subtle, behind content) --- */
 .has-bg{ position:relative; isolation:isolate; }
