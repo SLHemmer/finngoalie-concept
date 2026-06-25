@@ -1,419 +1,614 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Pro Shop — Finngoalie</title>
-  <meta name="description" content="Goalie gear that earns its spot. Brian's pads, TRUE skates, Finngoalie sticks, apparel, accessories and supplements — a curated, filterable selection from the Finngoalie pro shop." />
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Finngoalie — The Pro Shop. Gear that earns its spot.</title>
+<meta name="description" content="The Finngoalie pro shop — the Xtracker vision trainer, patented Finnpegs, Brian's pads, TRUE skates, FG1 sticks, apparel, accessories and supplements. Curated, filterable, ready to ship.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+<!-- ============================================================
+     SHOP-SCOPED COMPONENTS  —  composed entirely from the shared
+     design tokens in styles.css (no new colors, one accent only).
+     Header band · featured tiles · filter chips · product grid.
+     ============================================================ -->
+<style>
+  /* active nav state — matches the shared underline language */
+  .navlinks a.active{opacity:1}
+  .navlinks a.active::after{transform:scaleX(1)}
+  .drawer a.active{color:var(--accent)}
+
+  /* ---- page top spacing under the fixed nav ---- */
+  .shop-head{padding:calc(var(--nav-h) + 86px) 0 var(--s-8);position:relative}
+  .shop-head .eyebrow{display:inline-block;margin-bottom:20px}
+  .shop-head h1{
+    font-size:var(--fz-h1);line-height:.98;letter-spacing:-.045em;font-weight:800;max-width:15ch;
+  }
+  .shop-head h1 .accent{color:var(--accent)}
+  .shop-head p.lead{
+    font-size:var(--fz-lead);color:var(--mute);margin-top:24px;max-width:54ch;
+    line-height:1.5;font-weight:400;
+  }
+  .shop-head .meta-row{display:flex;gap:28px;flex-wrap:wrap;margin-top:34px}
+  .shop-head .meta-row .mi{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--mute);font-weight:500}
+  .shop-head .meta-row .mi svg{width:16px;height:16px;color:var(--accent);flex-shrink:0}
+
+  /* ============= FEATURED HIGHLIGHT STRIP ============= */
+  .featured{padding:var(--s-8) 0 var(--s-9)}
+  .feat-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;grid-template-rows:repeat(2,minmax(0,1fr));gap:18px;margin-top:48px;min-height:560px}
+  .feat-tile{
+    position:relative;border-radius:var(--r-lg);overflow:hidden;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    padding:34px;color:#fff;background:var(--ink);isolation:isolate;
+    transition:transform .55s var(--ease),box-shadow .55s var(--ease);will-change:transform;
+    min-height:266px;
+  }
+  .feat-tile:hover{transform:translateY(-6px);box-shadow:var(--sh-float)}
+  .feat-tile .bg{
+    position:absolute;inset:0;z-index:-2;background-size:cover;background-position:center;
+    transition:transform 1.2s var(--ease);
+  }
+  .feat-tile:hover .bg{transform:scale(1.06)}
+  .feat-tile .veil{
+    position:absolute;inset:0;z-index:-1;
+    background:linear-gradient(180deg,rgba(6,8,15,.12) 0%,rgba(6,8,15,.55) 52%,rgba(6,8,15,.92) 100%);
+  }
+  .feat-tile.lead-tile{grid-row:span 2}
+  .feat-tile .ftag{
+    position:absolute;top:24px;left:30px;z-index:1;
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    font-weight:600;color:#fff;background:rgba(29,108,255,.22);border:1px solid var(--accent-line);
+    backdrop-filter:blur(6px);border-radius:var(--r-pill);padding:6px 14px;
+  }
+  .feat-tile h3{font-size:clamp(22px,2.6vw,34px);font-weight:800;letter-spacing:-.03em;line-height:1.02}
+  .feat-tile.lead-tile h3{font-size:clamp(30px,4vw,52px)}
+  .feat-tile p{color:rgba(255,255,255,.72);font-size:14px;margin-top:10px;line-height:1.5;max-width:38ch}
+  .feat-tile .frow{display:flex;align-items:center;gap:14px;margin-top:20px}
+  .feat-tile .fprice{font-size:clamp(20px,2.4vw,30px);font-weight:800;letter-spacing:-.03em;color:#fff}
+  .feat-tile .fprice .save{font-size:.6em;color:rgba(255,255,255,.45);text-decoration:line-through;font-weight:500;margin-right:8px}
+  .feat-tile .fgo{
+    margin-left:auto;font-size:13.5px;font-weight:600;color:var(--accent-up);
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .feat-tile .fgo .chev{transition:transform .35s var(--ease-spring)}
+  .feat-tile:hover .fgo .chev{transform:translateX(5px)}
+
+  /* ============= CATALOG SHELL ============= */
+  .catalog{padding:var(--s-9) 0;background:var(--paper-2);border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+
+  /* ---- filter chips bar ---- */
+  .chips{
+    display:flex;gap:10px;flex-wrap:wrap;margin-top:46px;padding-bottom:6px;
+  }
+  .chip{
+    font-size:13.5px;font-weight:600;letter-spacing:-.01em;color:var(--ink-2);
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--r-pill);
+    padding:10px 20px;line-height:1;white-space:nowrap;
+    transition:background .3s var(--ease),color .3s var(--ease),border-color .3s var(--ease),transform .3s var(--ease-spring),box-shadow .3s var(--ease);
+  }
+  .chip:hover{border-color:var(--accent-line);color:var(--accent);transform:translateY(-1px)}
+  .chip.active{background:var(--accent);color:#fff;border-color:transparent;box-shadow:var(--sh-accent)}
+  .chip-count{font-size:12.5px;color:var(--mute-2);margin-left:6px;font-weight:500}
+  .chip.active .chip-count{color:rgba(255,255,255,.7)}
+
+  /* ---- product grid ---- */
+  .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:34px}
+  .pcard{
+    position:relative;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+    overflow:hidden;display:flex;flex-direction:column;
+    transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease),opacity .45s var(--ease);
+    will-change:transform;
+  }
+  .pcard:hover{transform:translateY(-6px);box-shadow:var(--sh-3);border-color:var(--accent-line)}
+  .pcard .pmedia{
+    position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--ink);
+  }
+  .pcard .pmedia .bg{
+    position:absolute;inset:0;background-size:cover;background-position:center;
+    transition:transform 1s var(--ease);
+  }
+  .pcard:hover .pmedia .bg{transform:scale(1.07)}
+  .pcard .pmedia::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(155deg,rgba(10,22,38,.18),rgba(8,16,29,.46));
+  }
+  .pcard .ptag{
+    position:absolute;top:12px;left:12px;z-index:2;
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    font-weight:600;color:#fff;background:rgba(10,12,15,.5);border:1px solid var(--line-on-dark);
+    backdrop-filter:blur(6px);border-radius:var(--r-pill);padding:5px 11px;
+  }
+  .pcard .ptag.sale{background:rgba(29,108,255,.32);border-color:var(--accent-line)}
+  .pcard .pbody{padding:20px 20px 18px;display:flex;flex-direction:column;flex:1}
+  .pcard .pcat{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:9px}
+  .pcard h3{font-size:16px;font-weight:700;letter-spacing:-.018em;line-height:1.22;color:var(--ink)}
+  .pcard .pfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:20px}
+  .pcard .pprice{font-size:17px;font-weight:800;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
+  .pcard .pprice .save{font-size:.72em;color:var(--mute-2);text-decoration:line-through;font-weight:500;margin-right:7px}
+  .pcard .pprice .from{font-size:.7em;color:var(--mute);font-weight:600;margin-right:4px}
+  .add-btn{
+    font-size:13px;font-weight:600;color:var(--accent);background:var(--accent-soft);
+    border:1px solid var(--accent-line);border-radius:var(--r-pill);padding:9px 16px;line-height:1;
+    display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+    transition:transform .35s var(--ease-spring),background .25s var(--ease),color .25s var(--ease),box-shadow .25s var(--ease);
+  }
+  .add-btn svg{width:14px;height:14px}
+  .add-btn:hover{background:var(--accent);color:#fff;border-color:transparent;box-shadow:var(--sh-accent)}
+  .add-btn:active{transform:scale(.95)}
+
+  /* empty-state (defensive — should never show with All) */
+  .pgrid-empty{display:none;text-align:center;color:var(--mute);padding:60px 0;font-size:15px}
+
+  /* ============= NOTE BAR ============= */
+  .notebar{padding:var(--s-8) 0;text-align:center}
+  .notebar .nb-in{
+    max-width:680px;margin:0 auto;border:1px solid var(--line);border-radius:var(--r-lg);
+    background:var(--paper-2);padding:38px 40px;box-shadow:var(--sh-2);
+  }
+  .notebar .nb-in .nbn{font-size:clamp(34px,5vw,52px);font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--accent)}
+  .notebar .nb-in p{color:var(--mute);font-size:15.5px;margin-top:14px;line-height:1.5}
+  .notebar .nb-in .btn-text{margin-top:22px}
+
+  /* ============= RESPONSIVE ============= */
+  @media(max-width:1080px){
+    .pgrid{grid-template-columns:repeat(3,1fr)}
+  }
+  @media(max-width:920px){
+    .feat-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;min-height:0}
+    .feat-tile.lead-tile{grid-row:auto;grid-column:1/-1;min-height:320px}
+    .pgrid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:560px){
+    .feat-grid{grid-template-columns:1fr}
+    .feat-tile.lead-tile{grid-column:auto}
+    .pgrid{grid-template-columns:1fr 1fr;gap:14px}
+    .shop-head{padding-top:calc(var(--nav-h) + 60px)}
+    .chips{gap:8px}
+    .chip{padding:9px 15px;font-size:13px}
+    .pcard .pbody{padding:16px 15px 15px}
+    .add-btn{padding:8px 13px}
+    .notebar .nb-in{padding:30px 24px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .feat-tile,.pcard,.feat-tile .bg,.pcard .pmedia .bg{transition:none!important;transform:none!important}
+  }
+</style>
 </head>
-<body>
+<body id="top">
 
-  <!-- ===== HEADER (verbatim from partials.html · active=Shop) ===== -->
-  <div class="announce">Pro Week 2026 · June 25–28 · <a href="train.html">12 spots left — reserve now ›</a></div>
-  <div class="nav-wrap">
-    <nav class="nav wrap-wide">
-      <a href="index.html" class="brand">
-        <svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg>
-        Finngoalie
+<!-- LIVING AURORA -->
+<canvas class="aurora-canvas" id="aurora"></canvas>
+
+<!-- ============================================================
+     NAV  —  REUSABLE SITE-WIDE BLOCK (verbatim · active = Shop)
+     ============================================================ -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Finn<b>goalie</b>
+    </a>
+    <div class="navlinks">
+      <a href="train.html">Train</a>
+      <a href="xtracker.html">The Xtracker</a>
+      <a href="finnpegs.html">Finnpegs</a>
+      <a href="shop.html" class="active">Shop</a>
+      <a href="coaches.html">For Coaches</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="nav-right">
+      <a class="nav-icon search-icon" href="shop.html" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
       </a>
-      <div class="nav-links">
-        <a href="train.html">Train</a>
-        <a href="xtracker.html">The Xtracker</a>
-        <a href="finnpegs.html">Finnpegs</a>
-        <a href="shop.html" class="active">Shop</a>
-        <a href="coaches.html">For Coaches</a>
-        <a href="about.html">About</a>
-      </div>
-      <div class="nav-r">
-        <button class="nav-ico" aria-label="Search">⌕</button>
-        <button class="nav-ico" aria-label="Cart">Bag <span class="cart-count">0</span></button>
-        <button class="burger" data-open-nav aria-label="Menu">☰</button>
-      </div>
-    </nav>
+      <a class="nav-icon" href="shop.html" aria-label="Bag" data-bag-add>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke-linecap="round"/></svg>
+        <span class="count" data-bag-count>0</span>
+      </a>
+      <a class="nav-cta magnetic" href="plan.html">Free Training Plan</a>
+      <button class="burger" id="burger" aria-label="Menu" data-burger><span></span><span></span><span></span></button>
+    </div>
   </div>
+</nav>
 
-  <!-- ===== MOBILE DRAWER (verbatim · active=Shop) ===== -->
-  <div class="drawer" id="drawer">
-    <button class="close" data-close-nav aria-label="Close">✕</button>
-    <a href="train.html" data-close-nav>Train</a>
-    <a href="xtracker.html" data-close-nav>The Xtracker</a>
-    <a href="finnpegs.html" data-close-nav>Finnpegs</a>
-    <a href="shop.html" data-close-nav class="active">Shop</a>
-    <a href="coaches.html" data-close-nav>For Coaches</a>
-    <a href="about.html" data-close-nav>About</a>
+<!-- MOBILE DRAWER (mirrors nav · active = Shop) -->
+<div class="drawer" id="drawer">
+  <a href="train.html" data-drawer-close>Train</a>
+  <a href="xtracker.html" data-drawer-close>The Xtracker</a>
+  <a href="finnpegs.html" data-drawer-close>Finnpegs</a>
+  <a href="shop.html" class="active" data-drawer-close>Shop</a>
+  <a href="coaches.html" data-drawer-close>For Coaches</a>
+  <a href="about.html" data-drawer-close>About</a>
+  <a class="drawer-cta" href="plan.html" data-drawer-close>Free Training Plan</a>
+</div>
+
+<!-- ============================================================
+     1 · HEADER BAND
+     ============================================================ -->
+<header class="shop-head">
+  <div class="wrap">
+    <span class="eyebrow reveal">The Pro Shop</span>
+    <h1 class="reveal d1">Gear that earns<br>its <span class="accent">spot.</span></h1>
+    <p class="lead reveal d2">Pads, skates, sticks and the small things that win games — the Xtracker and Finnpegs we build, the gear we trust, vetted by goalie coaches and priced honestly. The same kit we run in the crease.</p>
+    <div class="meta-row reveal d3">
+      <span class="mi"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Free shipping over $75</span>
+      <span class="mi"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-6 9 6v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Built in Nova Scotia</span>
+      <span class="mi"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Ships in 2 days</span>
+    </div>
   </div>
+</header>
 
-  <!-- ===== 1 · HEADER BAND ===== -->
-  <section class="section-tight light">
-    <div class="wrap">
-      <span class="eyebrow" data-reveal="up">The Pro Shop</span>
-      <h1 class="h1 balance" data-reveal="up" data-reveal-delay="80" style="max-width:16ch">Gear that earns its&nbsp;spot.</h1>
-      <p class="lead" data-reveal="up" data-reveal-delay="160" style="margin-top:18px">
-        Pads, skates, sticks and the small things that win games — vetted by goalie coaches,
-        priced honestly, ready to ship. The same gear we trust in the crease.
-      </p>
+<!-- ============================================================
+     2 · FEATURED HIGHLIGHT STRIP
+     ============================================================ -->
+<section class="featured">
+  <div class="wrap">
+    <div class="section-head" style="text-align:left;margin:0;max-width:none;padding:0">
+      <div class="kicker reveal">Start with the standouts</div>
+      <h2 class="reveal d1" style="font-size:var(--fz-h2);line-height:1.02;letter-spacing:-.035em;font-weight:800">The pieces that<br>built the brand.</h2>
     </div>
-  </section>
 
-  <!-- ===== 2 · FEATURED HIGHLIGHTS ===== -->
-  <section class="section dark">
-    <div class="wrap">
-      <div class="shead" data-reveal="up">
-        <span class="eyebrow">Get the highlights</span>
-        <h2 class="h2 balance">Start with the standouts.</h2>
-      </div>
+    <div class="feat-grid reveal d1">
+
+      <a class="feat-tile lead-tile" href="xtracker.html">
+        <div class="bg" style="background-image:url(assets/img/goalie-focus.jpg)"></div>
+        <div class="veil"></div>
+        <span class="ftag">Signature</span>
+        <h3>The Xtracker</h3>
+        <p>The vision trainer that teaches your eyes to read the play first. The product the whole brand is built on.</p>
+        <div class="frow">
+          <span class="fprice">$99.99</span>
+          <span class="fgo">View <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </a>
+
+      <a class="feat-tile" href="finnpegs.html">
+        <div class="bg" style="background-image:url(assets/img/net.jpg)"></div>
+        <div class="veil"></div>
+        <span class="ftag">Patented · P3G</span>
+        <h3>Finnpegs</h3>
+        <p>The patented net-anchoring system that holds cold.</p>
+        <div class="frow">
+          <span class="fprice"><span class="save">$220</span>$189</span>
+          <span class="fgo">View <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </a>
+
+      <a class="feat-tile" href="#catalog">
+        <div class="bg" style="background-image:url(assets/img/stick.jpg)"></div>
+        <div class="veil"></div>
+        <span class="ftag">Finngoalie</span>
+        <h3>FG1 Stick</h3>
+        <p>Our own featherweight pro-light goalie stick.</p>
+        <div class="frow">
+          <span class="fprice">From $189.99</span>
+          <span class="fgo">Shop <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </a>
+
+      <a class="feat-tile" href="#catalog" style="grid-column:span 2">
+        <div class="bg" style="background-image:url(assets/img/pads.jpg)"></div>
+        <div class="veil"></div>
+        <span class="ftag">Brian's · Flagship</span>
+        <h3>Optik X4 Sr Pad</h3>
+        <p>Elite rebound control and break — the big-ticket centerpiece of the gear wall.</p>
+        <div class="frow">
+          <span class="fprice">$1,299.99</span>
+          <span class="fgo">Shop <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </a>
+
     </div>
-    <div class="wrap-wide hscroll-wrap" data-reveal="fade" style="margin-top:40px">
-      <div class="hscroll">
+  </div>
+</section>
 
-        <a class="hcard" href="xtracker.html" style="background:linear-gradient(180deg,rgba(6,8,15,.1),rgba(6,8,15,.86)),url('assets/img/goalie-focus.jpg') center/cover,linear-gradient(150deg,#0a2a52,#06101f)">
-          <span class="tag" style="position:absolute;top:24px;left:30px">Signature</span>
-          <h3 class="h3">The Xtracker</h3>
-          <p>Vision-training aid that fixes tracking, stance and posture. The product the brand is built on.</p>
-          <div style="display:flex;align-items:center;gap:14px;margin-top:16px">
-            <span class="pricetag" style="color:#fff">$99.99</span>
-            <span class="btn-text" style="color:var(--blue-2)">View ›</span>
-          </div>
-        </a>
-
-        <a class="hcard" href="finnpegs.html" style="background:linear-gradient(180deg,rgba(6,8,15,.1),rgba(6,8,15,.86)),url('assets/img/net.jpg') center/cover,linear-gradient(150deg,#10355f,#070e1b)">
-          <span class="tag" style="position:absolute;top:24px;left:30px">Patented</span>
-          <h3 class="h3">Finnpegs P3G</h3>
-          <p>The patented net-anchoring system that holds the net cold — trusted by rinks and dealers.</p>
-          <div style="display:flex;align-items:center;gap:14px;margin-top:16px">
-            <span class="save" style="color:rgba(255,255,255,.5)">$220</span>
-            <span class="pricetag" style="color:#fff">$189</span>
-            <span class="btn-text" style="color:var(--blue-2)">View ›</span>
-          </div>
-        </a>
-
-        <a class="hcard" href="#catalog" style="background:linear-gradient(180deg,rgba(6,8,15,.1),rgba(6,8,15,.86)),url('assets/img/stick.jpg') center/cover,linear-gradient(150deg,#143a64,#0a1726)">
-          <span class="tag" style="position:absolute;top:24px;left:30px">Finngoalie</span>
-          <h3 class="h3">FG1 ProLight Stick</h3>
-          <p>Our own pro-light goalie stick — featherweight balance, a paddle that holds its edge.</p>
-          <div style="display:flex;align-items:center;gap:14px;margin-top:16px">
-            <span class="pricetag" style="color:#fff">From $189.99</span>
-            <span class="btn-text" style="color:var(--blue-2)">Shop ›</span>
-          </div>
-        </a>
-
-        <a class="hcard" href="#catalog" style="background:linear-gradient(180deg,rgba(6,8,15,.1),rgba(6,8,15,.86)),url('assets/img/pads.jpg') center/cover,linear-gradient(150deg,#0e2f55,#06111d)">
-          <span class="tag" style="position:absolute;top:24px;left:30px">Brian's</span>
-          <h3 class="h3">Optik X4 Sr Pad</h3>
-          <p>Flagship senior pad — elite rebound control and break. The big-ticket centerpiece.</p>
-          <div style="display:flex;align-items:center;gap:14px;margin-top:16px">
-            <span class="pricetag" style="color:#fff">$1,299.99</span>
-            <span class="btn-text" style="color:var(--blue-2)">Shop ›</span>
-          </div>
-        </a>
-
-      </div>
-      <div class="hscroll-nav">
-        <button data-hscroll-prev aria-label="Previous">‹</button>
-        <button data-hscroll-next aria-label="Next">›</button>
-      </div>
+<!-- ============================================================
+     3 · CATALOG  (filterable — app.js [data-filter]/[data-chip]/[data-tag])
+     ============================================================ -->
+<section class="catalog" id="catalog">
+  <div class="wrap">
+    <div class="section-head" style="text-align:left;margin:0;max-width:none;padding:0">
+      <div class="kicker reveal">The catalog</div>
+      <h2 class="reveal d1" style="font-size:var(--fz-h2);line-height:1.02;letter-spacing:-.035em;font-weight:800">Everything for<br>the crease.</h2>
+      <p class="reveal d2" style="font-size:var(--fz-lead);color:var(--mute);margin-top:22px;max-width:48ch">Filter by what you need. Pads to laces, skates to hydration — curated, not cluttered.</p>
     </div>
-  </section>
 
-  <!-- ===== 3 · CATALOG (filterable) ===== -->
-  <section class="section light" id="catalog">
-    <div class="wrap">
-      <div class="shead" data-reveal="up">
-        <span class="eyebrow">The Catalog</span>
-        <h2 class="h2 balance">Everything for the crease.</h2>
-        <p class="lead">Filter by what you need. Pads to laces, skates to hydration — curated, not cluttered.</p>
-      </div>
-
-      <!-- filter chips: app.js [data-filter-group] toggles .active + shows/hides [data-cat] in [data-filter-target] -->
-      <div class="chips" data-filter-group data-reveal="up" style="margin-top:36px">
-        <button class="chip active" data-filter="all">All</button>
-        <button class="chip" data-filter="goalie-gear">Goalie Gear</button>
-        <button class="chip" data-filter="skates">Skates</button>
-        <button class="chip" data-filter="sticks">Sticks</button>
-        <button class="chip" data-filter="apparel">Apparel</button>
-        <button class="chip" data-filter="accessories">Accessories</button>
-        <button class="chip" data-filter="supplements">Supplements</button>
-      </div>
-
-      <!-- product grid -->
-      <div class="grid g4" data-filter-target data-reveal="up" data-reveal-delay="80">
-
-        <!-- GOALIE GEAR -->
-        <div class="card" data-cat="goalie-gear">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(22,57,95,.55),rgba(10,22,38,.78)),url('assets/img/pads.jpg') center/cover"><span class="tag">Brian's</span></div>
-          <div class="card-body">
-            <h3 class="h3">Brian's Optik X4 Sr Pad</h3>
-            <p class="tiny">Flagship senior pad — elite rebound control.</p>
-            <div class="card-foot">
-              <span class="pricetag">$1,299.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="goalie-gear">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(16,53,93,.55),rgba(9,20,34,.78)),url('assets/img/pads.jpg') center/cover"><span class="tag">Brian's</span></div>
-          <div class="card-body">
-            <h3 class="h3">Brian's Iconik 2 Sr Pads</h3>
-            <p class="tiny">Top-tier dual-density pad set.</p>
-            <div class="card-foot">
-              <span class="pricetag">$2,499.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="goalie-gear">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(20,58,101,.55),rgba(10,24,39,.78)),url('assets/img/pads.jpg') center/cover"><span class="tag">Brian's · Junior</span></div>
-          <div class="card-body">
-            <h3 class="h3">Brian's Optik X4 Jr Pad</h3>
-            <p class="tiny">Junior fit, senior-grade tech.</p>
-            <div class="card-foot">
-              <span class="pricetag">$749.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="goalie-gear">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(18,52,87,.55),rgba(8,19,31,.78)),url('assets/img/pads.jpg') center/cover"><span class="tag">Brian's</span></div>
-          <div class="card-body">
-            <h3 class="h3">Brian's Chest &amp; Arm Protector</h3>
-            <p class="tiny">Low-profile mobility, full coverage.</p>
-            <div class="card-foot">
-              <span class="pricetag">$499.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <!-- SKATES -->
-        <div class="card" data-cat="skates">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(21,55,95,.55),rgba(10,21,37,.78)),url('assets/img/skates.jpg') center/cover"><span class="tag">TRUE</span></div>
-          <div class="card-body">
-            <h3 class="h3">TRUE Catalyst 9X4 Sr Skate</h3>
-            <p class="tiny">Pro-grade boot, locked-in fit.</p>
-            <div class="card-foot">
-              <span class="pricetag">$999.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="skates">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(17,53,92,.55),rgba(9,19,33,.78)),url('assets/img/skates.jpg') center/cover"><span class="tag">TRUE · Junior</span></div>
-          <div class="card-body">
-            <h3 class="h3">TRUE Catalyst 5X4 Jr Skate</h3>
-            <p class="tiny">Stable, responsive junior skate.</p>
-            <div class="card-foot">
-              <span class="pricetag">$349.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="skates">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(20,58,99,.55),rgba(10,24,38,.78)),url('assets/img/skates.jpg') center/cover"><span class="tag">Bauer</span></div>
-          <div class="card-body">
-            <h3 class="h3">Bauer Vertexx Edge Blades</h3>
-            <p class="tiny">Goalie holder blades, multiple sizes.</p>
-            <div class="card-foot">
-              <span class="pricetag">From $134.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <!-- STICKS -->
-        <div class="card" data-cat="sticks">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(13,47,86,.55),rgba(6,16,29,.78)),url('assets/img/stick.jpg') center/cover"><span class="tag">Finngoalie</span></div>
-          <div class="card-body">
-            <h3 class="h3">Finngoalie FG1 ProLight Stick</h3>
-            <p class="tiny">Our own featherweight pro stick.</p>
-            <div class="card-foot">
-              <span class="pricetag">From $189.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="sticks">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(19,55,94,.55),rgba(10,22,36,.78)),url('assets/img/stick.jpg') center/cover"><span class="tag">Brian's</span></div>
-          <div class="card-body">
-            <h3 class="h3">Brian's GSP4 Stick</h3>
-            <p class="tiny">Balanced foamcore, soft hands.</p>
-            <div class="card-foot">
-              <span class="pricetag">$265.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="sticks">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(16,52,91,.55),rgba(8,19,32,.78)),url('assets/img/stick.jpg') center/cover"><span class="tag">Pro Stock</span></div>
-          <div class="card-body">
-            <h3 class="h3">Prostock Goalie Stick</h3>
-            <p class="tiny">Real pro-stock builds, limited runs.</p>
-            <div class="card-foot">
-              <span class="pricetag">From $139.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <!-- ACCESSORIES -->
-        <div class="card" data-cat="accessories">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(20,57,99,.55),rgba(10,23,38,.78)),url('assets/img/net.jpg') center/cover"><span class="tag">Finngoalie · Sale</span></div>
-          <div class="card-body">
-            <h3 class="h3">Finngoalie Pro Laces</h3>
-            <p class="tiny">Waxed, durable, goalie-length.</p>
-            <div class="card-foot">
-              <span class="pricetag"><span class="save">$65.99</span>$49.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="accessories">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(18,54,93,.55),rgba(9,20,34,.78)),url('assets/img/puck.jpg') center/cover"><span class="tag">Training</span></div>
-          <div class="card-body">
-            <h3 class="h3">Catchball</h3>
-            <p class="tiny">Hand-eye and catch reaction trainer.</p>
-            <div class="card-foot">
-              <span class="pricetag">$39.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="accessories">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(15,50,88,.55),rgba(7,17,30,.78)),url('assets/img/net.jpg') center/cover"><span class="tag">GoaliesEdge</span></div>
-          <div class="card-body">
-            <h3 class="h3">GoaliesEdge Post Protectors</h3>
-            <p class="tiny">24k post protection for the crease.</p>
-            <div class="card-foot">
-              <span class="pricetag">From $65</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="accessories">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(20,58,100,.55),rgba(10,24,39,.78)),url('assets/img/mask.jpg') center/cover"><span class="tag">Finngoalie</span></div>
-          <div class="card-body">
-            <h3 class="h3">Finngoalie Mask</h3>
-            <p class="tiny">Branded goalie mask, multiple fits.</p>
-            <div class="card-foot">
-              <span class="pricetag">From $9.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <!-- SUPPLEMENTS -->
-        <div class="card" data-cat="supplements">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(17,53,92,.55),rgba(8,19,32,.78)),url('assets/img/ice-rink.jpg') center/cover"><span class="tag">BioSteel</span></div>
-          <div class="card-body">
-            <h3 class="h3">BioSteel Hydration Mix</h3>
-            <p class="tiny">Clean electrolyte mix for game day.</p>
-            <div class="card-foot">
-              <span class="pricetag">$19.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="supplements">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(19,55,89,.55),rgba(10,22,36,.78)),url('assets/img/puck.jpg') center/cover"><span class="tag">Filthy Mitts</span></div>
-          <div class="card-body">
-            <h3 class="h3">Filthy Mitts Spray</h3>
-            <p class="tiny">Deodorizing equipment spray.</p>
-            <div class="card-foot">
-              <span class="pricetag">From $8.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <!-- APPAREL -->
-        <div class="card" data-cat="apparel">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(20,57,98,.55),rgba(10,23,38,.78)),url('assets/img/youth.jpg') center/cover"><span class="tag">Apparel · Sale</span></div>
-          <div class="card-body">
-            <h3 class="h3">Finngoalie Cotton Tee</h3>
-            <p class="tiny">Soft everyday cotton tee.</p>
-            <div class="card-foot">
-              <span class="pricetag"><span class="save">$30</span>$9.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" data-cat="apparel">
-          <div class="card-media" style="background:linear-gradient(150deg,rgba(14,48,86,.55),rgba(6,16,29,.78)),url('assets/img/goalie-action.jpg') center/cover"><span class="tag">Apparel</span></div>
-          <div class="card-body">
-            <h3 class="h3">Finngoalie Nova Scotia Jersey</h3>
-            <p class="tiny">Nova Scotia Edition fan jersey.</p>
-            <div class="card-foot">
-              <span class="pricetag">$47.99</span>
-              <button class="btn btn-ghost btn-sm" data-add><span data-add-label>Add</span></button>
-            </div>
-          </div>
-        </div>
-
-      </div>
+    <!-- FILTER CHIPS  ·  group scope = "shop"  ·  per app.js -->
+    <div class="chips reveal d1" data-filter="shop">
+      <button class="chip active" data-chip="all">All</button>
+      <button class="chip" data-chip="goalie-gear">Goalie Gear</button>
+      <button class="chip" data-chip="skates">Skates</button>
+      <button class="chip" data-chip="sticks">Sticks</button>
+      <button class="chip" data-chip="apparel">Apparel</button>
+      <button class="chip" data-chip="accessories">Accessories</button>
+      <button class="chip" data-chip="supplements">Supplements</button>
     </div>
-  </section>
 
-  <!-- ===== 4 · NOTE BAR ===== -->
-  <section class="section-tight alt center">
-    <div class="wrap">
-      <p class="lead balance" data-reveal="up" style="margin:0 auto">
-        200+ products in the full store — this is a curated selection.
-      </p>
-      <div class="cta-row center" data-reveal="up" data-reveal-delay="100" style="margin-top:18px">
-        <a class="btn-text" href="#catalog">Browse the full catalog</a>
-      </div>
-    </div>
-  </section>
+    <!-- PRODUCT GRID  ·  target scope = "shop"  ·  cards carry [data-tag] (filter hook) + [data-cat] -->
+    <div class="pgrid reveal d2" data-filter-target="shop">
 
-  <!-- ===== CTA BAND + NEWSLETTER (verbatim) ===== -->
-  <section class="section cta-band">
-    <div class="hero-glow"></div>
-    <div class="wrap" style="position:relative;z-index:2">
-      <span class="eyebrow">Change your game</span>
-      <h2 class="h1 balance" data-reveal="up">Train your eyes.<br>Stop it cold.</h2>
-      <p class="lead" data-reveal="up" style="margin:18px auto 0;color:var(--muted-d)">Drills, camp drops and product news — no spam, just goalie stuff.</p>
-      <form class="news" onsubmit="return false" data-reveal="up">
-        <input type="email" placeholder="you@email.com" aria-label="Email" />
-        <button class="btn btn-blue">Join the list</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- ===== FOOTER (verbatim) ===== -->
-  <footer class="footer">
-    <div class="wrap-wide">
-      <div class="footer-top">
-        <div>
-          <a href="index.html" class="brand" style="margin-bottom:14px"><svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg> Finngoalie</a>
-          <p class="muted" style="max-width:34ch">Home of The Xtracker. Elite goaltender training &amp; patented goalie tech — engineered in Nova Scotia, Canada.</p>
-          <div class="socials"><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">TikTok</a></div>
+      <!-- ===== GOALIE GEAR ===== -->
+      <article class="pcard" data-tag="goalie-gear" data-cat="goalie-gear">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/pads.jpg)"></div><span class="ptag">Brian's</span></div>
+        <div class="pbody">
+          <div class="pcat">Goalie Gear</div>
+          <h3>Brian's Optik X4 Sr Pad</h3>
+          <div class="pfoot">
+            <span class="pprice">$1,299.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
         </div>
-        <div><h4>Train</h4><a href="train.html">Camps &amp; Programs</a><a href="train.html">Private Sessions</a><a href="train.html">Season Passes</a><a href="coaches.html">Mentorship</a></div>
-        <div><h4>Shop</h4><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs P3G</a><a href="shop.html">Goalie Gear</a><a href="shop.html">Apparel</a></div>
-        <div><h4>Company</h4><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="#">Contact</a><a href="#">Shipping &amp; Returns</a></div>
-      </div>
-      <div class="foot-bottom">
-        <span>© 2026 Finngoalie · Nova Scotia, Canada</span>
-        <span>hello@finngoalie.shop · Concept redesign</span>
-      </div>
-    </div>
-  </footer>
+      </article>
 
-  <!-- ===== SCRIPT (verbatim) ===== -->
-  <script src="app.js"></script>
+      <article class="pcard" data-tag="goalie-gear" data-cat="goalie-gear">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/pads.jpg)"></div><span class="ptag">Brian's · Pro</span></div>
+        <div class="pbody">
+          <div class="pcat">Goalie Gear</div>
+          <h3>Brian's Iconik 2 Sr Pads</h3>
+          <div class="pfoot">
+            <span class="pprice">$2,499.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pcard" data-tag="goalie-gear" data-cat="goalie-gear">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/pads.jpg)"></div><span class="ptag">Brian's · Junior</span></div>
+        <div class="pbody">
+          <div class="pcat">Goalie Gear</div>
+          <h3>Brian's Optik X4 Jr Pad</h3>
+          <div class="pfoot">
+            <span class="pprice">$749.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pcard" data-tag="goalie-gear" data-cat="goalie-gear">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/pads.jpg)"></div><span class="ptag">Brian's</span></div>
+        <div class="pbody">
+          <div class="pcat">Goalie Gear</div>
+          <h3>Brian's Chest &amp; Arm Protector</h3>
+          <div class="pfoot">
+            <span class="pprice">$499.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===== SKATES ===== -->
+      <article class="pcard" data-tag="skates" data-cat="skates">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/skates.jpg)"></div><span class="ptag">TRUE</span></div>
+        <div class="pbody">
+          <div class="pcat">Skates</div>
+          <h3>TRUE Catalyst 9X4 Sr Skate</h3>
+          <div class="pfoot">
+            <span class="pprice">$999.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pcard" data-tag="skates" data-cat="skates">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/skates.jpg)"></div><span class="ptag">TRUE · Junior</span></div>
+        <div class="pbody">
+          <div class="pcat">Skates</div>
+          <h3>TRUE Catalyst 5X4 Jr Skate</h3>
+          <div class="pfoot">
+            <span class="pprice">$349.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pcard" data-tag="skates" data-cat="skates">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/skates.jpg)"></div><span class="ptag">Bauer</span></div>
+        <div class="pbody">
+          <div class="pcat">Skates</div>
+          <h3>Bauer Vertexx Edge Blades</h3>
+          <div class="pfoot">
+            <span class="pprice"><span class="from">from</span>$134.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===== STICKS ===== -->
+      <article class="pcard" data-tag="sticks" data-cat="sticks">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/stick.jpg)"></div><span class="ptag">Finngoalie</span></div>
+        <div class="pbody">
+          <div class="pcat">Sticks</div>
+          <h3>Finngoalie FG1 ProLight Stick</h3>
+          <div class="pfoot">
+            <span class="pprice"><span class="from">from</span>$189.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pcard" data-tag="sticks" data-cat="sticks">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/stick.jpg)"></div><span class="ptag">Brian's</span></div>
+        <div class="pbody">
+          <div class="pcat">Sticks</div>
+          <h3>Brian's GSP4 Stick</h3>
+          <div class="pfoot">
+            <span class="pprice">$265.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pcard" data-tag="sticks" data-cat="sticks">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/stick.jpg)"></div><span class="ptag">Pro Stock</span></div>
+        <div class="pbody">
+          <div class="pcat">Sticks</div>
+          <h3>Prostock Goalie Stick</h3>
+          <div class="pfoot">
+            <span class="pprice"><span class="from">from</span>$139.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===== APPAREL ===== -->
+      <article class="pcard" data-tag="apparel" data-cat="apparel">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/youth.jpg)"></div><span class="ptag sale">Apparel · Sale</span></div>
+        <div class="pbody">
+          <div class="pcat">Apparel</div>
+          <h3>Finngoalie Cotton Tee</h3>
+          <div class="pfoot">
+            <span class="pprice"><span class="save">$30</span>$9.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pcard" data-tag="apparel" data-cat="apparel">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/goalie-action.jpg)"></div><span class="ptag">Apparel</span></div>
+        <div class="pbody">
+          <div class="pcat">Apparel</div>
+          <h3>Finngoalie Nova Scotia Jersey</h3>
+          <div class="pfoot">
+            <span class="pprice">$47.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===== ACCESSORIES ===== -->
+      <article class="pcard" data-tag="accessories" data-cat="accessories">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/mask.jpg)"></div><span class="ptag sale">Finngoalie · Sale</span></div>
+        <div class="pbody">
+          <div class="pcat">Accessories</div>
+          <h3>Finngoalie Pro Laces</h3>
+          <div class="pfoot">
+            <span class="pprice"><span class="save">$65.99</span>$49.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pcard" data-tag="accessories" data-cat="accessories">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/puck.jpg)"></div><span class="ptag">Training</span></div>
+        <div class="pbody">
+          <div class="pcat">Accessories</div>
+          <h3>Catchball</h3>
+          <div class="pfoot">
+            <span class="pprice">$39.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pcard" data-tag="accessories" data-cat="accessories">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/net.jpg)"></div><span class="ptag">GoaliesEdge</span></div>
+        <div class="pbody">
+          <div class="pcat">Accessories</div>
+          <h3>GoaliesEdge Post Protectors</h3>
+          <div class="pfoot">
+            <span class="pprice"><span class="from">from</span>$65</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pcard" data-tag="accessories" data-cat="accessories">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/mask.jpg)"></div><span class="ptag">Finngoalie</span></div>
+        <div class="pbody">
+          <div class="pcat">Accessories</div>
+          <h3>Finngoalie Mask</h3>
+          <div class="pfoot">
+            <span class="pprice"><span class="from">from</span>$9.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===== SUPPLEMENTS ===== -->
+      <article class="pcard" data-tag="supplements" data-cat="supplements">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/ice-rink.jpg)"></div><span class="ptag">BioSteel</span></div>
+        <div class="pbody">
+          <div class="pcat">Supplements</div>
+          <h3>BioSteel Hydration Mix</h3>
+          <div class="pfoot">
+            <span class="pprice">$19.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="pcard" data-tag="supplements" data-cat="supplements">
+        <div class="pmedia"><div class="bg" style="background-image:url(assets/img/puck.jpg)"></div><span class="ptag">Filthy Mitts</span></div>
+        <div class="pbody">
+          <div class="pcat">Supplements</div>
+          <h3>Filthy Mitts Spray</h3>
+          <div class="pfoot">
+            <span class="pprice"><span class="from">from</span>$8.99</span>
+            <button class="add-btn magnetic" data-bag-add>Add <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <p class="pgrid-empty">No products in this category yet.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     4 · NOTE BAR
+     ============================================================ -->
+<section class="notebar">
+  <div class="wrap">
+    <div class="nb-in reveal r-scale">
+      <div class="nbn"><span data-count="200">0</span><span style="color:var(--accent)">+</span></div>
+      <p>products in the full store — this is the curated edit. The complete catalog runs Brian's, TRUE, Bauer, Warrior, BioSteel, apparel and more.</p>
+      <a class="btn-text" href="#catalog">Browse the full catalog <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     5 · CLOSING CTA
+     ============================================================ -->
+<section class="closing">
+  <div class="wrap">
+    <h2 class="reveal">Train your eyes.<br><span class="accent">Stop it cold.</span></h2>
+    <p class="reveal d1">Start with the Xtracker — the vision trainer trusted by 1,000+ goalies. Yours in two days.</p>
+    <a class="btn btn-primary btn-lg magnetic reveal d2" href="xtracker.html" data-bag-add>Get the Xtracker — $99.99 <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER  —  REUSABLE SITE-WIDE BLOCK (copy verbatim on every page)
+     ============================================================ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Finn<b>goalie</b></a>
+        <p>Vision-led goalie training &amp; gear. Built in Nova Scotia, trusted in the crease across 50+ rinks.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="3.5"/><path d="M11 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.3 1.8 3.9 4 4.2v2.7c-1.5 0-2.9-.4-4-1.1v5.7a5.3 5.3 0 1 1-5.3-5.3c.3 0 .5 0 .8.1v2.8a2.6 2.6 0 1 0 1.8 2.4V3H14z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h3.5l4 5.6L16 4h3l-6 7.8L20 20h-3.5l-4.3-6L7 20H4l6.3-8.2z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col"><h5>Train</h5><a href="train.html">Private</a><a href="train.html">Camps</a><a href="train.html">Weekly</a><a href="train.html">Pro</a></div>
+      <div class="foot-col"><h5>Shop</h5><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs</a><a href="shop.html">Pro Shop</a><a href="shop.html">Bundles</a></div>
+      <div class="foot-col"><h5>Company</h5><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="shop.html">Reviews</a><a href="about.html">Contact</a></div>
+      <div class="foot-col free"><h5>Free Tools</h5><a href="plan.html">Training Plan</a><a href="vision-test.html">Vision Test</a><a href="club.html">Goalie Club</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Finngoalie. All rights reserved.</span>
+      <span class="mono">DESIGNED FOR THE CREASE · NS · CA</span>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
 </body>
 </html>

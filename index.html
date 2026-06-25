@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Finngoalie — Home of The Xtracker · Elite Goaltending Gear &amp; Training</title>
-  <meta name="description" content="See it first. Stop it cold. The Xtracker, patented Finnpegs, and elite goaltender training — engineered for goalies who win with their eyes." />
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Finngoalie — The Xtracker. See it first. Stop it cold.</title>
+<meta name="description" content="Finngoalie builds the instruments elite goaltenders train with — the Xtracker vision trainer, patented Finnpegs net systems, and pro camps. Built in Nova Scotia, trusted in the crease.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body id="top">
 
-<!-- ===== HEADER ===== -->
-<div class="announce">Pro Week 2026 · June 25–28 · <a href="train.html">12 spots left — reserve now ›</a></div>
-<div class="nav-wrap">
-  <nav class="nav wrap-wide">
-    <a href="index.html" class="brand">
-      <svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg>
-      Finngoalie
+<!-- LIVING AURORA -->
+<canvas class="aurora-canvas" id="aurora"></canvas>
+
+<!-- ============================================================
+     NAV  —  REUSABLE SITE-WIDE BLOCK (copy verbatim on every page)
+     ============================================================ -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Finn<b>goalie</b>
     </a>
-    <div class="nav-links">
+    <div class="navlinks">
       <a href="train.html">Train</a>
       <a href="xtracker.html">The Xtracker</a>
       <a href="finnpegs.html">Finnpegs</a>
@@ -27,334 +32,380 @@
       <a href="coaches.html">For Coaches</a>
       <a href="about.html">About</a>
     </div>
-    <div class="nav-r">
-      <button class="nav-ico" aria-label="Search">⌕</button>
-      <button class="nav-ico" aria-label="Cart">Bag <span class="cart-count">0</span></button>
-      <button class="burger" data-open-nav aria-label="Menu">☰</button>
+    <div class="nav-right">
+      <a class="nav-icon search-icon" href="shop.html" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+      </a>
+      <a class="nav-icon" href="shop.html" aria-label="Bag" data-bag-add>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke-linecap="round"/></svg>
+        <span class="count" data-bag-count>0</span>
+      </a>
+      <a class="nav-cta magnetic" href="plan.html">Free Training Plan</a>
+      <button class="burger" id="burger" aria-label="Menu" data-burger><span></span><span></span><span></span></button>
     </div>
-  </nav>
-</div>
+  </div>
+</nav>
 
-<!-- ===== MOBILE DRAWER ===== -->
+<!-- MOBILE DRAWER (mirrors nav) -->
 <div class="drawer" id="drawer">
-  <button class="close" data-close-nav aria-label="Close">✕</button>
-  <a href="train.html" data-close-nav>Train</a>
-  <a href="xtracker.html" data-close-nav>The Xtracker</a>
-  <a href="finnpegs.html" data-close-nav>Finnpegs</a>
-  <a href="shop.html" data-close-nav>Shop</a>
-  <a href="coaches.html" data-close-nav>For Coaches</a>
-  <a href="about.html" data-close-nav>About</a>
+  <a href="train.html" data-drawer-close>Train</a>
+  <a href="xtracker.html" data-drawer-close>The Xtracker</a>
+  <a href="finnpegs.html" data-drawer-close>Finnpegs</a>
+  <a href="shop.html" data-drawer-close>Shop</a>
+  <a href="coaches.html" data-drawer-close>For Coaches</a>
+  <a href="about.html" data-drawer-close>About</a>
+  <a class="drawer-cta" href="plan.html" data-drawer-close>Free Training Plan</a>
 </div>
 
-<!-- ===== 1. CINEMATIC HERO ===== -->
-<section class="hero">
-  <div class="hero-bg" style="background-image:url('assets/img/goalie-save.jpg')"></div>
-  <div class="hero-glow"></div>
+<!-- ============================================================
+     HERO  —  live puck-tracker is the signature
+     ============================================================ -->
+<header class="hero">
+  <canvas class="hero-tracker" data-puck-tracker data-readout="heroReadout"></canvas>
+  <div class="hero-veil"></div>
+
+  <!-- live HUD readout, fed by the puck-tracker -->
+  <div class="hero-readout" id="heroReadout">
+    <div class="rh">TRACK // LIVE</div>
+    <div class="rl"><span>VELOCITY</span><b data-vel>— mph</b></div>
+    <div class="rl"><span>LOCK</span><b data-lock>ACQUIRING</b></div>
+    <div class="rl"><span>ANGLE</span><b data-ang>—°</b></div>
+    <div class="rl"><span>REACT</span><b>0.18 s</b></div>
+  </div>
+
+  <div class="hero-in">
+    <div class="hero-eyebrow mono">THE XTRACKER · VISION TRAINER</div>
+    <h1>
+      <span class="l" style="animation-delay:.25s">See</span>
+      <span class="l" style="animation-delay:.33s">it</span>
+      <span class="l accent" style="animation-delay:.41s">first.</span><br>
+      <span class="l" style="animation-delay:.55s">Stop</span>
+      <span class="l" style="animation-delay:.63s">it</span>
+      <span class="l accent" style="animation-delay:.71s">cold.</span>
+    </h1>
+    <p class="sub">The vision trainer that teaches your eyes to read the play a heartbeat before the puck does. Precision-built for the crease.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary magnetic" href="#tracker">Get the Xtracker <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="btn btn-ghost magnetic" href="#tracker">See how it works</a>
+    </div>
+  </div>
+
+  <div class="hero-scrollcue mono">SCROLL<div class="dot"></div></div>
+</header>
+
+<!-- ============================================================
+     TRUST
+     ============================================================ -->
+<div class="trust">
   <div class="wrap">
-    <span class="eyebrow" data-reveal="up">Home of The Xtracker</span>
-    <h1 class="display balance" data-reveal="up" data-reveal-delay="80">See it first.<br>Stop it <span class="accent">cold.</span></h1>
-    <p class="lead" data-reveal="up" data-reveal-delay="160">Goaltending is a vision sport. The Xtracker trains your eyes to find the puck sooner — so the save is made before the shot ever leaves the stick.</p>
-    <div class="cta-row" data-reveal="up" data-reveal-delay="240">
-      <a href="xtracker.html" class="btn btn-blue btn-lg" data-add>Get The Xtracker — $99.99</a>
-      <a href="#xtracker" class="btn btn-text">Watch the film</a>
+    <span class="lbl">Trusted in the crease</span>
+    <div class="marks">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z" fill="currentColor"/></svg>4.9 / 5 · 600+ reviews</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/></svg>13 years in the crease</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Patented Finnpegs systems</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>50+ rinks · 1,000+ goalies</span>
     </div>
   </div>
-  <a href="#trust" class="scroll-cue">Scroll</a>
+</div>
+
+<!-- ============================================================
+     THE SIGNATURE PINNED PRODUCT SEQUENCE
+     ============================================================ -->
+<section class="pin-section" id="tracker">
+  <div class="pin-stage">
+    <div class="pin-bg"></div>
+    <div class="pin-progress" id="pinBar"></div>
+    <div class="pin-counter mono">THE XTRACKER · STAGE <b id="pinStage">01</b> / 04</div>
+
+    <div class="stage-copy copy-top" data-copy="0"><h3>Engineered to be <span class="accent">seen.</span></h3><p>Every line drawn for one job — train the eyes that win games.</p></div>
+    <div class="stage-copy copy-top" data-copy="1" style="opacity:0"><h3>Read the play <span class="accent">early.</span></h3><p>Reactive light cues fire faster than instinct. You learn to anticipate.</p></div>
+    <div class="stage-copy copy-bottom" data-copy="2" style="opacity:0"><h3>Track. Every. <span class="accent">Angle.</span></h3><p>360° puck-pickup drills built into one calm, durable unit.</p></div>
+    <div class="stage-copy copy-bottom" data-copy="3" style="opacity:0"><h3>Then stop it <span class="accent">cold.</span></h3><p>From first read to clean glove. The Xtracker — $99.99.</p></div>
+
+    <div class="stage-prod" id="stageProd">
+      <div class="tracker">
+        <div class="glow"></div>
+        <div class="tracker-body" data-tracker-mount></div>
+        <div class="scan"></div>
+        <div class="reflection" data-tracker-mount></div>
+      </div>
+    </div>
+
+    <div class="calls">
+      <svg viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet">
+        <g class="call-grp">
+          <path class="call-line" d="M500 250 L300 160" />
+          <circle class="call-dot" cx="500" cy="250" r="3.5"/>
+          <text class="call-label" x="120" y="150">REACTIVE LED ARRAY</text>
+          <text class="call-label sub" x="120" y="172">12 independent vision targets</text>
+        </g>
+        <g class="call-grp">
+          <path class="call-line" d="M510 370 L720 470" />
+          <circle class="call-dot" cx="510" cy="370" r="3.5"/>
+          <text class="call-label" x="730" y="462">IMPACT-GRADE SHELL</text>
+          <text class="call-label sub" x="730" y="484">survives a 90 mph slapshot</text>
+        </g>
+        <g class="call-grp">
+          <path class="call-line" d="M470 430 L270 540" />
+          <circle class="call-dot" cx="470" cy="430" r="3.5"/>
+          <text class="call-label" x="90" y="532">8-HOUR BATTERY</text>
+          <text class="call-label sub" x="90" y="554">one charge · a full week of reps</text>
+        </g>
+      </svg>
+    </div>
+  </div>
 </section>
 
-<!-- ===== 2. TRUST BAR ===== -->
-<section class="trust on-dark dark" id="trust">
+<!-- ============================================================
+     SPECS
+     ============================================================ -->
+<section class="specs">
+  <div class="glow-blob"></div>
   <div class="wrap">
-    <div class="trust-item"><svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M4 10.5 8 14.5l8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Patented Finnpegs</div>
-    <div class="trust-item"><svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M4 10.5 8 14.5l8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>NHL-endorsed</div>
-    <div class="trust-item"><svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M4 10.5 8 14.5l8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Ships worldwide</div>
-    <div class="trust-item"><svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M4 10.5 8 14.5l8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>1,000+ goalies trained</div>
+    <div class="section-head">
+      <div class="kicker reveal">Inside the unit</div>
+      <h2 class="reveal d1">Small object.<br><span style="color:#7fb0ff">Outsized advantage.</span></h2>
+    </div>
+    <div class="grid">
+      <div class="spec-cell reveal"><div class="lab">Reaction</div><div class="num"><span data-count="0.18" data-dec="2">0.18</span><span class="u">s</span></div><div class="desc">Cue-to-light latency. Faster than the moment you decide to move.</div></div>
+      <div class="spec-cell reveal d1"><div class="lab">Targets</div><div class="num"><span data-count="12">12</span></div><div class="desc">Independent vision zones for full-net puck-pickup training.</div></div>
+      <div class="spec-cell reveal d2"><div class="lab">Battery</div><div class="num"><span data-count="8">8</span><span class="u">h</span></div><div class="desc">A full training week on a single charge. USB-C, charges in 90 min.</div></div>
+      <div class="spec-cell reveal d3"><div class="lab">Build</div><div class="num"><span data-count="90">90</span><span class="u">mph</span></div><div class="desc">Impact-rated shell. Take a slapshot dead-on, keep training.</div></div>
+    </div>
   </div>
 </section>
 
-<!-- ===== 3. PINNED SCROLL SEQUENCE — The Xtracker ===== -->
-<section data-pin style="height:300vh" id="xtracker"><div data-pin-stage class="dark"><div class="hero-glow"></div><div class="wrap center" style="position:relative;z-index:2">
-  <div class="pin-shot" style="margin:0 auto 30px;max-width:520px;transform:scale(calc(.72 + var(--p,0)*.5));opacity:calc(.5 + var(--p,0)*.5)"><img src="assets/img/goalie-focus.jpg" alt="Goaltender tracking the puck in close" style="border-radius:24px"/></div>
-  <div style="position:relative;min-height:120px">
-    <div class="beat" data-beat="0"><span class="eyebrow">The Xtracker</span><h2 class="display">See the puck.</h2></div>
-    <div class="beat" data-beat="1"><span class="eyebrow">Vision, engineered</span><h2 class="display">Track the play.</h2></div>
-    <div class="beat" data-beat="2"><span class="eyebrow">$99.99</span><h2 class="display">Stop it cold.</h2><div class="cta-row center" style="margin-top:22px"><a href="xtracker.html" class="btn btn-blue btn-lg" data-add>Add to Bag</a><a href="xtracker.html" class="btn btn-text">Learn more</a></div></div>
-  </div>
-</div></div></section>
-
-<!-- ===== 4. BIG STATEMENT ===== -->
-<section class="section light center">
+<!-- ============================================================
+     BUY
+     ============================================================ -->
+<section class="buy" data-buy-trigger>
   <div class="wrap">
-    <h2 class="h1 balance" data-reveal="up" style="max-width:18ch;margin:0 auto">Goaltending is a vision sport. We built the tools to prove it.</h2>
-    <p class="lead balance" data-reveal="up" data-reveal-delay="120" style="margin:26px auto 0;text-align:center">Two patented inventions, one obsessive coach, and thirteen years of camps. Everything we make exists to do one thing — let you read the play a fraction of a second sooner.</p>
+    <div class="section-head">
+      <div class="kicker reveal">The Xtracker</div>
+      <div class="price reveal d1"><small>$</small>99<small>.99</small></div>
+      <div class="meta reveal d2"><span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg></span> &nbsp;<b>4.9</b> · Free shipping over $75 · Ships in 2 days</div>
+      <div class="buy-cta reveal d3">
+        <a class="btn btn-primary magnetic" href="shop.html" data-bag-add>Add to bag <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn btn-ghost magnetic" href="xtracker.html">Full specs</a>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ===== 5. TRAIN WITH US ===== -->
-<section class="section alt">
+<!-- ============================================================
+     VISION SPORT — statement
+     ============================================================ -->
+<section class="founder" style="padding-bottom:0">
   <div class="wrap">
-    <div class="shead" data-reveal="up">
-      <span class="eyebrow">Train with us</span>
-      <h2 class="h2 balance">Ice time that changes the read.</h2>
-      <p class="lead">Coach-led on-ice and synthetic sessions, built around the way elite goalies actually see the game.</p>
+    <div class="section-head" style="max-width:840px">
+      <div class="kicker reveal">Goaltending is a vision sport</div>
+      <h2 class="reveal d1">The save doesn't start in the hands.<br><span class="mute">It starts in the </span><span class="accent">eyes.</span></h2>
+      <p class="reveal d2">Reflexes are a myth. Elite goalies aren't faster — they see earlier. Fifty milliseconds of read is the difference between a glove save and a red light. Everything Finngoalie builds trains the part of the game nobody else trains.</p>
     </div>
-    <div class="grid g4" style="margin-top:48px">
-      <div class="feature" data-reveal="up">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="2"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <h3 class="h3">Private Sessions</h3>
-        <p class="muted">One-on-one synthetic and on-ice reps. The fastest way to fix a habit.</p>
-        <p class="pricetag" style="margin-top:14px">from $49.99</p>
-      </div>
-      <div class="feature" data-reveal="up" data-reveal-delay="100">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 7h16v12H4zM4 7l8-4 8 4" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
-        <h3 class="h3">Camps &amp; Programs</h3>
-        <p class="muted">Multi-day intensives by season, age and level — Pro Week to Warrior Week.</p>
-        <p class="pricetag" style="margin-top:14px">from $175</p>
-      </div>
-      <div class="feature" data-reveal="up" data-reveal-delay="200">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M5 12l4-4M5 12l4 4M19 7v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <h3 class="h3">In-Season Weekly</h3>
-        <p class="muted">Stay sharp through the grind with weekly primetime-ice training.</p>
-        <p class="pricetag" style="margin-top:14px">from $369</p>
-      </div>
-      <div class="feature" data-reveal="up" data-reveal-delay="300">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.5 5.5L20 9.5l-4 4 1 6-5-2.8L7 19.5l1-6-4-4 5.5-1L12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
-        <h3 class="h3">Pro &amp; Prospects</h3>
-        <p class="muted">Development series for AAA, prospects and players chasing the next level.</p>
-        <p class="pricetag" style="margin-top:14px">from $119.99</p>
-      </div>
-    </div>
-    <div style="margin-top:36px" data-reveal="up"><a href="train.html" class="btn btn-text">View full calendar</a></div>
   </div>
 </section>
 
-<!-- ===== 6. UPCOMING CAMPS ===== -->
-<section class="section light">
+<!-- ============================================================
+     TRAIN WITH US
+     ============================================================ -->
+<section class="setup" id="setup" style="margin-top:130px">
   <div class="wrap">
-    <div class="shead" data-reveal="up">
-      <span class="eyebrow">Upcoming camps</span>
-      <h2 class="h2 balance">Lock your spot.</h2>
-      <p class="lead">Dates fill fast — the camp calendar is the cash engine, and goalies remember the year they got in.</p>
+    <div class="section-head">
+      <div class="kicker reveal">Train with us</div>
+      <h2 class="reveal d1">Find your <span class="mute">setup.</span></h2>
+      <p class="reveal d2">From a single private session to a full pro week. Same obsession, every tier.</p>
     </div>
-    <div class="grid" style="margin-top:48px;gap:16px">
-      <div class="camp" data-reveal="up">
-        <div class="camp-date"><span class="m">Jun</span><span class="d">25</span></div>
-        <div>
-          <h3 class="h3">Pro Week 2026</h3>
-          <div class="camp-meta">
-            <span class="tag">4 days</span><span class="tag">U13–Pro</span><span class="tag">On-ice + vision</span><span class="urgent">12 spots left</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="pricetag">from $175</span>
-          <a href="train.html" class="btn btn-blue btn-sm">Enroll</a>
-        </div>
-      </div>
-      <div class="camp" data-reveal="up" data-reveal-delay="100">
-        <div class="camp-date"><span class="m">Jul</span><span class="d">27</span></div>
-        <div>
-          <h3 class="h3">High Performance Camp</h3>
-          <div class="camp-meta">
-            <span class="tag">4 days</span><span class="tag">U13–U20</span><span class="tag">AAA pace</span><span class="urgent">8 spots left</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="pricetag">from $299.99</span>
-          <a href="train.html" class="btn btn-blue btn-sm">Enroll</a>
-        </div>
-      </div>
-      <div class="camp" data-reveal="up" data-reveal-delay="200">
-        <div class="camp-date"><span class="m">Aug</span><span class="d">11</span></div>
-        <div>
-          <h3 class="h3">Warrior Week 2026</h3>
-          <div class="camp-meta">
-            <span class="tag">4 days</span><span class="tag">U9 / U11 / U13</span><span class="tag">Foundations</span><span class="urgent">5 spots left</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="pricetag"><span class="save">$450</span>$379.99</span>
-          <a href="train.html" class="btn btn-blue btn-sm">Enroll</a>
-        </div>
-      </div>
+    <div class="setup-grid stagger">
+      <a class="setup-card" href="train.html"><div class="tag">1-on-1</div><h4>Private</h4><div class="from">single session</div><div class="p"><small>from $</small>49<small>.99</small></div><div class="desc">Pure focus. One goalie, one coach, every rep dialed to you.</div><span class="go">Book a slot <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+      <a class="setup-card feat" href="train.html"><div class="tag">Most popular</div><h4>Camps</h4><div class="from">multi-day intensive</div><div class="p"><small>from $</small>175</div><div class="desc">Immersive crease work with the full Finngoalie system + Xtracker.</div><span class="go">See dates <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#7fb0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+      <a class="setup-card" href="train.html"><div class="tag">In-season</div><h4>Weekly</h4><div class="from">recurring block</div><div class="p"><small>from $</small>369</div><div class="desc">Consistent weekly reps that build real, compounding edge.</div><span class="go">Reserve <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+      <a class="setup-card" href="train.html"><div class="tag">Elite</div><h4>Pro</h4><div class="from">per session</div><div class="p"><small>from $</small>119<small>.99</small></div><div class="desc">Junior, college &amp; pro-track development. Highest-bar coaching.</div><span class="go">Apply <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
     </div>
   </div>
 </section>
 
-<!-- ===== 7. GET THE HIGHLIGHTS ===== -->
-<section class="section dark">
+<!-- ============================================================
+     CAMPS URGENCY
+     ============================================================ -->
+<section class="camps">
   <div class="wrap">
-    <div class="hscroll-wrap">
-      <div class="shead" data-reveal="up" style="display:flex;justify-content:space-between;align-items:flex-end;max-width:none;gap:24px">
-        <div>
-          <span class="eyebrow">The lineup</span>
-          <h2 class="h2 balance" style="max-width:18ch">Get the highlights.</h2>
-        </div>
-        <div class="hscroll-nav">
-          <button data-hscroll-prev aria-label="Previous">‹</button>
-          <button data-hscroll-next aria-label="Next">›</button>
-        </div>
+    <div class="section-head">
+      <div class="kicker reveal">Upcoming</div>
+      <h2 class="reveal d1">Next on the <span class="mute">ice.</span></h2>
+    </div>
+    <div class="camp-banner reveal d1">
+      <div class="photo" style="background-image:url(assets/img/goalie-action.jpg)"></div>
+      <div class="camp-left">
+        <div class="urg"><span class="pulse"></span>Filling fast</div>
+        <h3>Pro Week — June 25</h3>
+        <p>Five days of elite crease development with the full Finngoalie staff. Xtracker vision blocks every morning, live reads every afternoon.</p>
       </div>
-      <div class="hscroll" style="margin-top:36px">
-        <div class="hcard" style="background:linear-gradient(180deg,rgba(6,8,15,.1),rgba(6,8,15,.85)),url('assets/img/goalie-focus.jpg') center/cover">
-          <span class="eyebrow">$99.99</span>
-          <h3 class="h3">The Xtracker</h3>
-          <p>Vision-restriction trainer that fixes tracking, stance and posture.</p>
-        </div>
-        <div class="hcard" style="background:linear-gradient(180deg,rgba(6,8,15,.1),rgba(6,8,15,.85)),url('assets/img/net.jpg') center/cover">
-          <span class="eyebrow">$189</span>
-          <h3 class="h3">Finnpegs P3G</h3>
-          <p>Patented net-anchoring system. The net stays put, the reps stay real.</p>
-        </div>
-        <div class="hcard" style="background:linear-gradient(180deg,rgba(6,8,15,.1),rgba(6,8,15,.85)),url('assets/img/training.jpg') center/cover">
-          <span class="eyebrow">from $289.99</span>
-          <h3 class="h3">Box Control System</h3>
-          <p>Angle and positioning apparatus that builds a repeatable crease map.</p>
-        </div>
-        <div class="hcard" style="background:linear-gradient(180deg,rgba(6,8,15,.1),rgba(6,8,15,.85)),url('assets/img/mask.jpg') center/cover">
-          <span class="eyebrow">from $299.99</span>
-          <h3 class="h3">ReactionX Lamp</h3>
-          <p>Reaction-light training that sharpens first-step explosiveness.</p>
-        </div>
+      <div class="camp-right">
+        <div class="spots"><span data-count="12">12</span><small>spots left</small></div>
+        <a class="btn magnetic" href="train.html">Claim a spot</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 8. FINNPEGS B2B BAND ===== -->
-<section class="section alt">
+<!-- ============================================================
+     FINNPEGS
+     ============================================================ -->
+<section class="finnpegs" id="finnpegs">
   <div class="wrap">
-    <div class="split">
-      <div data-reveal="up">
-        <span class="eyebrow">Finnpegs P3G · Patented</span>
-        <h2 class="h2 balance">The net stays put.<br>The reps stay real.</h2>
-        <p class="lead">When the net jumps on contact, the rep is a lie. Finnpegs P3G is the patented anchoring system trusted on 50+ rinks — so every drill mirrors a real game, post to post.</p>
-        <p class="tiny" style="margin-top:14px">Patent-protected. Built for daily abuse. Pro peg covers and dealer bulk pricing available.</p>
-        <div class="cta-row" style="margin-top:26px">
-          <a href="finnpegs.html" class="btn btn-blue">Shop Finnpegs</a>
-          <a href="finnpegs.html" class="btn btn-text">Dealer &amp; bulk pricing</a>
-        </div>
+    <div class="finn-grid">
+      <div class="finn-visual reveal r-scale">
+        <img src="assets/img/net.jpg" alt="Finnpegs patented net system">
+        <span class="badge">Patented · P3G</span>
       </div>
-      <div class="split-media" data-reveal="right">
-        <img src="assets/img/net.jpg" alt="Hockey net anchored on the ice" />
+      <div class="finn-copy reveal r-right">
+        <div class="kicker">Finnpegs net systems</div>
+        <h2>The net stays where you put it.</h2>
+        <p>Our patented peg systems lock the net to the ice with zero shift on contact — so every drill runs true, rep after rep. Engineered, tested, and trusted across 50+ rinks.</p>
+        <div class="price"><small>from $</small>189</div>
+        <a class="btn btn-primary magnetic" href="finnpegs.html">Shop Finnpegs <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 9. STATS ===== -->
-<section class="section light center">
+<!-- ============================================================
+     STATS
+     ============================================================ -->
+<section class="stats">
   <div class="wrap">
-    <div class="grid g4">
-      <div class="stat" data-reveal="up">
-        <div class="n"><span data-count="1000" data-count-suffix="+">0</span></div>
-        <div class="l">Goalies trained</div>
-      </div>
-      <div class="stat" data-reveal="up" data-reveal-delay="100">
-        <div class="n"><span data-count="13">0</span></div>
-        <div class="l">Years of camps</div>
-      </div>
-      <div class="stat" data-reveal="up" data-reveal-delay="200">
-        <div class="n"><span data-count="50" data-count-suffix="+">0</span></div>
-        <div class="l">Rinks on Finnpegs</div>
-      </div>
-      <div class="stat" data-reveal="up" data-reveal-delay="300">
-        <div class="n"><span data-count="4.9">0</span></div>
-        <div class="l">Average rating</div>
-      </div>
+    <div class="section-head">
+      <div class="kicker reveal">The record</div>
+      <h2 class="reveal d1">Built over <span class="mute">reps.</span></h2>
+    </div>
+    <div class="stats-grid">
+      <div class="stat reveal"><div class="n"><span data-count="1000">0</span><span class="ac">+</span></div><div class="lab">Goalies trained</div></div>
+      <div class="stat reveal d1"><div class="n"><span data-count="13">0</span></div><div class="lab">Years in the crease</div></div>
+      <div class="stat reveal d2"><div class="n"><span data-count="50">0</span><span class="ac">+</span></div><div class="lab">Rinks served</div></div>
+      <div class="stat reveal d3"><div class="n"><span data-count="4.9" data-dec="1">0</span><span class="ac">★</span></div><div class="lab">Average rating</div></div>
     </div>
   </div>
 </section>
 
-<!-- ===== 10. TESTIMONIALS ===== -->
-<section class="section alt">
+<!-- ============================================================
+     TESTIMONIAL
+     ============================================================ -->
+<section class="testi">
+  <div class="glow-blob"></div>
   <div class="wrap">
-    <div class="shead center" data-reveal="up">
-      <span class="eyebrow">What they say</span>
-      <h2 class="h2 balance">Goalies, parents, and the rinks that run them.</h2>
-    </div>
-    <div class="grid g3">
-      <div class="quote" data-reveal="up">
-        <div class="stars">★★★★★</div>
-        <p>"The Xtracker rewired how I see the puck off the stick. I'm setting earlier and fighting through screens like never before."</p>
-        <div class="q-by">
-          <div class="q-av"></div>
-          <div><div class="q-name">Marcus Lindgren</div><div class="q-role">Pro goaltender</div></div>
-        </div>
-      </div>
-      <div class="quote" data-reveal="up" data-reveal-delay="100">
-        <div class="stars">★★★★★</div>
-        <p>"Three Pro Weeks in. My son walks off the ice every day more confident — and the coaching is unreal. Worth every dollar."</p>
-        <div class="q-by">
-          <div class="q-av"></div>
-          <div><div class="q-name">Jenna Cormier</div><div class="q-role">Hockey parent · U15</div></div>
-        </div>
-      </div>
-      <div class="quote" data-reveal="up" data-reveal-delay="200">
-        <div class="stars">★★★★★</div>
-        <p>"We anchor every net in the facility with Finnpegs P3G. Setup takes seconds and they don't budge. A total game-changer for practice."</p>
-        <div class="q-by">
-          <div class="q-av"></div>
-          <div><div class="q-name">Dale Whitman</div><div class="q-role">Rink operations · Atlantic Ice</div></div>
-        </div>
-      </div>
-    </div>
+    <div class="mark">"</div>
+    <blockquote class="reveal">My puck-tracking changed inside two weeks. I was reading shots before they left the stick. Nothing else trains your eyes like the Xtracker.</blockquote>
+    <div class="who reveal d1"><span class="avatar">M</span> <span>— <b>Marcus L.</b> · U18 AAA starter</span></div>
   </div>
 </section>
 
-<!-- ===== 11. FOUNDER TEASER ===== -->
-<section class="section dark">
+<!-- ============================================================
+     FOUNDER
+     ============================================================ -->
+<section class="founder" id="founder">
   <div class="wrap">
-    <div class="split">
-      <div data-reveal="up">
-        <span class="eyebrow">The coach</span>
-        <h2 class="h2 balance">Built by a coach obsessed with the read.</h2>
-        <p class="lead">Thirteen years on the ice. A patent or two. And a stubborn belief that goaltending is won between the ears and behind the eyes — long before the body ever moves.</p>
-        <div class="cta-row" style="margin-top:26px">
-          <a href="about.html" class="btn btn-text">Meet the coach</a>
-        </div>
+    <div class="founder-grid">
+      <div class="founder-photo reveal r-left">
+        <img src="assets/img/coach.jpg" alt="Finngoalie founder">
+        <div class="name"><b>The Founder</b><span>Goalie · coach · builder — 13 yrs in the crease</span></div>
       </div>
-      <div class="split-media" data-reveal="left">
-        <img src="assets/img/coach.jpg" alt="Goalie coach on the bench" />
+      <div class="founder-copy reveal r-right">
+        <div class="kicker">A note from the founder</div>
+        <h2>I built the gear I always wished I had.</h2>
+        <p>Thirteen years of goaltending taught me one thing: the save starts in the eyes. Everything we make — the Xtracker, the Finnpegs systems, the camps — exists to train the part of the game nobody else trains. No noise. No gimmicks. Just tools that earn their place on the ice.</p>
+        <div class="sig">— Built in Nova Scotia, for goalies everywhere.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 12. CTA BAND + NEWSLETTER ===== -->
-<section class="section cta-band">
-  <div class="hero-glow"></div>
-  <div class="wrap" style="position:relative;z-index:2">
-    <span class="eyebrow">Change your game</span>
-    <h2 class="h1 balance" data-reveal="up">Train your eyes.<br>Stop it cold.</h2>
-    <p class="lead" data-reveal="up" style="margin:18px auto 0;color:var(--muted-d)">Drills, camp drops and product news — no spam, just goalie stuff.</p>
-    <form class="news" onsubmit="return false" data-reveal="up">
-      <input type="email" placeholder="you@email.com" aria-label="Email" />
-      <button class="btn btn-blue">Join the list</button>
-    </form>
+<!-- ============================================================
+     PROMO BAND  —  the money feature (Free Tools funnels)
+     ============================================================ -->
+<section class="promo">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker reveal">Free for goalies</div>
+      <h2 class="reveal d1">Three ways in.<br><span class="mute">No cost. Pure </span><span class="accent">edge.</span></h2>
+      <p class="reveal d2">Start training your vision today — these tools are on us.</p>
+    </div>
+    <div class="promo-grid stagger">
+      <a class="promo-card" href="plan.html">
+        <span class="free-tag">Free</span>
+        <span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h16M4 12h16M4 19h10" stroke-linecap="round"/><circle cx="18" cy="19" r="2.5"/></svg></span>
+        <div class="pt">Personalized</div>
+        <h3>Free Training Plan</h3>
+        <p>Answer 6 questions, get a goalie-specific vision &amp; movement plan built around your level and schedule.</p>
+        <span class="go">Build my plan <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <a class="promo-card" href="vision-test.html">
+        <span class="free-tag">Free</span>
+        <span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></span>
+        <div class="pt">60-second drill</div>
+        <h3>Test Your Vision</h3>
+        <p>A timed puck-tracking test that scores your reaction and read speed against the Finngoalie benchmark.</p>
+        <span class="go">Take the test <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <a class="promo-card" href="club.html">
+        <span class="free-tag">Free</span>
+        <span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.5a3.2 3.2 0 0 1 0 6M21 20c0-2.6-1.4-4.4-3.5-5.2" stroke-linecap="round"/></svg></span>
+        <div class="pt">Community</div>
+        <h3>Join the Goalie Club</h3>
+        <p>Weekly drills, early camp access, and a crew of goalies chasing the same tenth of a second. Free to join.</p>
+        <span class="go">Join the club <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+    </div>
   </div>
 </section>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-  <div class="wrap-wide">
-    <div class="footer-top">
-      <div>
-        <a href="index.html" class="brand" style="margin-bottom:14px"><svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg> Finngoalie</a>
-        <p class="muted" style="max-width:34ch">Home of The Xtracker. Elite goaltender training &amp; patented goalie tech — engineered in Nova Scotia, Canada.</p>
-        <div class="socials"><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">TikTok</a></div>
+<!-- ============================================================
+     CLOSING
+     ============================================================ -->
+<section class="closing">
+  <div class="wrap">
+    <h2 class="reveal">See it first.<br><span class="accent">Stop it cold.</span></h2>
+    <p class="reveal d1">The vision trainer trusted by 1,000+ goalies. Yours in two days.</p>
+    <a class="btn btn-primary btn-lg magnetic reveal d2" href="shop.html" data-bag-add>Get the Xtracker — $99.99 <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER  —  REUSABLE SITE-WIDE BLOCK (copy verbatim on every page)
+     ============================================================ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Finn<b>goalie</b></a>
+        <p>Vision-led goalie training &amp; gear. Built in Nova Scotia, trusted in the crease across 50+ rinks.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="3.5"/><path d="M11 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.3 1.8 3.9 4 4.2v2.7c-1.5 0-2.9-.4-4-1.1v5.7a5.3 5.3 0 1 1-5.3-5.3c.3 0 .5 0 .8.1v2.8a2.6 2.6 0 1 0 1.8 2.4V3H14z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h3.5l4 5.6L16 4h3l-6 7.8L20 20h-3.5l-4.3-6L7 20H4l6.3-8.2z"/></svg></a>
+        </div>
       </div>
-      <div><h4>Train</h4><a href="train.html">Camps &amp; Programs</a><a href="train.html">Private Sessions</a><a href="train.html">Season Passes</a><a href="coaches.html">Mentorship</a></div>
-      <div><h4>Shop</h4><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs P3G</a><a href="shop.html">Goalie Gear</a><a href="shop.html">Apparel</a></div>
-      <div><h4>Company</h4><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="#">Contact</a><a href="#">Shipping &amp; Returns</a></div>
+      <div class="foot-col"><h5>Train</h5><a href="train.html">Private</a><a href="train.html">Camps</a><a href="train.html">Weekly</a><a href="train.html">Pro</a></div>
+      <div class="foot-col"><h5>Shop</h5><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs</a><a href="shop.html">Pro Shop</a><a href="shop.html">Bundles</a></div>
+      <div class="foot-col"><h5>Company</h5><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="shop.html">Reviews</a><a href="about.html">Contact</a></div>
+      <div class="foot-col free"><h5>Free Tools</h5><a href="plan.html">Training Plan</a><a href="vision-test.html">Vision Test</a><a href="club.html">Goalie Club</a></div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Finngoalie · Nova Scotia, Canada</span>
-      <span>hello@finngoalie.shop · Concept redesign</span>
+      <span>© 2026 Finngoalie. All rights reserved.</span>
+      <span class="mono">DESIGNED FOR THE CREASE · NS · CA</span>
     </div>
   </div>
 </footer>
 
-<!-- ===== SCRIPT ===== -->
+<!-- STICKY BUY -->
+<div class="stickybuy" id="stickybuy">
+  <div class="sb-prod">
+    <span class="sb-mini"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg></span>
+    <span class="sb-name">The Xtracker <span>Vision trainer · $99.99</span></span>
+  </div>
+  <button class="sb-btn magnetic" data-bag-add onclick="document.getElementById('tracker').scrollIntoView({behavior:'smooth'})">Add to bag</button>
+</div>
+
 <script src="app.js"></script>
 </body>
 </html>

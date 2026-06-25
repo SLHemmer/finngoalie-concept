@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Finngoalie — Your Free Personalized Goalie Training Plan</title>
+<meta name="description" content="Answer six quick questions and get a free, personalized goalie training plan — built by our coaches around your level, schedule, and biggest weakness. Vision-led, crease-tested.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ============================================================
+     PLAN FUNNEL — page-scoped styles (compose tokens from styles.css)
+     ============================================================ */
+
+  /* funnel shell — sits below the fixed nav, centred stage */
+  .funnel{position:relative;min-height:100svh;padding:calc(var(--nav-h) + 40px) 28px 96px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;isolation:isolate}
+  .funnel-veil{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(120% 80% at 50% 30%,transparent 40%,var(--paper) 86%)}
+  .funnel-stage{position:relative;z-index:2;width:100%;max-width:760px;margin:0 auto}
+
+  /* a single funnel screen — only .is-active is shown */
+  .screen{display:none}
+  .screen.is-active{display:block;animation:screenIn .55s var(--ease) both}
+  @keyframes screenIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+  .screen.leaving{animation:screenOut .3s var(--ease) both}
+  @keyframes screenOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-14px)}}
+
+  /* ---- intro hero ---- */
+  .fn-hero{text-align:center}
+  .fn-eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:24px;display:inline-flex;align-items:center;gap:8px}
+  .fn-eyebrow .pip{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulseDot 1.4s infinite}
+  .fn-hero h1{font-size:var(--fz-h1);line-height:.98;font-weight:800;letter-spacing:-.04em;max-width:16ch;margin:0 auto}
+  .fn-hero h1 .accent{color:var(--accent)}
+  .fn-hero .sub{font-size:clamp(16px,2vw,20px);color:var(--mute);max-width:44ch;margin:26px auto 0;line-height:1.5;font-weight:400}
+  .fn-hero .meta-line{display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;margin-top:24px;font-size:13.5px;color:var(--mute-2);font-weight:500}
+  .fn-hero .meta-line span{display:inline-flex;align-items:center;gap:7px}
+  .fn-hero .meta-line svg{width:15px;height:15px;color:var(--accent)}
+  .fn-hero .start-wrap{margin-top:42px;display:flex;flex-direction:column;align-items:center;gap:16px}
+  .fn-trust-row{display:flex;align-items:center;gap:16px;font-size:13px;color:var(--mute);font-weight:500}
+  .fn-trust-row .faces{display:flex}
+  .fn-trust-row .faces .f{width:26px;height:26px;border-radius:50%;border:2px solid var(--paper);margin-left:-8px;background:linear-gradient(135deg,var(--accent),var(--accent-deep));display:grid;place-items:center;color:#fff;font-size:10px;font-weight:700}
+  .fn-trust-row .faces .f:first-child{margin-left:0}
+  .fn-trust-row .stars{display:inline-flex;gap:1px;color:var(--gold)}
+  .fn-trust-row .stars svg{width:14px;height:14px}
+
+  /* ---- quiz progress bar ---- */
+  .quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
+  .quiz-back{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--mute);background:none;padding:8px 4px;transition:color var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease)}
+  .quiz-back svg{width:16px;height:16px}
+  .quiz-back:hover{color:var(--ink);transform:translateX(-2px)}
+  .quiz-back[disabled]{opacity:0;pointer-events:none}
+  .quiz-step-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute-2);font-weight:500}
+  .quiz-step-label b{color:var(--accent)}
+  .progress-track{height:4px;border-radius:var(--r-pill);background:var(--paper-3);overflow:hidden;margin-bottom:46px;box-shadow:inset 0 1px 2px rgba(10,12,15,.04)}
+  .progress-fill{height:100%;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--accent-deep),var(--accent));width:0%;transition:width .6s var(--ease);box-shadow:0 0 12px rgba(29,108,255,.45)}
+
+  /* ---- question block ---- */
+  .q-head{text-align:center;margin-bottom:38px}
+  .q-head .q-kicker{font-size:var(--fz-xs);letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:14px}
+  .q-head h2{font-size:clamp(28px,4.4vw,46px);line-height:1.04;letter-spacing:-.03em;font-weight:800}
+  .q-head p{font-size:15.5px;color:var(--mute);margin-top:14px;max-width:42ch;margin-left:auto;margin-right:auto}
+
+  /* option grid */
+  .opt-grid{display:grid;gap:14px}
+  .opt-grid.cols-1{grid-template-columns:1fr}
+  .opt-grid.cols-2{grid-template-columns:repeat(2,1fr)}
+  .opt-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+
+  .opt{
+    position:relative;text-align:left;background:var(--paper-2);border:1px solid var(--line);
+    border-radius:var(--r);padding:22px 24px;display:flex;align-items:center;gap:18px;cursor:pointer;width:100%;
+    transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .25s var(--ease),background .25s var(--ease);
+    will-change:transform;
+  }
+  .opt:hover{transform:translateY(-3px);box-shadow:var(--sh-2);border-color:var(--accent-line)}
+  .opt:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .opt.selected{border-color:var(--accent);background:var(--accent-soft);box-shadow:var(--sh-2)}
+  .opt .opt-ico{width:46px;height:46px;flex-shrink:0;border-radius:13px;background:var(--paper-3);border:1px solid var(--line-2);display:grid;place-items:center;color:var(--accent);transition:background .25s var(--ease),color .25s var(--ease)}
+  .opt .opt-ico svg{width:23px;height:23px}
+  .opt.selected .opt-ico{background:var(--accent);color:#fff;border-color:transparent}
+  .opt .opt-txt{flex:1;min-width:0}
+  .opt .opt-title{display:block;font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+  .opt .opt-desc{display:block;font-size:13px;color:var(--mute);margin-top:3px;line-height:1.4}
+  .opt .opt-check{width:24px;height:24px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;color:#fff;transition:.25s var(--ease)}
+  .opt .opt-check svg{width:14px;height:14px;opacity:0;transform:scale(.5);transition:.25s var(--ease-spring)}
+  .opt.selected .opt-check{background:var(--accent);border-color:var(--accent)}
+  .opt.selected .opt-check svg{opacity:1;transform:scale(1)}
+  /* compact options (age / days) — centered chips */
+  .opt.compact{flex-direction:column;text-align:center;gap:10px;padding:24px 14px;align-items:center;justify-content:center}
+  .opt.compact .opt-check{display:none}
+  .opt.compact .opt-title{font-size:17px}
+  .opt.compact .opt-desc{font-size:12px}
+
+  /* ---- final unlock step (name + email) ---- */
+  .unlock-card{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-lg);padding:40px 36px;box-shadow:var(--sh-2)}
+  .field{margin-bottom:20px}
+  .field label{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute-2);font-weight:600;margin-bottom:9px}
+  .field input{
+    width:100%;font-family:inherit;font-size:16px;color:var(--ink);background:var(--paper);
+    border:1px solid var(--line);border-radius:var(--r-sm);padding:15px 18px;
+    transition:border-color .25s var(--ease),box-shadow .25s var(--ease),background .25s var(--ease);
+  }
+  .field input::placeholder{color:var(--mute-2)}
+  .field input:focus{outline:none;border-color:var(--accent);background:var(--paper-2);box-shadow:0 0 0 3px var(--accent-soft)}
+  .field input.invalid{border-color:#d8443c;box-shadow:0 0 0 3px rgba(216,68,60,.12)}
+  .field .err{font-size:12.5px;color:#d8443c;margin-top:7px;font-weight:500;display:none}
+  .field .err.show{display:block}
+  .unlock-assure{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--mute);margin-top:6px;line-height:1.5}
+  .unlock-assure svg{width:15px;height:15px;color:var(--accent);flex-shrink:0}
+
+  /* ---- nav controls under a question ---- */
+  .q-nav{display:flex;justify-content:center;margin-top:36px}
+  .q-nav .btn[disabled]{opacity:.4;pointer-events:none;box-shadow:none}
+  .auto-hint{text-align:center;font-size:12.5px;color:var(--mute-2);margin-top:20px}
+
+  /* ---- building / loading screen ---- */
+  .building{text-align:center;padding:40px 0}
+  .building .ring{width:96px;height:96px;margin:0 auto 30px;position:relative}
+  .building .ring svg{width:100%;height:100%;animation:spin 1.4s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .building h2{font-size:clamp(26px,4vw,40px);letter-spacing:-.03em;font-weight:800;line-height:1.05}
+  .building .b-line{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--mute);margin-top:22px;letter-spacing:.02em;min-height:20px}
+
+  /* ============================================================
+     RESULT — the personalized plan
+     ============================================================ */
+  .result{display:none}
+  .result.is-active{display:block;animation:screenIn .6s var(--ease) both}
+  .result-wrap{max-width:1080px;margin:0 auto;padding:calc(var(--nav-h) + 56px) 28px 40px}
+
+  .res-banner{
+    background:linear-gradient(125deg,var(--ink),var(--ink-2));color:#fff;border-radius:var(--r-lg);
+    padding:48px 46px;position:relative;overflow:hidden;text-align:center;
+  }
+  .res-banner::before{content:"";position:absolute;inset:0;z-index:0;opacity:.8;background:radial-gradient(120% 100% at 18% 0%,rgba(29,108,255,.34),transparent 58%)}
+  .res-banner > *{position:relative;z-index:1}
+  .res-banner .sent-pill{display:inline-flex;align-items:center;gap:9px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#a9ffce;background:rgba(80,220,140,.12);border:1px solid rgba(80,220,140,.3);border-radius:var(--r-pill);padding:8px 16px;margin-bottom:24px}
+  .res-banner .sent-pill svg{width:15px;height:15px}
+  .res-banner h1{font-size:clamp(30px,5vw,56px);font-weight:800;letter-spacing:-.04em;line-height:1.02}
+  .res-banner h1 .accent{color:var(--accent-up)}
+  .res-banner .name-hi{color:var(--accent-up)}
+  .res-banner .res-sub{color:rgba(255,255,255,.66);font-size:16px;margin-top:18px;max-width:50ch;margin-left:auto;margin-right:auto;line-height:1.5}
+
+  /* your inputs chip row */
+  .input-chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:28px}
+  .input-chip{font-size:12.5px;font-weight:500;color:rgba(255,255,255,.85);background:rgba(255,255,255,.07);border:1px solid var(--line-on-dark);border-radius:var(--r-pill);padding:7px 14px;display:inline-flex;align-items:center;gap:7px}
+  .input-chip b{color:#fff;font-weight:600}
+  .input-chip .dot{width:5px;height:5px;border-radius:50%;background:var(--accent-up)}
+
+  /* section heads inside result */
+  .res-sec{margin-top:64px}
+  .res-sec .res-sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:28px;flex-wrap:wrap}
+  .res-sec .res-sec-head .rk{font-size:var(--fz-xs);letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px}
+  .res-sec .res-sec-head h2{font-size:clamp(24px,3.4vw,38px);letter-spacing:-.03em;font-weight:800;line-height:1.04}
+  .res-sec .res-sec-head .rn{font-size:13.5px;color:var(--mute);max-width:34ch}
+
+  /* weekly schedule grid */
+  .week-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+  .day-card{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);padding:22px 22px;position:relative;overflow:hidden;
+    transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .25s var(--ease);
+  }
+  .day-card:hover{transform:translateY(-4px);box-shadow:var(--sh-2);border-color:var(--accent-line)}
+  .day-card.rest{background:var(--paper);border-style:dashed}
+  .day-card .d-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .day-card .d-day{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute-2);font-weight:500}
+  .day-card .d-dur{font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:var(--r-pill);padding:3px 10px}
+  .day-card .d-title{font-size:17px;font-weight:700;letter-spacing:-.015em;line-height:1.1}
+  .day-card .d-focus{font-size:13px;color:var(--mute);margin-top:8px;line-height:1.45}
+  .day-card .d-tag{margin-top:16px;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
+  .day-card .d-tag svg{width:13px;height:13px}
+  .day-card.rest .d-title{color:var(--mute)}
+  .day-card.rest .d-tag{color:var(--mute-2)}
+
+  /* drills list */
+  .drill-list{display:grid;gap:14px}
+  .drill{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);padding:24px 26px;
+    display:flex;gap:22px;align-items:flex-start;transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .25s var(--ease);
+  }
+  .drill:hover{transform:translateX(4px);box-shadow:var(--sh-2);border-color:var(--accent-line)}
+  .drill .d-num{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:500;color:var(--accent);line-height:1;flex-shrink:0;width:42px}
+  .drill .d-body{flex:1;min-width:0}
+  .drill .d-body h3{font-size:18px;font-weight:700;letter-spacing:-.015em}
+  .drill .d-body p{font-size:14px;color:var(--mute);margin-top:7px;line-height:1.55}
+  .drill .d-meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--mute-2)}
+  .drill .d-meta b{color:var(--ink-2);font-weight:500}
+
+  /* vision module (xtracker upsell) — dark feature card */
+  .vision-mod{
+    background:linear-gradient(125deg,var(--ink),var(--ink-2));color:#fff;border-radius:var(--r-lg);
+    padding:42px;display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:center;position:relative;overflow:hidden;
+  }
+  .vision-mod::before{content:"";position:absolute;inset:0;z-index:0;opacity:.7;background:radial-gradient(120% 90% at 80% 10%,rgba(29,108,255,.4),transparent 58%)}
+  .vision-mod > *{position:relative;z-index:1}
+  .vision-mod .vm-tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-up);font-weight:600;margin-bottom:14px}
+  .vision-mod h3{font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-.025em;line-height:1.06}
+  .vision-mod p{color:rgba(255,255,255,.66);font-size:15px;margin-top:16px;line-height:1.55}
+  .vision-mod .vm-cta{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .vision-mod .vm-price{font-size:14px;color:rgba(255,255,255,.55);font-family:'JetBrains Mono',monospace}
+  .vision-mod .vm-art{display:flex;justify-content:center;align-items:center}
+  .vision-mod .vm-art .tracker{width:min(260px,70%)}
+  .vision-mod.is-product .vm-tag{color:var(--signal)}
+
+  /* recommended camp banner */
+  .camp-rec{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;
+    display:grid;grid-template-columns:.9fr 1.1fr;align-items:stretch;box-shadow:var(--sh-2);
+  }
+  .camp-rec .cr-photo{background-size:cover;background-position:center;min-height:240px;position:relative}
+  .camp-rec .cr-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--paper-2))}
+  .camp-rec .cr-photo .cr-badge{position:absolute;top:20px;left:20px;z-index:1;display:inline-flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-2);background:rgba(246,247,249,.92);backdrop-filter:blur(8px);border-radius:var(--r-pill);padding:7px 14px}
+  .camp-rec .cr-badge .pulse{width:7px;height:7px;border-radius:50%;background:var(--signal);box-shadow:0 0 0 0 rgba(255,207,107,.6);animation:pulse 2s infinite}
+  .camp-rec .cr-body{padding:40px 42px}
+  .camp-rec .cr-body .cr-k{font-size:var(--fz-xs);letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px}
+  .camp-rec .cr-body h3{font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-.025em;line-height:1.06}
+  .camp-rec .cr-body p{color:var(--mute);font-size:14.5px;margin-top:14px;line-height:1.55;max-width:42ch}
+  .camp-rec .cr-stats{display:flex;gap:30px;margin-top:24px}
+  .camp-rec .cr-stat .cs-n{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1}
+  .camp-rec .cr-stat .cs-n .signal{color:var(--gold)}
+  .camp-rec .cr-stat .cs-l{font-size:11px;color:var(--mute-2);text-transform:uppercase;letter-spacing:.08em;margin-top:6px;font-weight:500}
+  .camp-rec .cr-body .btn{margin-top:28px}
+
+  /* next-steps CTA trio */
+  .next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .next-card{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);padding:30px 28px;
+    display:flex;flex-direction:column;position:relative;overflow:hidden;
+    transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .25s var(--ease);will-change:transform;
+  }
+  .next-card:hover{transform:translateY(-6px);box-shadow:var(--sh-3);border-color:var(--accent-line)}
+  .next-card.primary{background:var(--ink);color:#fff;border-color:transparent}
+  .next-card.primary::before{content:"";position:absolute;inset:0;z-index:0;opacity:.7;background:radial-gradient(120% 90% at 20% 0%,rgba(29,108,255,.4),transparent 60%)}
+  .next-card > *{position:relative;z-index:1}
+  .next-card .nc-ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent);margin-bottom:22px}
+  .next-card.primary .nc-ico{background:rgba(255,255,255,.08);border-color:var(--line-on-dark);color:#fff}
+  .next-card .nc-ico svg{width:23px;height:23px}
+  .next-card h3{font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.08}
+  .next-card.primary h3{color:#fff}
+  .next-card p{font-size:13.5px;color:var(--mute);margin-top:10px;line-height:1.5}
+  .next-card.primary p{color:rgba(255,255,255,.6)}
+  .next-card .nc-price{margin-top:18px;font-size:22px;font-weight:800;letter-spacing:-.02em}
+  .next-card .nc-price small{font-size:.6em;color:var(--mute);font-weight:500}
+  .next-card.primary .nc-price small{color:rgba(255,255,255,.5)}
+  .next-card .nc-cta{margin-top:auto;padding-top:24px}
+  .next-card .nc-cta .btn{width:100%;justify-content:center}
+
+  /* book a call strip */
+  .book-strip{
+    margin-top:30px;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:34px 40px;display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap;box-shadow:var(--sh-1);
+  }
+  .book-strip .bs-left{display:flex;align-items:center;gap:22px}
+  .book-strip .bs-ico{width:54px;height:54px;border-radius:16px;background:var(--accent-soft);border:1px solid var(--accent-line);display:grid;place-items:center;color:var(--accent);flex-shrink:0}
+  .book-strip .bs-ico svg{width:26px;height:26px}
+  .book-strip h3{font-size:21px;font-weight:800;letter-spacing:-.02em}
+  .book-strip p{font-size:14px;color:var(--mute);margin-top:5px}
+  .book-strip.booked .bs-ico{background:rgba(80,200,140,.12);border-color:rgba(80,200,140,.3);color:#34a06a}
+
+  /* small toast */
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(160%);z-index:950;
+    background:rgba(10,12,15,.94);backdrop-filter:blur(18px);color:#fff;border:1px solid var(--line-on-dark);
+    border-radius:var(--r-pill);padding:13px 24px;font-size:14px;font-weight:500;box-shadow:var(--sh-float);
+    display:flex;align-items:center;gap:10px;transition:transform .5s var(--ease-spring);max-width:90vw;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .toast svg{width:17px;height:17px;color:#7fffb0;flex-shrink:0}
+
+  /* result reveal animation for child blocks */
+  .res-rise{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .res-rise.in{opacity:1;transform:none}
+
+  /* ---- responsive ---- */
+  @media(max-width:760px){
+    .opt-grid.cols-3{grid-template-columns:repeat(2,1fr)}
+    .vision-mod{grid-template-columns:1fr;gap:28px;padding:34px 28px}
+    .vision-mod .vm-art{order:-1}
+    .camp-rec{grid-template-columns:1fr}
+    .camp-rec .cr-photo{min-height:180px}
+    .camp-rec .cr-photo::after{background:linear-gradient(transparent,var(--paper-2))}
+    .next-grid{grid-template-columns:1fr}
+    .result-wrap{padding-top:calc(var(--nav-h) + 36px)}
+  }
+  @media(max-width:480px){
+    .opt-grid.cols-3,.opt-grid.cols-2{grid-template-columns:1fr}
+    .opt-grid.cols-2.keep,.opt-grid.cols-3.keep{grid-template-columns:repeat(2,1fr)}
+    .res-banner{padding:36px 24px}
+    .camp-rec .cr-body,.unlock-card{padding:28px 24px}
+    .drill{flex-direction:column;gap:12px}
+    .drill .d-num{width:auto}
+    .book-strip{flex-direction:column;align-items:flex-start;text-align:left}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .screen.is-active,.result.is-active,.screen.leaving{animation:none!important}
+    .res-rise{opacity:1!important;transform:none!important}
+    .building .ring svg{animation:none}
+  }
+</style>
+</head>
+<body id="top">
+
+<!-- LIVING AURORA -->
+<canvas class="aurora-canvas" id="aurora"></canvas>
+
+<!-- ============================================================
+     NAV  —  REUSABLE SITE-WIDE BLOCK (copied verbatim from index.html)
+     ============================================================ -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Finn<b>goalie</b>
+    </a>
+    <div class="navlinks">
+      <a href="train.html">Train</a>
+      <a href="xtracker.html">The Xtracker</a>
+      <a href="finnpegs.html">Finnpegs</a>
+      <a href="shop.html">Shop</a>
+      <a href="coaches.html">For Coaches</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="nav-right">
+      <a class="nav-icon search-icon" href="shop.html" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+      </a>
+      <a class="nav-icon" href="shop.html" aria-label="Bag" data-bag-add>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke-linecap="round"/></svg>
+        <span class="count" data-bag-count>0</span>
+      </a>
+      <a class="nav-cta magnetic" href="plan.html">Free Training Plan</a>
+      <button class="burger" id="burger" aria-label="Menu" data-burger><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE DRAWER (mirrors nav) -->
+<div class="drawer" id="drawer">
+  <a href="train.html" data-drawer-close>Train</a>
+  <a href="xtracker.html" data-drawer-close>The Xtracker</a>
+  <a href="finnpegs.html" data-drawer-close>Finnpegs</a>
+  <a href="shop.html" data-drawer-close>Shop</a>
+  <a href="coaches.html" data-drawer-close>For Coaches</a>
+  <a href="about.html" data-drawer-close>About</a>
+  <a class="drawer-cta" href="plan.html" data-drawer-close>Free Training Plan</a>
+</div>
+
+<!-- ============================================================
+     FUNNEL  —  the quiz lives here (intro + 6 steps + building)
+     ============================================================ -->
+<main class="funnel" id="funnel">
+  <div class="funnel-veil"></div>
+  <div class="funnel-stage">
+
+    <!-- ===== INTRO ===== -->
+    <section class="screen is-active" data-screen="intro">
+      <div class="fn-hero">
+        <div class="fn-eyebrow"><span class="pip"></span>Free · 90 seconds · built by our coaches</div>
+        <h1>Your free personalized goalie <span class="accent">training plan.</span></h1>
+        <p class="sub">Answer six quick questions. Our coaches build you a real weekly plan — vision drills, movement, and the mental game — dialled to your level and schedule. No cost.</p>
+        <div class="meta-line">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Tailored to your weakness</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 8v4l3 2" stroke-linecap="round"/><circle cx="12" cy="12" r="9"/></svg>Ready in 90 seconds</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6H4v12h16V6z"/><path d="M4 8l8 5 8-5" stroke-linecap="round"/></svg>Sent to your inbox</span>
+        </div>
+        <div class="start-wrap">
+          <button class="btn btn-primary btn-lg magnetic" data-start>Build my plan
+            <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="fn-trust-row">
+            <span class="faces"><span class="f">JR</span><span class="f">PR</span><span class="f">A</span></span>
+            <span><span class="stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg></span> &nbsp;<b>1,000+</b> plans built · Jr to Pro</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== QUIZ SHELL (steps injected here) ===== -->
+    <section class="screen" data-screen="quiz">
+      <div class="quiz-top">
+        <button class="quiz-back" data-back disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>Back
+        </button>
+        <span class="quiz-step-label">Step <b data-step-cur>1</b> of <span data-step-total>6</span></span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" data-progress></div></div>
+      <div data-question-mount></div>
+    </section>
+
+    <!-- ===== BUILDING ===== -->
+    <section class="screen" data-screen="building">
+      <div class="building">
+        <div class="ring">
+          <svg viewBox="0 0 50 50" fill="none">
+            <circle cx="25" cy="25" r="21" stroke="rgba(29,108,255,.14)" stroke-width="4"/>
+            <circle cx="25" cy="25" r="21" stroke="#1d6cff" stroke-width="4" stroke-linecap="round" stroke-dasharray="40 132"/>
+          </svg>
+        </div>
+        <h2>Building your plan…</h2>
+        <div class="b-line" data-build-line>Reading your answers</div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ============================================================
+     RESULT  —  the personalized plan (rendered by JS on submit)
+     ============================================================ -->
+<div class="result" data-result>
+  <div class="result-wrap">
+
+    <!-- banner + your inputs -->
+    <div class="res-banner res-rise">
+      <div class="sent-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Plan sent to <span data-sent-email>your inbox</span></div>
+      <h1><span class="name-hi" data-res-name>Goalie</span>, here's your <span class="accent">personalized plan.</span></h1>
+      <p class="res-sub" data-res-headline>Built around your level, your schedule, and the part of your game we're going to turn into a weapon.</p>
+      <div class="input-chips" data-input-chips></div>
+    </div>
+
+    <!-- weekly schedule -->
+    <div class="res-sec res-rise">
+      <div class="res-sec-head">
+        <div>
+          <div class="rk">Your week</div>
+          <h2 data-week-title>Your training week</h2>
+        </div>
+        <div class="rn" data-week-note></div>
+      </div>
+      <div class="week-grid" data-week-grid></div>
+    </div>
+
+    <!-- focus drills -->
+    <div class="res-sec res-rise">
+      <div class="res-sec-head">
+        <div>
+          <div class="rk">Built for your weakness</div>
+          <h2 data-drills-title>Your focus drills</h2>
+        </div>
+        <div class="rn" data-drills-note></div>
+      </div>
+      <div class="drill-list" data-drill-list></div>
+    </div>
+
+    <!-- vision module (xtracker) -->
+    <div class="res-sec res-rise" data-vision-sec>
+      <div class="res-sec-head">
+        <div>
+          <div class="rk">Vision module</div>
+          <h2 data-vision-title>Train your eyes</h2>
+        </div>
+      </div>
+      <div class="vision-mod" data-vision-mod>
+        <div>
+          <div class="vm-tag" data-vm-tag>Recommended for you</div>
+          <h3 data-vm-h>See the play before it happens.</h3>
+          <p data-vm-p></p>
+          <div class="vm-cta">
+            <a class="btn btn-primary magnetic" href="shop.html" data-bag-add data-vm-cta>Add the Xtracker — $99.99
+              <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <span class="vm-price" data-vm-price>Ships in 2 days · free over $75</span>
+          </div>
+        </div>
+        <div class="vm-art">
+          <div class="tracker">
+            <div class="glow"></div>
+            <div class="tracker-body" data-tracker-mount></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- recommended camp -->
+    <div class="res-sec res-rise">
+      <div class="res-sec-head">
+        <div>
+          <div class="rk">Where to level up</div>
+          <h2>Your recommended camp</h2>
+        </div>
+      </div>
+      <div class="camp-rec">
+        <div class="cr-photo" data-camp-photo>
+          <span class="cr-badge"><span class="pulse"></span><span data-camp-badge>Filling fast</span></span>
+        </div>
+        <div class="cr-body">
+          <div class="cr-k" data-camp-k>Best fit</div>
+          <h3 data-camp-title>Pro Week</h3>
+          <p data-camp-desc></p>
+          <div class="cr-stats">
+            <div class="cr-stat"><div class="cs-n" data-camp-price>$175</div><div class="cs-l">From</div></div>
+            <div class="cr-stat"><div class="cs-n"><span class="signal" data-camp-spots>12</span></div><div class="cs-l">Spots left</div></div>
+            <div class="cr-stat"><div class="cs-n" data-camp-when>June 25</div><div class="cs-l">Next dates</div></div>
+          </div>
+          <a class="btn btn-primary magnetic" href="train.html">Claim a spot
+            <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- next steps trio -->
+    <div class="res-sec res-rise">
+      <div class="res-sec-head">
+        <div>
+          <div class="rk">Your next step</div>
+          <h2>Make it count.</h2>
+        </div>
+      </div>
+      <div class="next-grid">
+        <div class="next-card primary">
+          <div class="nc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3>The Xtracker</h3>
+          <p>The vision trainer that powers the eye-work in your plan. Train the read, not just the reflex.</p>
+          <div class="nc-price">$99<small>.99</small></div>
+          <div class="nc-cta"><a class="btn btn-primary magnetic" href="shop.html" data-bag-add>Add to bag</a></div>
+        </div>
+        <div class="next-card">
+          <div class="nc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke-linecap="round"/></svg></div>
+          <h3>See the camps</h3>
+          <p>Multi-day intensives that compress months of crease work into one immersive week.</p>
+          <div class="nc-price">from $175</div>
+          <div class="nc-cta"><a class="btn btn-ghost magnetic" href="train.html">See dates</a></div>
+        </div>
+        <div class="next-card">
+          <div class="nc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.5a3.2 3.2 0 0 1 0 6M21 20c0-2.6-1.4-4.4-3.5-5.2" stroke-linecap="round"/></svg></div>
+          <h3>Join the Goalie Club</h3>
+          <p>Weekly drills, early camp access, and a crew chasing the same tenth of a second. Free.</p>
+          <div class="nc-price">Free</div>
+          <div class="nc-cta"><a class="btn btn-ghost magnetic" href="club.html">Join free</a></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- book a free intro call -->
+    <div class="book-strip res-rise" data-book-strip>
+      <div class="bs-left">
+        <div class="bs-ico" data-book-ico><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L20 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></div>
+        <div>
+          <h3 data-book-h>Want a coach to walk you through it?</h3>
+          <p data-book-p>Book a free 15-minute intro call. We'll tune the plan to you and answer anything.</p>
+        </div>
+      </div>
+      <button class="btn btn-primary magnetic" data-book-btn>Book my free call
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       FOOTER  —  REUSABLE SITE-WIDE BLOCK (copied verbatim from index.html)
+       ============================================================ -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a class="brand" href="index.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Finn<b>goalie</b></a>
+          <p>Vision-led goalie training &amp; gear. Built in Nova Scotia, trusted in the crease across 50+ rinks.</p>
+          <div class="foot-social">
+            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+            <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="3.5"/><path d="M11 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none"/></svg></a>
+            <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.3 1.8 3.9 4 4.2v2.7c-1.5 0-2.9-.4-4-1.1v5.7a5.3 5.3 0 1 1-5.3-5.3c.3 0 .5 0 .8.1v2.8a2.6 2.6 0 1 0 1.8 2.4V3H14z"/></svg></a>
+            <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h3.5l4 5.6L16 4h3l-6 7.8L20 20h-3.5l-4.3-6L7 20H4l6.3-8.2z"/></svg></a>
+          </div>
+        </div>
+        <div class="foot-col"><h5>Train</h5><a href="train.html">Private</a><a href="train.html">Camps</a><a href="train.html">Weekly</a><a href="train.html">Pro</a></div>
+        <div class="foot-col"><h5>Shop</h5><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs</a><a href="shop.html">Pro Shop</a><a href="shop.html">Bundles</a></div>
+        <div class="foot-col"><h5>Company</h5><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="shop.html">Reviews</a><a href="about.html">Contact</a></div>
+        <div class="foot-col free"><h5>Free Tools</h5><a href="plan.html">Training Plan</a><a href="vision-test.html">Vision Test</a><a href="club.html">Goalie Club</a></div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 Finngoalie. All rights reserved.</span>
+        <span class="mono">DESIGNED FOR THE CREASE · NS · CA</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- TOAST -->
+<div class="toast" data-toast><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-toast-msg></span></div>
+
+<script src="app.js"></script>
+
+<!-- ============================================================
+     FUNNEL LOGIC  —  question model + rules engine + render
+     ============================================================ -->
+<script>
+(function(){
+  "use strict";
+
+  var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- icon helpers (small inline SVGs) ---------- */
+  function ic(path, opts){
+    opts = opts || {};
+    return '<svg viewBox="0 0 24 24" fill="'+(opts.fill||'none')+'" stroke="'+(opts.stroke||'currentColor')+'" stroke-width="'+(opts.sw||1.7)+'" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>';
+  }
+  var ICONS = {
+    house:    ic('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>'),
+    compete:  ic('<path d="M6 3h12l-1 6a5 5 0 0 1-10 0L6 3z"/><path d="M9 21h6M12 14v7"/>'),
+    aaa:      ic('<path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/>'),
+    junior:   ic('<path d="M12 2l3 5 5 1-3.5 4 1 5.5L12 19l-5.5 2.5 1-5.5L4 12l5-1 3-5z"/>'),
+    adult:    ic('<circle cx="12" cy="7" r="3.4"/><path d="M5 21c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/>'),
+    eye:      ic('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>'),
+    rebound:  ic('<path d="M12 3v6M12 21a6 6 0 0 0 6-6c0-3-2-5-6-9-4 4-6 6-6 9a6 6 0 0 0 6 6z"/>'),
+    lateral:  ic('<path d="M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4"/>'),
+    angle:    ic('<path d="M4 20V4M4 20h16M4 12l16-8"/>'),
+    mind:     ic('<path d="M9 3a6 6 0 0 0-2 11.7V18a2 2 0 0 0 2 2h0M15 3a6 6 0 0 1 2 11.7V18a2 2 0 0 1-2 2h0M9 21h6"/>'),
+    age:      ic('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+    cal:      ic('<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'),
+    flame:    ic('<path d="M12 3c0 4-5 5-5 10a5 5 0 0 0 10 0c0-2-1.5-3-2.5-4.5C13 6 12 5 12 3z"/>'),
+    team:     ic('<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"/><path d="M16 5a3 3 0 0 1 0 6"/>'),
+    starter:  ic('<path d="M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>'),
+    recruit:  ic('<path d="M22 10L12 4 2 10l10 6 10-6z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>'),
+    improve:  ic('<path d="M3 17l6-6 4 4 7-8"/><path d="M14 7h7v7"/>'),
+    check:    ic('<path d="M5 13l4 4L19 7"/>', {sw:2.2})
+  };
+
+  /* ============================================================
+     QUESTION MODEL  (6 steps)
+     ============================================================ */
+  var QUESTIONS = [
+    {
+      key:'level', kicker:'Your level',
+      q:'What level do you play?', sub:'So we set the right intensity and standard.',
+      cols:1,
+      opts:[
+        {v:'house',  t:'House league',          d:'Recreational, building fundamentals',          ico:ICONS.house},
+        {v:'comp',   t:'Competitive',           d:'Travel / select / rep team',                   ico:ICONS.compete},
+        {v:'aaa',    t:'AAA',                    d:'Top-tier minor hockey',                        ico:ICONS.aaa},
+        {v:'junior', t:'Junior+',               d:'Junior, prep, college-track',                  ico:ICONS.junior},
+        {v:'adult',  t:'Adult rec',             d:'Beer league / pickup, still chasing the edge', ico:ICONS.adult}
+      ]
+    },
+    {
+      key:'age', kicker:'Your age', q:'What age band are you in?',
+      sub:'We scale volume and recovery to your stage.',
+      cols:3, compact:true,
+      opts:[
+        {v:'u9', t:'U9',  d:'8 & under'}, {v:'u11', t:'U11', d:'9–10'},
+        {v:'u13', t:'U13', d:'11–12'},    {v:'u15', t:'U15', d:'13–14'},
+        {v:'u18', t:'U18', d:'15–17'},    {v:'adult', t:'Adult', d:'18+'}
+      ]
+    },
+    {
+      key:'weakness', kicker:'Your focus', q:"What's your biggest weakness right now?",
+      sub:"Be honest — this is the part we'll turn into a weapon.",
+      cols:1,
+      opts:[
+        {v:'tracking',    t:'Puck tracking & vision', d:'You lose the puck through traffic and screens',   ico:ICONS.eye},
+        {v:'rebound',     t:'Rebound control',        d:'Pucks bounce out into danger after the save',     ico:ICONS.rebound},
+        {v:'lateral',     t:'Lateral movement',       d:'Slow post-to-post, beaten on cross-ice plays',    ico:ICONS.lateral},
+        {v:'positioning', t:'Positioning & angles',   d:'Caught out of position, giving up too much net',  ico:ICONS.angle},
+        {v:'mental',      t:'Mental game',            d:'Rattled by goals, inconsistent night to night',   ico:ICONS.mind}
+      ]
+    },
+    {
+      key:'days', kicker:'Your schedule', q:'How many days a week can you train?',
+      sub:'Off-ice counts — we build around your real week.',
+      cols:2, compact:true,
+      opts:[
+        {v:'1', t:'1 day',  d:'One focused session', ico:ICONS.cal},
+        {v:'2', t:'2 days', d:'A steady rhythm',     ico:ICONS.cal},
+        {v:'3', t:'3 days', d:'Real momentum',       ico:ICONS.cal},
+        {v:'4', t:'4+ days', d:"All-in, let's go",    ico:ICONS.flame}
+      ]
+    },
+    {
+      key:'goal', kicker:'Your goal', q:"What's the goal this season?",
+      sub:'Everything in the plan points at this.',
+      cols:1,
+      opts:[
+        {v:'team',     t:'Make the team',        d:'Earn a roster spot at tryouts',          ico:ICONS.team},
+        {v:'starter',  t:'Win the starter job',  d:'Become the #1 goalie',                   ico:ICONS.starter},
+        {v:'recruit',  t:'Get recruited',        d:'Junior, prep, or college exposure',      ico:ICONS.recruit},
+        {v:'improve',  t:'Just improve',         d:'Get measurably better, love the game',   ico:ICONS.improve}
+      ]
+    },
+    { key:'unlock', kicker:'Almost there', q:'Where should we send your plan?',
+      sub:'Your full plan unlocks on the next screen — and lands in your inbox.', unlock:true }
+  ];
+
+  /* ============================================================
+     STATE
+     ============================================================ */
+  var answers = { level:null, age:null, weakness:null, days:null, goal:null, name:'', email:'' };
+  var stepIndex = 0;                  // 0..5
+  var capturedEmail = null;           // demo "store" — the captured lead
+
+  /* ---------- element refs ---------- */
+  var screens = {};
+  document.querySelectorAll('[data-screen]').forEach(function(s){ screens[s.getAttribute('data-screen')] = s; });
+  var qMount     = document.querySelector('[data-question-mount]');
+  var backBtn    = document.querySelector('[data-back]');
+  var progressEl = document.querySelector('[data-progress]');
+  var stepCurEl  = document.querySelector('[data-step-cur]');
+  var stepTotEl  = document.querySelector('[data-step-total]');
+  var resultEl   = document.querySelector('[data-result]');
+  var toastEl    = document.querySelector('[data-toast]');
+  var toastMsg   = document.querySelector('[data-toast-msg]');
+  if(stepTotEl) stepTotEl.textContent = QUESTIONS.length;
+
+  /* ---------- screen switching ---------- */
+  function showScreen(name){
+    Object.keys(screens).forEach(function(k){ screens[k].classList.toggle('is-active', k === name); });
+    window.scrollTo({ top:0, behavior: RM ? 'auto' : 'smooth' });
+  }
+
+  /* ---------- label maps (for chips + copy) ---------- */
+  var LBL = {
+    level:{house:'House league',comp:'Competitive',aaa:'AAA',junior:'Junior+',adult:'Adult rec'},
+    age:{u9:'U9',u11:'U11',u13:'U13',u15:'U15',u18:'U18',adult:'Adult'},
+    weakness:{tracking:'Puck tracking',rebound:'Rebound control',lateral:'Lateral movement',positioning:'Positioning & angles',mental:'Mental game'},
+    days:{'1':'1 day/wk','2':'2 days/wk','3':'3 days/wk','4':'4+ days/wk'},
+    goal:{team:'Make the team',starter:'Win the starter job',recruit:'Get recruited',improve:'Just improve'}
+  };
+
+  /* ============================================================
+     RENDER A QUESTION
+     ============================================================ */
+  function renderStep(){
+    var Q = QUESTIONS[stepIndex];
+    backBtn.disabled = stepIndex === 0;
+    stepCurEl.textContent = stepIndex + 1;
+    progressEl.style.width = ((stepIndex) / QUESTIONS.length * 100) + '%';
+
+    var html = '<div class="q-head"><div class="q-kicker">'+Q.kicker+'</div><h2>'+Q.q+'</h2>'+(Q.sub?'<p>'+Q.sub+'</p>':'')+'</div>';
+
+    if(Q.unlock){
+      html += renderUnlock();
+    } else {
+      var gridCls = 'opt-grid cols-' + (Q.cols||1) + (Q.compact && Q.cols>1 ? ' keep' : '');
+      html += '<div class="'+gridCls+'">';
+      Q.opts.forEach(function(o){
+        var sel = answers[Q.key] === o.v ? ' selected' : '';
+        if(Q.compact){
+          html += '<button class="opt compact'+sel+'" data-opt="'+o.v+'" type="button">'+
+                    (o.ico?'<span class="opt-ico">'+o.ico+'</span>':'')+
+                    '<span class="opt-txt"><span class="opt-title">'+o.t+'</span>'+(o.d?'<span class="opt-desc">'+o.d+'</span>':'')+'</span>'+
+                  '</button>';
+        } else {
+          html += '<button class="opt'+sel+'" data-opt="'+o.v+'" type="button">'+
+                    '<span class="opt-ico">'+o.ico+'</span>'+
+                    '<span class="opt-txt"><span class="opt-title">'+o.t+'</span><span class="opt-desc">'+o.d+'</span></span>'+
+                    '<span class="opt-check">'+ICONS.check+'</span>'+
+                  '</button>';
+        }
+      });
+      html += '</div><div class="auto-hint">Pick one to continue — or use the arrow keys.</div>';
+    }
+    qMount.innerHTML = html;
+    wireStep(Q);
+  }
+
+  function renderUnlock(){
+    return ''+
+      '<div class="unlock-card">'+
+        '<div class="field">'+
+          '<label for="fn-name">Your name</label>'+
+          '<input id="fn-name" type="text" autocomplete="given-name" placeholder="e.g. Alex" value="'+escapeAttr(answers.name)+'">'+
+          '<div class="err" data-err="name">Tell us your name so we can address your plan.</div>'+
+        '</div>'+
+        '<div class="field">'+
+          '<label for="fn-email">Email</label>'+
+          '<input id="fn-email" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com" value="'+escapeAttr(answers.email)+'">'+
+          '<div class="err" data-err="email">Enter a valid email so we can send your plan.</div>'+
+        '</div>'+
+        '<div class="q-nav"><button class="btn btn-primary btn-lg magnetic" data-unlock type="button" style="width:100%;justify-content:center">Unlock my plan'+
+          '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+        '</button></div>'+
+        '<div class="unlock-assure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>No spam, ever. Your plan only — unsubscribe in one click.</div>'+
+      '</div>';
+  }
+
+  function escapeAttr(s){ return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+  /* ---------- wiring for the current step ---------- */
+  function wireStep(Q){
+    if(Q.unlock){
+      var unlockBtn = qMount.querySelector('[data-unlock]');
+      var nameI = qMount.querySelector('#fn-name');
+      var emailI = qMount.querySelector('#fn-email');
+      [nameI,emailI].forEach(function(inp){
+        if(!inp) return;
+        inp.addEventListener('input', function(){ inp.classList.remove('invalid'); var e=inp.closest('.field').querySelector('.err'); if(e) e.classList.remove('show'); });
+        inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); submitUnlock(); } });
+      });
+      unlockBtn.addEventListener('click', submitUnlock);
+      if(nameI) setTimeout(function(){ nameI.focus(); }, 360);
+      return;
+    }
+    // option buttons — select + auto-advance
+    var opts = qMount.querySelectorAll('[data-opt]');
+    opts.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        opts.forEach(function(b){ b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        answers[Q.key] = btn.getAttribute('data-opt');
+        setTimeout(next, 260);   // brief beat so the selection is felt
+      });
+    });
+    // keyboard: 1-9 to pick, arrows to move focus, enter to confirm focused
+    var focusIdx = -1;
+    // pre-focus the already-selected option if any
+    opts.forEach(function(b,i){ if(b.classList.contains('selected')) focusIdx=i; });
+    qMount.tabIndex = -1; qMount.focus();
+    function keyHandler(e){
+      if(!screens.quiz.classList.contains('is-active')) return;
+      if(e.key >= '1' && e.key <= String(opts.length)){ var i=parseInt(e.key,10)-1; if(opts[i]) opts[i].click(); }
+      else if(e.key==='ArrowDown'||e.key==='ArrowRight'){ e.preventDefault(); focusIdx=Math.min(opts.length-1,focusIdx+1); opts[focusIdx].focus(); }
+      else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){ e.preventDefault(); focusIdx=Math.max(0,focusIdx-1); opts[focusIdx].focus(); }
+    }
+    // attach once per step; cleaned up by replacing qMount.innerHTML next render
+    document.addEventListener('keydown', keyHandler);
+    qMount._cleanup = function(){ document.removeEventListener('keydown', keyHandler); };
+  }
+
+  function clearStepKeys(){ if(qMount._cleanup){ qMount._cleanup(); qMount._cleanup=null; } }
+
+  /* ---------- step navigation ---------- */
+  function next(){
+    clearStepKeys();
+    if(stepIndex < QUESTIONS.length - 1){
+      stepIndex++;
+      renderStep();
+    }
+  }
+  function back(){
+    clearStepKeys();
+    if(stepIndex > 0){ stepIndex--; renderStep(); }
+  }
+  backBtn.addEventListener('click', back);
+
+  /* ---------- start ---------- */
+  document.querySelectorAll('[data-start]').forEach(function(b){
+    b.addEventListener('click', function(){
+      showScreen('quiz');
+      stepIndex = 0;
+      renderStep();
+    });
+  });
+
+  /* ---------- unlock (validate, capture, build) ---------- */
+  function submitUnlock(){
+    var nameI = qMount.querySelector('#fn-name');
+    var emailI = qMount.querySelector('#fn-email');
+    var ok = true;
+    var name = (nameI.value||'').trim();
+    var email = (emailI.value||'').trim();
+    if(name.length < 1){ fieldErr(nameI,true); ok=false; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ fieldErr(emailI,true); ok=false; }
+    if(!ok) return;
+
+    answers.name = name; answers.email = email;
+    capturedEmail = email;                 // DEMO: "stored" lead
+    progressEl.style.width = '100%';
+    clearStepKeys();
+    runBuild();
+  }
+  function fieldErr(inp, on){
+    inp.classList.toggle('invalid', on);
+    var e = inp.closest('.field').querySelector('.err');
+    if(e) e.classList.toggle('show', on);
+  }
+
+  /* ---------- building animation, then result ---------- */
+  function runBuild(){
+    showScreen('building');
+    var lines = [
+      'Reading your answers',
+      'Mapping drills to '+(LBL.weakness[answers.weakness]||'your focus').toLowerCase(),
+      'Scheduling '+ (LBL.days[answers.days]||'your week'),
+      'Matching the right camp',
+      'Locking in your plan'
+    ];
+    var lineEl = document.querySelector('[data-build-line]');
+    if(RM){
+      // no theatrics under reduced motion — go straight there
+      buildAndShowResult();
+      return;
+    }
+    var i = 0;
+    lineEl.textContent = lines[0];
+    var iv = setInterval(function(){
+      i++;
+      if(i < lines.length){ lineEl.textContent = lines[i]; }
+      else { clearInterval(iv); buildAndShowResult(); }
+    }, 480);
+  }
+
+  /* ============================================================
+     RULES ENGINE  —  turns answers into a real plan
+     ============================================================ */
+
+  // 1) Weekly minutes & whether on-ice is realistic, by level/age
+  function sessionLength(){
+    var young = (answers.age==='u9'||answers.age==='u11');
+    if(young) return 30;
+    if(answers.age==='u13') return 40;
+    if(answers.level==='junior'||answers.level==='aaa') return 60;
+    return 50;
+  }
+
+  // 2) Drill library, keyed by weakness — each returns 3-4 ordered drills
+  var DRILLS = {
+    tracking:[
+      {h:'Xtracker reactive read (LED chase)', p:'Stand square, follow the lit target with your eyes only — head still, body quiet. Builds the early read that beats screens.', sets:'4 × 45s', focus:'Vision'},
+      {h:'Two-puck tracking', p:'A partner alternates two pucks low-to-high. Call the puck out loud before it arrives — train commitment to the read.', sets:'3 × 10', focus:'Tracking'},
+      {h:'Screen recovery', p:'Take shots through a stationary screen. Find the puck around the body, not over it. Re-locate fast after every release.', sets:'15 shots', focus:'Traffic'},
+      {h:'Off-ice quiet-eye reps', p:'Tennis-ball wall throws: catch with the last 1/3 of vision locked. Trains the same fixation the Xtracker drills on ice.', sets:'5 min', focus:'Off-ice'}
+    ],
+    rebound:[
+      {h:'Controlled-chest seals', p:'Absorb shots into the chest and smother — no kick-outs. Then re-set. Quiet hands, soft hands.', sets:'20 shots', focus:'Control'},
+      {h:'Steer-to-corner reps', p:'Deliberately direct every rebound to the corner or into your body. Pick a target before the shot lands.', sets:'4 × 8', focus:'Direction'},
+      {h:'Second-save scramble', p:'Shooter fires, you give a rebound on purpose, then recover for the second shot. Trains the chaos after the first stop.', sets:'3 × 6', focus:'Recovery'},
+      {h:'Stick-blade angle work', p:'Off-ice: set the blade flat on the ice and practice cushioning. Rebound control starts with a calm bottom hand.', sets:'5 min', focus:'Off-ice'}
+    ],
+    lateral:[
+      {h:'Post-to-post push timing', p:'Explode post-to-post on the pass, arrive set and square — not still gliding. Beat the puck to the spot.', sets:'4 × 8', focus:'Push'},
+      {h:'T-push & butterfly slide', p:'Drive off the inside edge, seal the far post. Control the slide — stop on the puck, not past it.', sets:'3 × 10', focus:'Slide'},
+      {h:'Royal-road reads', p:'React to cross-ice passes through the slot. Stay patient, then move with conviction. Don\'t over-commit early.', sets:'15 reps', focus:'Reaction'},
+      {h:'Off-ice lateral bounds', p:'Skater bounds + lateral band walks. Build the explosive first step that wins cross-crease plays.', sets:'4 × 30s', focus:'Off-ice'}
+    ],
+    positioning:[
+      {h:'Angle & depth ladders', p:'Walk your depth on the puck — top of crease vs deep. Square to the puck, cut the shooter\'s net in half.', sets:'4 × 6', focus:'Angles'},
+      {h:'Post integration', p:'Reverse-VH and overlap reps. Take away the short side without losing the back door.', sets:'3 × 8', focus:'Posts'},
+      {h:'Tracking your edges', p:'Shadow the puck around the zone keeping your feet pointed at it. Position is a habit, not a guess.', sets:'5 min', focus:'Footwork'},
+      {h:'Video positioning review', p:'Pause your own game film at the release. Where were you? Build the mental map that makes angles automatic.', sets:'10 min', focus:'Film'}
+    ],
+    mental:[
+      {h:'Reset routine', p:'Build a 3-second reset after every goal: breath, glove tap, eyes up. Same routine, every time — it owns the moment.', sets:'every rep', focus:'Reset'},
+      {h:'Quiet-eye + breathing', p:'Box breathing before each shot (4-in, 4-hold, 4-out). Lower the heart rate, sharpen the read. Calm sees more.', sets:'5 min', focus:'Calm'},
+      {h:'Pressure shots', p:'Have a coach call the score — "down 1, 30 left." Train the save that matters under the weight of the moment.', sets:'3 × 10', focus:'Pressure'},
+      {h:'One-save mantra', p:'Pick a cue word ("next") and a process goal for each session. Detach from outcome, attach to the read.', sets:'daily', focus:'Mindset'}
+    ]
+  };
+
+  // 3) Recommend the right camp from age + level
+  function recommendCamp(){
+    var L = answers.level, A = answers.age;
+    var young = (A==='u9'||A==='u11'||A==='u13');
+    if(L==='junior' || L==='aaa' || A==='u18'){
+      return { k:'Best fit · elite track', title:'Pro Week', price:'$175', spots:'12', when:'June 25', badge:'Filling fast',
+        desc:'Five days of elite crease development with the full Finngoalie staff. Xtracker vision blocks every morning, live reads every afternoon — built for goalies chasing the next level.',
+        photo:'assets/img/goalie-action.jpg' };
+    }
+    if(young){
+      return { k:'Best fit · foundations', title:'Foundational Camp', price:'$149', spots:'18', when:'July 8', badge:'New dates',
+        desc:'A confidence-first camp for younger goalies — clean fundamentals, vision basics, and a ton of pucks in a setting built to make the position fun.',
+        photo:'assets/img/youth.jpg' };
+    }
+    if(L==='comp'){
+      return { k:'Best fit · development', title:'Competitive Camp', price:'$165', spots:'14', when:'July 2', badge:'Filling fast',
+        desc:'Four days that sharpen the rep player — tracking, rebound control, and lateral speed under game-paced pressure. The jump-up camp.',
+        photo:'assets/img/training.jpg' };
+    }
+    // adult rec
+    return { k:'Best fit · adult', title:'Adult Skills Weekend', price:'$135', spots:'10', when:'July 12', badge:'Limited spots',
+      desc:'A two-day weekend built for adult goalies — refine your angles, fix the rebounds that cost you, and walk away with a plan you can actually keep.',
+      photo:'assets/img/ice-rink.jpg' };
+  }
+
+  // 4) Build the weekly schedule mapped to days/week + the weakness focus
+  var DAY_NAMES = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  function buildWeek(){
+    var dpw = parseInt(answers.days,10);          // 1,2,3,4 (4 = 4+)
+    var len = sessionLength();
+    var W = (LBL.weakness[answers.weakness]||'focus');
+    var focusDrill = DRILLS[answers.weakness];
+
+    // training-day templates, in priority order — we slot the first N
+    var templates = [
+      { title:'Vision & focus block', focus:'Xtracker + '+W.toLowerCase()+' work — the core of your plan.', tag:'On-ice', primary:true },
+      { title:'Movement & '+W.toLowerCase(), focus:'Footwork, slides, and live reads tuned to your weakness.', tag:'On-ice' },
+      { title:'Off-ice vision + recovery', focus:'Quiet-eye reps, mobility, and the mental routine. Low load, high payoff.', tag:'Off-ice' },
+      { title:'Game-pace integration', focus:'Bring every piece together under pressure. Compete reps.', tag:'On-ice' }
+    ];
+    var picks = templates.slice(0, Math.min(dpw, 4));
+
+    // spread the picked days across the week (avoid clustering)
+    var spread = { 1:[2], 2:[1,4], 3:[1,3,5], 4:[0,2,4,6] };
+    var slots = spread[dpw] || [1,3,5];
+
+    var week = [];
+    for(var d=0; d<7; d++){
+      var slotPos = slots.indexOf(d);
+      if(slotPos > -1 && picks[slotPos]){
+        var tpl = picks[slotPos];
+        week.push({ day:DAY_NAMES[d], rest:false, title:tpl.title, focus:tpl.focus, tag:tpl.tag, dur:len+' min', primary:tpl.primary });
+      } else {
+        week.push({ day:DAY_NAMES[d], rest:true, title:(d===6?'Full rest':'Active recovery'), focus:(d===6?'Sleep, fuel, reset. Recovery is training.':'Light mobility, walk, or a few quiet-eye reps if you feel fresh.'), tag:'Rest' });
+      }
+    }
+    return { week:week, dpw:dpw, len:len };
+  }
+
+  // 5) Vision-module copy — Xtracker is the hero recommendation when weakness=tracking
+  function visionModule(){
+    var trackingFocused = (answers.weakness==='tracking');
+    if(trackingFocused){
+      return {
+        product:true,
+        tag:'Recommended for your weakness',
+        h:'Your weakness is vision. This is the fix.',
+        p:'You told us puck tracking is the gap. The Xtracker is the exact tool the vision drills in your plan are built around — reactive LED reads that teach your eyes to find the puck early, even through traffic. It is the single fastest lever on your plan.',
+        cta:'Add the Xtracker — $99.99'
+      };
+    }
+    return {
+      product:false,
+      tag:'Every plan trains vision',
+      h:'Goaltending is a vision sport.',
+      p:'Even with '+ (LBL.weakness[answers.weakness]||'your focus').toLowerCase() +' as your priority, the eyes lead the save. The Xtracker bolts a daily vision block onto your plan — 10 minutes that sharpen the read behind every technique you train.',
+      cta:'See the Xtracker — $99.99'
+    };
+  }
+
+  // 6) A headline that reflects their goal
+  function goalHeadline(){
+    var name = answers.name || 'Goalie';
+    var map = {
+      team:    'Here is the plan that earns you a roster spot — built around your '+(LBL.weakness[answers.weakness]||'focus').toLowerCase()+'.',
+      starter: 'This is how you take the crease and keep it. Every block points at the starter job.',
+      recruit: 'Recruiters watch for early reads and calm rebounds. This plan builds exactly that.',
+      improve: 'Real, measurable progress — built around your level, your schedule, and your '+(LBL.weakness[answers.weakness]||'focus').toLowerCase()+'.'
+    };
+    return map[answers.goal] || map.improve;
+  }
+
+  /* ============================================================
+     RENDER THE RESULT
+     ============================================================ */
+  function buildAndShowResult(){
+    var weekData = buildWeek();
+    var camp = recommendCamp();
+    var vm = visionModule();
+    var drills = DRILLS[answers.weakness] || DRILLS.tracking;
+
+    // ---- banner ----
+    document.querySelector('[data-sent-email]').textContent = answers.email;
+    document.querySelector('[data-res-name]').textContent = answers.name;
+    document.querySelector('[data-res-headline]').textContent = goalHeadline();
+
+    // ---- input chips ----
+    var chips = [
+      {l:'Level', v:LBL.level[answers.level]},
+      {l:'Age', v:LBL.age[answers.age]},
+      {l:'Focus', v:LBL.weakness[answers.weakness]},
+      {l:'Schedule', v:LBL.days[answers.days]},
+      {l:'Goal', v:LBL.goal[answers.goal]}
+    ];
+    document.querySelector('[data-input-chips]').innerHTML = chips.map(function(c){
+      return '<span class="input-chip"><span class="dot"></span>'+c.l+' · <b>'+c.v+'</b></span>';
+    }).join('');
+
+    // ---- week ----
+    document.querySelector('[data-week-title]').textContent = weekData.dpw+(weekData.dpw>=4?'+':'')+'-day training week';
+    document.querySelector('[data-week-note]').textContent = 'Sessions ~'+weekData.len+' min. Recovery days are part of the plan — not a break from it.';
+    document.querySelector('[data-week-grid]').innerHTML = weekData.week.map(function(d){
+      return '<div class="day-card'+(d.rest?' rest':'')+'">'+
+        '<div class="d-top"><span class="d-day">'+d.day+'</span>'+(d.dur?'<span class="d-dur">'+d.dur+'</span>':'')+'</div>'+
+        '<div class="d-title">'+d.title+'</div>'+
+        '<div class="d-focus">'+d.focus+'</div>'+
+        '<div class="d-tag">'+(d.rest
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3a9 9 0 1 0 9 9c-4 0-9-2-9-9z" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>')+
+          d.tag+'</div>'+
+      '</div>';
+    }).join('');
+
+    // ---- drills ----
+    document.querySelector('[data-drills-title]').textContent = 'Your '+(LBL.weakness[answers.weakness]||'focus').toLowerCase()+' drills';
+    document.querySelector('[data-drills-note]').textContent = 'Run these on your on-ice days, in order. Quality over volume — every rep with intent.';
+    document.querySelector('[data-drill-list]').innerHTML = drills.map(function(dr,i){
+      return '<div class="drill">'+
+        '<div class="d-num">'+(i+1<10?'0'+(i+1):(i+1))+'</div>'+
+        '<div class="d-body"><h3>'+dr.h+'</h3><p>'+dr.p+'</p>'+
+          '<div class="d-meta"><span>Volume · <b>'+dr.sets+'</b></span><span>Focus · <b>'+dr.focus+'</b></span></div>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+
+    // ---- vision module ----
+    var vmod = document.querySelector('[data-vision-mod]');
+    vmod.classList.toggle('is-product', vm.product);
+    document.querySelector('[data-vm-tag]').textContent = vm.tag;
+    document.querySelector('[data-vm-h]').textContent = vm.h;
+    document.querySelector('[data-vm-p]').textContent = vm.p;
+    document.querySelector('[data-vm-cta]').firstChild.textContent = vm.cta + ' ';
+    document.querySelector('[data-vision-title]').textContent = vm.product ? 'The fix for your weakness' : 'Train your eyes';
+
+    // ---- camp ----
+    var photoEl = document.querySelector('[data-camp-photo]');
+    photoEl.style.backgroundImage = "url('"+camp.photo+"')";
+    document.querySelector('[data-camp-k]').textContent = camp.k;
+    document.querySelector('[data-camp-title]').textContent = camp.title;
+    document.querySelector('[data-camp-desc]').textContent = camp.desc;
+    document.querySelector('[data-camp-price]').textContent = camp.price;
+    document.querySelector('[data-camp-spots]').textContent = camp.spots;
+    document.querySelector('[data-camp-when]').textContent = camp.when;
+    document.querySelector('[data-camp-badge]').textContent = camp.badge;
+
+    // ---- book strip personalization ----
+    document.querySelector('[data-book-h]').textContent = 'Want a coach to tune this for '+answers.name+'?';
+
+    // mount tracker SVG into result (app.js already ran; mount manually)
+    mountTracker();
+
+    // show result
+    showScreen(''); // deactivate all funnel screens
+    Object.keys(screens).forEach(function(k){ screens[k].classList.remove('is-active'); });
+    screens['building'].classList.remove('is-active');
+    document.getElementById('funnel').style.display = 'none';
+    resultEl.classList.add('is-active');
+    window.scrollTo({ top:0, behavior:'auto' });
+
+    // staged reveals
+    revealResult();
+
+    // toast: plan sent
+    toast('Plan sent to '+answers.email);
+  }
+
+  /* mount the Xtracker SVG (mirror of app.js mount, since result was hidden at load) */
+  function mountTracker(){
+    var TRACKER_SVG =
+      '<svg class="tracker-svg" viewBox="0 0 240 252" xmlns="http://www.w3.org/2000/svg">'+
+      '<defs>'+
+        '<linearGradient id="bodyG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f37"/><stop offset=".5" stop-color="#15181d"/><stop offset="1" stop-color="#070809"/></linearGradient>'+
+        '<linearGradient id="rimG2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#454b54"/><stop offset="1" stop-color="#1a1d22"/></linearGradient>'+
+        '<radialGradient id="faceG2" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#222730"/><stop offset="1" stop-color="#0c0e12"/></radialGradient>'+
+        '<radialGradient id="lensG2" cx="42%" cy="36%" r="65%"><stop offset="0" stop-color="#5b8bff"/><stop offset=".4" stop-color="#1d6cff"/><stop offset="1" stop-color="#0a2f7a"/></radialGradient>'+
+        '<linearGradient id="hiG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".5"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>'+
+      '</defs>'+
+      '<rect x="24" y="20" width="192" height="212" rx="40" fill="url(#bodyG2)"/>'+
+      '<rect x="24" y="20" width="192" height="212" rx="40" fill="none" stroke="url(#rimG2)" stroke-width="2.5"/>'+
+      '<rect x="40" y="36" width="160" height="180" rx="30" fill="url(#faceG2)"/>'+
+      '<rect x="40" y="36" width="160" height="180" rx="30" fill="url(#hiG2)" opacity=".5"/>'+
+      '<circle cx="120" cy="118" r="46" fill="url(#lensG2)"/>'+
+      '<circle cx="120" cy="118" r="46" fill="none" stroke="#0a2f7a" stroke-width="2"/>'+
+      '<circle cx="120" cy="118" r="22" fill="#0a0c10" opacity=".55"/>'+
+      '<circle cx="106" cy="104" r="10" fill="#cfe0ff" opacity=".7"/>'+
+      '<g class="leds">'+
+        '<circle cx="120" cy="62" r="4.5" fill="#1d6cff"/><circle cx="166" cy="80" r="4.5" fill="#1d6cff"/>'+
+        '<circle cx="178" cy="130" r="4.5" fill="#1d6cff"/><circle cx="162" cy="178" r="4.5" fill="#1d6cff"/>'+
+        '<circle cx="120" cy="196" r="4.5" fill="#1d6cff"/><circle cx="78" cy="178" r="4.5" fill="#1d6cff"/>'+
+        '<circle cx="62" cy="130" r="4.5" fill="#1d6cff"/><circle cx="74" cy="80" r="4.5" fill="#1d6cff"/>'+
+      '</g>'+
+      '<text x="120" y="206" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#5a6470" letter-spacing="2">XTRACKER</text>'+
+      '</svg>';
+    document.querySelectorAll('[data-result] [data-tracker-mount]').forEach(function(el){
+      if(!el.innerHTML.trim()) el.innerHTML = TRACKER_SVG;
+    });
+    if(!RM){
+      document.querySelectorAll('[data-result] .leds').forEach(function(g){
+        var leds = g.querySelectorAll('circle'); var i=0;
+        setInterval(function(){ leds.forEach(function(l){l.setAttribute('opacity','.32');}); leds[i%leds.length].setAttribute('opacity','1'); i++; }, 420);
+      });
+    }
+  }
+
+  /* staged reveal of result blocks */
+  function revealResult(){
+    var rises = resultEl.querySelectorAll('.res-rise');
+    if(RM){ rises.forEach(function(r){ r.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold:.12, rootMargin:'0px 0px -6% 0px' });
+    rises.forEach(function(r){ io.observe(r); });
+    // ensure the top banner is in immediately
+    setTimeout(function(){ if(rises[0]) rises[0].classList.add('in'); }, 60);
+  }
+
+  /* ---------- book-a-call (demo) ---------- */
+  document.querySelector('[data-book-btn]').addEventListener('click', function(){
+    var strip = document.querySelector('[data-book-strip]');
+    strip.classList.add('booked');
+    document.querySelector('[data-book-ico]').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    document.querySelector('[data-book-h]').textContent = "You're on the list, "+answers.name+" ✓";
+    document.querySelector('[data-book-p]').textContent = 'A coach will reach out at '+answers.email+' to find a time. Talk soon.';
+    this.outerHTML = '<span style="font-size:14px;font-weight:600;color:#34a06a;display:inline-flex;align-items:center;gap:8px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Call requested</span>';
+    toast('Free call requested — check '+answers.email);
+  });
+
+  /* ---------- toast ---------- */
+  var toastTimer = null;
+  function toast(msg){
+    if(!toastEl) return;
+    toastMsg.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 4200);
+  }
+
+})();
+</script>
+</body>
+</html>

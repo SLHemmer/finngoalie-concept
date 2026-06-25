@@ -1,487 +1,716 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Train With Us — Camps & Programs | Finngoalie</title>
-<meta name="description" content="Find your ice. Pick your level. Browse Finngoalie's 2026 goaltender camps, weekly programs, private synthetic sessions and season passes — small ratios, video review, all levels welcome." />
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css" />
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Train — Camps, Programs &amp; Private Sessions | Finngoalie</title>
+<meta name="description" content="Find your ice. Pick your level. Finngoalie camps, weekly programs and private on-ice sessions — filterable by format, with real dates, ages and levels. Book a single session, a package, or a full season pass.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ============================================================
+     PAGE-LOCAL  —  Train page: hero · conversion ladder · camp list
+     Composes the shared tokens (--accent / --ink / --mute / --line /
+     --signal …). No new colors beyond the one blue + the warm signal.
+     ============================================================ */
 
-<!-- ===== HEADER ===== -->
-<div class="announce">Pro Week 2026 · June 25–28 · <a href="train.html">12 spots left — reserve now ›</a></div>
-<div class="nav-wrap">
-  <nav class="nav wrap-wide">
-    <a href="index.html" class="brand">
-      <svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg>
-      Finngoalie
+  /* — hero: Apple-clean, crafted duotone training photo behind ink veil — */
+  .train-hero{
+    position:relative;min-height:84svh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;
+    padding:140px 28px 96px;overflow:hidden;isolation:isolate;
+  }
+  .train-hero .hero-photo{
+    position:absolute;inset:0;z-index:0;background-size:cover;background-position:center 30%;
+    /* duotone: desaturate + cool toward the brand ink/blue */
+    filter:grayscale(.62) contrast(1.06) brightness(.92);
+  }
+  .train-hero .hero-photo::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(29,108,255,.20),transparent 42%),
+               linear-gradient(0deg,var(--paper) 4%,rgba(246,247,249,.4) 38%,rgba(246,247,249,.12) 70%);
+  }
+  /* radial vignette so the copy sits on calm paper, photo breathes at the edges */
+  .train-hero .hero-veil{
+    position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(120% 78% at 50% 46%,transparent 30%,var(--paper) 86%);
+  }
+  .train-hero .hero-in{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center}
+  .train-hero h1{
+    font-size:var(--fz-display);line-height:.94;font-weight:800;letter-spacing:-.045em;max-width:13ch;
+  }
+  .train-hero h1 .l{display:inline-block;opacity:0;transform:translateY(26px) rotate(1.5deg);animation:riseWord 1.05s var(--ease) forwards}
+  .train-hero h1 .accent{color:var(--accent)}
+  .train-hero p.sub{
+    font-size:clamp(17px,2.1vw,22px);color:var(--mute);max-width:40ch;margin:30px auto 0;
+    font-weight:400;letter-spacing:-.01em;line-height:1.45;
+    opacity:0;transform:translateY(16px);animation:rise 1s var(--ease) .8s forwards;
+  }
+  .train-hero .hero-cta{
+    display:flex;gap:14px;margin-top:42px;flex-wrap:wrap;justify-content:center;
+    opacity:0;transform:translateY(16px);animation:rise 1s var(--ease) .95s forwards;
+  }
+  /* small live count chips under the hero CTA — date-driven urgency cue */
+  .train-hero .hero-meta{
+    display:flex;gap:26px;margin-top:40px;flex-wrap:wrap;justify-content:center;
+    opacity:0;transform:translateY(12px);animation:rise 1s var(--ease) 1.15s forwards;
+  }
+  .train-hero .hero-meta .hm{display:flex;align-items:baseline;gap:8px;font-size:14px;color:var(--mute)}
+  .train-hero .hero-meta .hm b{font-size:22px;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
+  .train-hero .hero-meta .hm .sg{color:var(--accent)}
+
+  /* ============================================================
+     CONVERSION LADDER  — single session → package → season pass
+     ============================================================ */
+  .ladder{padding:var(--s-9) 0 var(--s-8)}
+  .ladder-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:58px;align-items:stretch}
+  .rung{
+    position:relative;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);
+    padding:36px 30px;display:flex;flex-direction:column;overflow:hidden;
+    transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease);will-change:transform;
+  }
+  .rung:hover{transform:translateY(-6px);box-shadow:var(--sh-3);border-color:var(--accent-line)}
+  .rung .step{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute-2);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+  .rung .step .dotline{flex:1;height:1px;background:var(--line)}
+  .rung h3{font-size:23px;font-weight:700;letter-spacing:-.02em}
+  .rung .lede{font-size:14px;color:var(--mute);margin-top:10px;line-height:1.55;flex:1}
+  .rung .p{font-size:clamp(30px,3.6vw,42px);font-weight:800;letter-spacing:-.03em;margin-top:26px;line-height:1}
+  .rung .p small{font-size:.38em;color:var(--mute);font-weight:500}
+  .rung .go{margin-top:22px;font-size:13.5px;font-weight:600;color:var(--accent);display:inline-flex;align-items:center;gap:6px}
+  .rung .go .chev{transition:transform .35s var(--ease-spring)}
+  .rung:hover .go .chev{transform:translateX(4px)}
+  /* featured middle rung — the recommended package, on ink */
+  .rung.feat{background:var(--ink);color:#fff;border-color:transparent}
+  .rung.feat::before{content:"";position:absolute;inset:0;z-index:0;opacity:.7;background:radial-gradient(120% 90% at 18% 0%,rgba(29,108,255,.34),transparent 60%)}
+  .rung.feat > *{position:relative;z-index:1}
+  .rung.feat .step{color:var(--accent-up)}
+  .rung.feat .step .dotline{background:var(--line-on-dark)}
+  .rung.feat .lede{color:rgba(255,255,255,.62)}
+  .rung.feat .go{color:var(--accent-up)}
+  .rung.feat .tagpop{position:absolute;top:24px;right:24px;z-index:2;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);background:var(--signal);border-radius:var(--r-pill);padding:5px 12px}
+
+  /* ============================================================
+     FILTER + CAMP LIST
+     ============================================================ */
+  .programs{padding:var(--s-8) 0 var(--s-9)}
+  /* chip bar — composes pill geometry from the design language */
+  .chipbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:46px}
+  .chip{
+    font-size:13.5px;font-weight:600;letter-spacing:-.01em;color:var(--ink-2);
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-pill);
+    padding:10px 20px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;line-height:1;
+    transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease),
+               border-color var(--dur-fast) var(--ease),transform .35s var(--ease-spring);
+  }
+  .chip .cn{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mute-2);font-weight:500}
+  .chip:hover{border-color:var(--accent-line);color:var(--ink)}
+  .chip.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:var(--sh-accent)}
+  .chip.active .cn{color:rgba(255,255,255,.7)}
+  .chip:active{transform:scale(.96)}
+
+  /* camp list — date-led rows that read like a calendar */
+  .camplist{margin-top:46px;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--paper-2)}
+  .camprow{
+    display:grid;grid-template-columns:120px 1fr auto;align-items:center;gap:28px;
+    padding:26px 30px;position:relative;
+    transition:background var(--dur-fast) var(--ease);
+  }
+  .camprow + .camprow{border-top:1px solid var(--line-2)}
+  .camprow:hover{background:var(--paper)}
+
+  /* date badge — calendar-card look */
+  .datebadge{
+    width:120px;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;text-align:center;
+    background:var(--paper);box-shadow:var(--sh-1);
+  }
+  .datebadge .dm{background:var(--ink);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;padding:6px 0;font-weight:600}
+  .datebadge .dd{font-size:26px;font-weight:800;letter-spacing:-.03em;padding:10px 0 2px;line-height:1}
+  .datebadge .dr{font-size:11px;color:var(--mute);padding-bottom:10px;letter-spacing:.02em}
+  .datebadge.tbd .dm{background:var(--ink-3)}
+
+  .campmain{min-width:0}
+  .campmain h4{font-size:19px;font-weight:700;letter-spacing:-.02em;line-height:1.18}
+  .campmain .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .campmain .t{
+    font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--ink-2);background:var(--paper-3);border-radius:var(--r-pill);padding:5px 11px;line-height:1;
+  }
+  .campmain .t.lvl{color:var(--accent);background:var(--accent-soft)}
+  .campmain .desc{font-size:13.5px;color:var(--mute);margin-top:12px;line-height:1.5;max-width:52ch}
+
+  .campside{display:flex;flex-direction:column;align-items:flex-end;gap:14px;flex-shrink:0;text-align:right}
+  .campside .urg{
+    display:inline-flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.06em;
+    text-transform:uppercase;font-weight:600;color:var(--gold);
+  }
+  .campside .urg.hot{color:var(--accent)}
+  .campside .urg .pulse{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulseG 2s infinite}
+  .campside .urg.hot .pulse{animation:pulseB 2s infinite}
+  @keyframes pulseG{0%{box-shadow:0 0 0 0 rgba(184,138,46,.5)}70%{box-shadow:0 0 0 9px rgba(184,138,46,0)}100%{box-shadow:0 0 0 0 rgba(184,138,46,0)}}
+  @keyframes pulseB{0%{box-shadow:0 0 0 0 rgba(29,108,255,.5)}70%{box-shadow:0 0 0 9px rgba(29,108,255,0)}100%{box-shadow:0 0 0 0 rgba(29,108,255,0)}}
+  .campside .price{font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1;display:flex;align-items:baseline;gap:8px;justify-content:flex-end}
+  .campside .price small{font-size:.5em;color:var(--mute);font-weight:500}
+  .campside .price .was{font-size:14px;font-weight:500;color:var(--mute-2);text-decoration:line-through;letter-spacing:0}
+  .campside .enroll{
+    margin-top:2px;font-size:13.5px;font-weight:600;padding:11px 22px;border-radius:var(--r-pill);
+    background:var(--accent);color:#fff;box-shadow:var(--sh-accent);display:inline-flex;align-items:center;gap:8px;line-height:1;
+    transition:transform .35s var(--ease-spring),background var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease);
+  }
+  .campside .enroll .chev{transition:transform .35s var(--ease-spring)}
+  .campside .enroll:hover{background:var(--accent-deep);box-shadow:var(--sh-accent-lg)}
+  .campside .enroll:hover .chev{transform:translateX(3px)}
+
+  /* result count line above the list */
+  .listmeta{display:flex;align-items:center;justify-content:space-between;margin-top:38px;gap:16px;flex-wrap:wrap}
+  .listmeta .rc{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;color:var(--mute-2)}
+  .listmeta .rc b{color:var(--ink)}
+  .listmeta .note{font-size:13px;color:var(--mute);display:inline-flex;align-items:center;gap:8px}
+  .listmeta .note svg{width:15px;height:15px;color:var(--accent)}
+
+  /* ============================================================
+     PRIVATE & SYNTHETIC split
+     ============================================================ */
+  .split{padding:var(--s-9) 0;background:var(--paper-2);border-top:1px solid var(--line-2)}
+  .split-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:56px}
+  .split-card{
+    position:relative;border-radius:var(--r-lg);overflow:hidden;min-height:400px;display:flex;
+    align-items:flex-end;color:#fff;padding:40px;isolation:isolate;
+  }
+  .split-card .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;filter:grayscale(.4) contrast(1.05);transition:transform 1.2s var(--ease)}
+  .split-card:hover .bg{transform:scale(1.06)}
+  .split-card::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(0deg,rgba(8,10,14,.92),rgba(8,10,14,.34) 58%,rgba(8,10,14,.12))}
+  .split-card > .in{position:relative;z-index:2}
+  .split-card .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-up);font-weight:600}
+  .split-card h3{font-size:clamp(26px,3.4vw,36px);font-weight:800;letter-spacing:-.03em;line-height:1.04;margin-top:14px}
+  .split-card p{color:rgba(255,255,255,.66);font-size:14.5px;margin-top:14px;line-height:1.55;max-width:40ch}
+  .split-card .row{display:flex;align-items:center;gap:18px;margin-top:24px;flex-wrap:wrap}
+  .split-card .pr{font-size:20px;font-weight:800;letter-spacing:-.02em}
+  .split-card .pr small{font-size:.6em;color:rgba(255,255,255,.55);font-weight:500}
+  .split-card .glink{font-size:13.5px;font-weight:600;color:#fff;display:inline-flex;align-items:center;gap:7px}
+  .split-card .glink .chev{transition:transform .35s var(--ease-spring)}
+  .split-card:hover .glink .chev{transform:translateX(4px)}
+
+  /* ============================================================
+     PARENT REASSURANCE trio
+     ============================================================ */
+  .reassure{padding:var(--s-9) 0}
+  .reassure-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:58px}
+  .recard{border:1px solid var(--line);border-radius:var(--r);padding:34px 30px;background:var(--paper-2);transition:transform .5s var(--ease),box-shadow .5s var(--ease);will-change:transform}
+  .recard:hover{transform:translateY(-5px);box-shadow:var(--sh-2)}
+  .recard .ri{width:46px;height:46px;border-radius:13px;background:var(--accent-soft);display:grid;place-items:center;color:var(--accent);margin-bottom:24px}
+  .recard .ri svg{width:23px;height:23px}
+  .recard h4{font-size:18px;font-weight:700;letter-spacing:-.02em}
+  .recard p{font-size:14px;color:var(--mute);margin-top:12px;line-height:1.55}
+
+  /* ============================================================
+     FAQ accordion uses shared .accordion classes — only width wrap
+     ============================================================ */
+  .faq{padding:var(--s-9) 0;background:var(--paper-2);border-top:1px solid var(--line-2)}
+  .faq .accordion{max-width:780px;margin-left:auto;margin-right:auto}
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media(max-width:920px){
+    .ladder-grid{grid-template-columns:1fr;gap:16px}
+    .split-grid{grid-template-columns:1fr}
+    .reassure-grid{grid-template-columns:1fr;gap:16px}
+    .camprow{grid-template-columns:96px 1fr;gap:18px 20px}
+    .campside{grid-column:1 / -1;flex-direction:row;align-items:center;justify-content:space-between;text-align:left;margin-top:4px;flex-wrap:wrap;gap:14px}
+    .campside .price{justify-content:flex-start}
+    .datebadge{width:96px}
+  }
+  @media(max-width:680px){
+    .train-hero{min-height:78svh;padding:120px 22px 72px}
+    .chipbar{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;margin-left:-2px;margin-right:-2px;scrollbar-width:none}
+    .chipbar::-webkit-scrollbar{display:none}
+    .chip{flex-shrink:0}
+    .camprow{padding:22px 20px}
+    .camplist{border-radius:var(--r)}
+    .campside .enroll{flex:1;justify-content:center}
+    .train-hero .hero-meta{gap:18px}
+  }
+</style>
+</head>
+<body id="top">
+
+<!-- LIVING AURORA -->
+<canvas class="aurora-canvas" id="aurora"></canvas>
+
+<!-- ============================================================
+     NAV  —  REUSABLE SITE-WIDE BLOCK (copied verbatim, active=Train)
+     ============================================================ -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Finn<b>goalie</b>
     </a>
-    <div class="nav-links">
-      <a href="train.html" class="active">Train</a>
+    <div class="navlinks">
+      <a href="train.html" class="active" aria-current="page">Train</a>
       <a href="xtracker.html">The Xtracker</a>
       <a href="finnpegs.html">Finnpegs</a>
       <a href="shop.html">Shop</a>
       <a href="coaches.html">For Coaches</a>
       <a href="about.html">About</a>
     </div>
-    <div class="nav-r">
-      <button class="nav-ico" aria-label="Search">⌕</button>
-      <button class="nav-ico" aria-label="Cart">Bag <span class="cart-count">0</span></button>
-      <button class="burger" data-open-nav aria-label="Menu">☰</button>
-    </div>
-  </nav>
-</div>
-
-<!-- ===== MOBILE DRAWER ===== -->
-<div class="drawer" id="drawer">
-  <button class="close" data-close-nav aria-label="Close">✕</button>
-  <a href="train.html" data-close-nav>Train</a>
-  <a href="xtracker.html" data-close-nav>The Xtracker</a>
-  <a href="finnpegs.html" data-close-nav>Finnpegs</a>
-  <a href="shop.html" data-close-nav>Shop</a>
-  <a href="coaches.html" data-close-nav>For Coaches</a>
-  <a href="about.html" data-close-nav>About</a>
-</div>
-
-<!-- ===== 1. HERO ===== -->
-<header class="hero" style="min-height:72vh">
-  <div class="hero-bg" style="background-image:linear-gradient(150deg,rgba(19,51,92,.82),rgba(7,13,24,.92)),url('assets/img/training.jpg');background-size:cover;background-position:center"></div>
-  <div class="hero-glow"></div>
-  <div class="wrap">
-    <span class="eyebrow" data-reveal="fade">Train with us</span>
-    <h1 class="display balance" data-reveal="up" data-reveal-delay="80">Find your ice.<br>Pick your level.</h1>
-    <p class="lead" data-reveal="up" data-reveal-delay="160">From a first single session to a full-season pass — every Finngoalie program is built by goalie coaches, capped at small ratios, and dialed to exactly where your game is right now.</p>
-    <div class="cta-row" data-reveal="up" data-reveal-delay="220">
-      <a class="btn btn-blue btn-lg" href="#calendar">Browse the calendar</a>
-      <a class="btn-text" href="#private">Book a private session</a>
+    <div class="nav-right">
+      <a class="nav-icon search-icon" href="shop.html" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+      </a>
+      <a class="nav-icon" href="shop.html" aria-label="Bag" data-bag-add>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke-linecap="round"/></svg>
+        <span class="count" data-bag-count>0</span>
+      </a>
+      <a class="nav-cta magnetic" href="plan.html">Free Training Plan</a>
+      <button class="burger" id="burger" aria-label="Menu" data-burger><span></span><span></span><span></span></button>
     </div>
   </div>
-  <div class="scroll-cue">Scroll</div>
+</nav>
+
+<!-- MOBILE DRAWER (mirrors nav) -->
+<div class="drawer" id="drawer">
+  <a href="train.html" data-drawer-close>Train</a>
+  <a href="xtracker.html" data-drawer-close>The Xtracker</a>
+  <a href="finnpegs.html" data-drawer-close>Finnpegs</a>
+  <a href="shop.html" data-drawer-close>Shop</a>
+  <a href="coaches.html" data-drawer-close>For Coaches</a>
+  <a href="about.html" data-drawer-close>About</a>
+  <a class="drawer-cta" href="plan.html" data-drawer-close>Free Training Plan</a>
+</div>
+
+<!-- ============================================================
+     HERO  —  "Find your ice. Pick your level."
+     ============================================================ -->
+<header class="train-hero">
+  <div class="hero-photo" style="background-image:url(assets/img/training.jpg)"></div>
+  <div class="hero-veil"></div>
+  <div class="hero-in">
+    <div class="hero-eyebrow mono">CAMPS · PROGRAMS · PRIVATE ICE</div>
+    <h1>
+      <span class="l" style="animation-delay:.25s">Find</span>
+      <span class="l" style="animation-delay:.33s">your</span>
+      <span class="l accent" style="animation-delay:.41s">ice.</span><br>
+      <span class="l" style="animation-delay:.55s">Pick</span>
+      <span class="l" style="animation-delay:.63s">your</span>
+      <span class="l accent" style="animation-delay:.71s">level.</span>
+    </h1>
+    <p class="sub">From a single private session to a full pro week — every tier trains the same thing nobody else trains: the eyes. Filter by format, lock your spot.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary magnetic" href="#programs">Browse all programs <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="btn btn-ghost magnetic" href="plan.html">Get a free plan first</a>
+    </div>
+    <div class="hero-meta">
+      <div class="hm"><b data-count="11">11</b><span>programs open now</span></div>
+      <div class="hm"><b><span class="sg">$</span><span data-count="49.99" data-dec="2">49.99</span></b><span>entry session</span></div>
+      <div class="hm"><b data-count="4">4</b><span>seasons covered</span></div>
+    </div>
+  </div>
 </header>
 
-<!-- ===== 2. CONVERSION LADDER ===== -->
-<section class="section light">
+<!-- ============================================================
+     CONVERSION LADDER
+     ============================================================ -->
+<section class="ladder">
   <div class="wrap">
-    <div class="shead center" data-reveal="up">
-      <span class="eyebrow">Start where you are</span>
-      <h2 class="h1 balance">Start small. Climb the ladder.</h2>
-      <p class="lead" style="margin:16px auto 0">Try it once. Commit to a block. Or train all season. Each step builds on the last — and the value climbs with you.</p>
+    <div class="section-head">
+      <div class="kicker reveal">One path, three rungs</div>
+      <h2 class="reveal d1">Start small. <span class="mute">Climb as far</span> <span class="accent">as you want.</span></h2>
+      <p class="reveal d2">Most goalies start with a single session, fall for the work, and grow into a package or a season pass. No pressure — just a clear ladder.</p>
     </div>
-    <div class="grid g3">
-
-      <div class="feature" data-reveal="up" data-reveal-delay="0">
-        <div class="ico" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </div>
-        <span class="tag">Step 1 · Try it</span>
-        <h3 style="margin-top:14px">Single Session</h3>
-        <p class="pricetag accent">from $49.99</p>
-        <p class="muted" style="margin:6px 0 0">One-on-one synthetic-ice session with a goalie coach. The lowest-friction way to feel the Finngoalie difference — no commitment, instant feedback.</p>
-        <div style="margin-top:auto;padding-top:20px"><a class="btn-text" href="#private">Book a single session</a></div>
+    <div class="ladder-grid stagger">
+      <div class="rung">
+        <div class="step"><span>01 · Try it</span><span class="dotline"></span></div>
+        <h3>Single Session</h3>
+        <p class="lede">One private synthetic-ice session. Pure focus — one goalie, one coach, every rep dialed to you. The lowest-friction way in.</p>
+        <div class="p"><small>from $</small>49<small>.99</small></div>
+        <a class="go" href="book.html">Book a session <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
-
-      <div class="feature" data-reveal="up" data-reveal-delay="120" style="outline:1.5px solid var(--blue);outline-offset:-1.5px">
-        <div class="ico" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h6M9 6l6 6-6 6M15 12h6"/></svg>
-        </div>
-        <span class="pill">Most popular</span>
-        <h3 style="margin-top:14px">Training Package</h3>
-        <p class="pricetag accent">from $325</p>
-        <p class="muted" style="margin:6px 0 0">A multi-session block — synthetic packages, weekly programs and camps. Real progression: repetition, tracking and structured drills across several weeks.</p>
-        <div style="margin-top:auto;padding-top:20px"><a class="btn-text" href="#calendar">See packages &amp; camps</a></div>
+      <div class="rung feat">
+        <span class="tagpop">Most chosen</span>
+        <div class="step"><span>02 · Commit</span><span class="dotline"></span></div>
+        <h3>Training Package</h3>
+        <p class="lede">A multi-session synthetic block (Spring &amp; Summer). Reps stack, the work compounds — the sweet spot of value and momentum.</p>
+        <div class="p"><small>from $</small>325</div>
+        <a class="go" href="book.html">Build a package <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#7fb0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
-
-      <div class="feature" data-reveal="up" data-reveal-delay="240">
-        <div class="ico" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.9H22l-6 4.4 2.3 7-6.3-4.6L5.7 20l2.3-7-6-4.4h7.6L12 2Z"/></svg>
-        </div>
-        <span class="tag">Step 3 · All in</span>
-        <h3 style="margin-top:14px">Season Pass</h3>
-        <p class="pricetag accent">from $899.99</p>
-        <p class="muted" style="margin:6px 0 0">Season-long 1:1 synthetic or weekly on-ice training. The serious path — your goalie develops every week with the same coach watching the whole arc.</p>
-        <div style="margin-top:auto;padding-top:20px"><a class="btn-text" href="#private">Lock in a season pass</a></div>
+      <div class="rung">
+        <div class="step"><span>03 · Go all-in</span><span class="dotline"></span></div>
+        <h3>Season Pass</h3>
+        <p class="lede">Season-long 1-on-1 synthetic ice. Weekly reps, all year, with the same coach building one continuous development arc.</p>
+        <div class="p"><small>from $</small>899<small>.99</small></div>
+        <a class="go" href="book.html">Get the season pass <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ===== 3. FILTER + CALENDAR ===== -->
-<section class="section alt" id="calendar">
+<!-- ============================================================
+     PROGRAMS  —  filter chips + camp list (data-filter wiring)
+     ============================================================ -->
+<section class="programs" id="programs">
   <div class="wrap">
-    <div class="shead" data-reveal="up">
-      <span class="eyebrow">2026 schedule</span>
-      <h2 class="h1 balance">2026 camps &amp; programs.</h2>
-      <p class="lead" style="margin-top:16px">Filter by format and level. Dates are set, ice is limited — when a program fills, it's gone.</p>
+    <div class="section-head">
+      <div class="kicker reveal">Camps &amp; programs · 2026</div>
+      <h2 class="reveal d1">Next on <span class="mute">the ice.</span></h2>
+      <p class="reveal d2">Real dates, real ages, real levels. Filter to your format and claim a spot before it fills.</p>
     </div>
 
-    <!-- filter chips -->
-    <div class="chips" data-filter-group data-reveal="fade" aria-label="Filter programs">
-      <button class="chip active" data-filter="all">All programs</button>
-      <button class="chip" data-filter="camps">Camps</button>
-      <button class="chip" data-filter="weekly">Weekly</button>
-      <button class="chip" data-filter="private">Private</button>
-      <button class="chip" data-filter="elite">Elite / AAA</button>
-      <button class="chip" data-filter="synthetic">Synthetic</button>
+    <!-- FILTER CHIPS  ·  group scope = "camps"  (app.js: [data-filter]/[data-chip]) -->
+    <div class="chipbar reveal d1" data-filter="camps" data-active-chip="all" role="tablist" aria-label="Filter programs by format">
+      <button class="chip active" data-chip="all">All <span class="cn">11</span></button>
+      <button class="chip" data-chip="camps">Camps <span class="cn">6</span></button>
+      <button class="chip" data-chip="weekly">Weekly <span class="cn">4</span></button>
+      <button class="chip" data-chip="private">Private <span class="cn">1</span></button>
+      <button class="chip" data-chip="elite">Elite / AAA <span class="cn">4</span></button>
+      <button class="chip" data-chip="synthetic">Synthetic <span class="cn">2</span></button>
     </div>
 
-    <!-- calendar list -->
-    <div class="grid" data-filter-target style="gap:16px">
-
-      <!-- 1 -->
-      <div class="camp" data-cat="camps elite" data-reveal="up">
-        <div class="camp-date"><span class="m">Jun</span><span class="d">25</span></div>
-        <div>
-          <h3 class="h3">Pro Week 2026</h3>
-          <div class="camp-meta">
-            <span class="tag">Jun 25–28</span>
-            <span class="tag">U13–U20</span>
-            <span class="tag">Elite camp</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="tag urgent">12 spots left</span>
-          <span class="pricetag">from $175</span>
-          <button class="btn btn-blue btn-sm" data-add><span data-add-label>Enroll</span></button>
-        </div>
-      </div>
-
-      <!-- 2 -->
-      <div class="camp" data-cat="camps elite" data-reveal="up">
-        <div class="camp-date"><span class="m">Jul</span><span class="d">27</span></div>
-        <div>
-          <h3 class="h3">High Performance Camp</h3>
-          <div class="camp-meta">
-            <span class="tag">Jul 27–30</span>
-            <span class="tag">U13–U20</span>
-            <span class="tag">High performance</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="tag urgent">Filling up</span>
-          <span class="pricetag">from $299.99</span>
-          <button class="btn btn-blue btn-sm" data-add><span data-add-label>Enroll</span></button>
-        </div>
-      </div>
-
-      <!-- 3 -->
-      <div class="camp" data-cat="camps" data-reveal="up">
-        <div class="camp-date"><span class="m">Aug</span><span class="d">11</span></div>
-        <div>
-          <h3 class="h3">Warrior Week 2026</h3>
-          <div class="camp-meta">
-            <span class="tag">Aug 11–14</span>
-            <span class="tag">U9 · U11 · U13</span>
-            <span class="tag">Foundational</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="tag urgent">Filling up</span>
-          <span class="pricetag"><span class="save">$450</span>$379.99</span>
-          <button class="btn btn-blue btn-sm" data-add><span data-add-label>Enroll</span></button>
-        </div>
-      </div>
-
-      <!-- 4 -->
-      <div class="camp" data-cat="weekly" data-reveal="up">
-        <div class="camp-date"><span class="m">Apr</span><span class="d">06</span></div>
-        <div>
-          <h3 class="h3">Spring Weekly 2026</h3>
-          <div class="camp-meta">
-            <span class="tag">Weekly · Spring</span>
-            <span class="tag">All levels</span>
-            <span class="tag">On-ice</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="tag urgent">8 spots left</span>
-          <span class="pricetag">$329</span>
-          <button class="btn btn-blue btn-sm" data-add><span data-add-label>Enroll</span></button>
-        </div>
-      </div>
-
-      <!-- 5 -->
-      <div class="camp" data-cat="weekly" data-reveal="up">
-        <div class="camp-date"><span class="m">Jul</span><span class="d">02</span></div>
-        <div>
-          <h3 class="h3">Summer WEEKLY 2026</h3>
-          <div class="camp-meta">
-            <span class="tag">Weekly · Summer</span>
-            <span class="tag">All levels</span>
-            <span class="tag">On-ice</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="tag urgent">Filling up</span>
-          <span class="pricetag">from $189.99</span>
-          <button class="btn btn-blue btn-sm" data-add><span data-add-label>Enroll</span></button>
-        </div>
-      </div>
-
-      <!-- 6 -->
-      <div class="camp" data-cat="weekly elite" data-reveal="up">
-        <div class="camp-date"><span class="m">Jul</span><span class="d">07</span></div>
-        <div>
-          <h3 class="h3">AAA High Performance Summer</h3>
-          <div class="camp-meta">
-            <span class="tag">Weekly · Summer</span>
-            <span class="tag">U15 · U18</span>
-            <span class="tag">AAA / elite</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="tag urgent">6 spots left</span>
-          <span class="pricetag">from $249.99</span>
-          <button class="btn btn-blue btn-sm" data-add><span data-add-label>Enroll</span></button>
-        </div>
-      </div>
-
-      <!-- 7 -->
-      <div class="camp" data-cat="camps" data-reveal="up">
-        <div class="camp-date"><span class="m">Aug</span><span class="d">04</span></div>
-        <div>
-          <h3 class="h3">GoaliesEdge Summer Camp</h3>
-          <div class="camp-meta">
-            <span class="tag">Aug 4–7</span>
-            <span class="tag">All levels</span>
-            <span class="tag">Skating / edgework</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="tag urgent">Filling up</span>
-          <span class="pricetag">$289</span>
-          <button class="btn btn-blue btn-sm" data-add><span data-add-label>Enroll</span></button>
-        </div>
-      </div>
-
-      <!-- 8 -->
-      <div class="camp" data-cat="camps" data-reveal="up">
-        <div class="camp-date"><span class="m">Aug</span><span class="d">18</span></div>
-        <div>
-          <h3 class="h3">Foundational Goaltender Camp</h3>
-          <div class="camp-meta">
-            <span class="tag">Aug 18–21</span>
-            <span class="tag">U9–U13</span>
-            <span class="tag">Foundational</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="tag urgent">9 spots left</span>
-          <span class="pricetag">from $250</span>
-          <button class="btn btn-blue btn-sm" data-add><span data-add-label>Enroll</span></button>
-        </div>
-      </div>
-
-      <!-- 9 -->
-      <div class="camp" data-cat="elite" data-reveal="up">
-        <div class="camp-date"><span class="m">Jul</span><span class="d">14</span></div>
-        <div>
-          <h3 class="h3">Top Prospects Week U13</h3>
-          <div class="camp-meta">
-            <span class="tag">Jul 14–18</span>
-            <span class="tag">U13</span>
-            <span class="tag">Invitational / elite</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="tag urgent">4 spots left</span>
-          <span class="pricetag">$699</span>
-          <button class="btn btn-blue btn-sm" data-add><span data-add-label>Enroll</span></button>
-        </div>
-      </div>
-
-      <!-- 10 -->
-      <div class="camp" data-cat="weekly" data-reveal="up">
-        <div class="camp-date"><span class="m">Oct</span><span class="d">04</span></div>
-        <div>
-          <h3 class="h3">In-Season Saturday Training</h3>
-          <div class="camp-meta">
-            <span class="tag">Weekly · In-season</span>
-            <span class="tag">All levels</span>
-            <span class="tag">Primetime ice</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="tag urgent">Filling up</span>
-          <span class="pricetag">from $389</span>
-          <button class="btn btn-blue btn-sm" data-add><span data-add-label>Enroll</span></button>
-        </div>
-      </div>
-
-      <!-- 11 -->
-      <div class="camp" data-cat="private synthetic" data-reveal="up">
-        <div class="camp-date"><span class="m">Sep</span><span class="d">08</span></div>
-        <div>
-          <h3 class="h3">Private On-Ice Weekly Season Package</h3>
-          <div class="camp-meta">
-            <span class="tag">Weekly · Full season</span>
-            <span class="tag">All levels</span>
-            <span class="tag">Private 1:1</span>
-          </div>
-        </div>
-        <div class="camp-r">
-          <span class="tag urgent">2 spots left</span>
-          <span class="pricetag">$1,799</span>
-          <button class="btn btn-blue btn-sm" data-add><span data-add-label>Enroll</span></button>
-        </div>
-      </div>
-
+    <div class="listmeta reveal">
+      <div class="rc"><b>11</b> programs · sorted by date</div>
+      <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg> Dates &amp; spots update live</div>
     </div>
 
-    <p class="tiny" style="margin-top:24px">Showing 2026 programs · dates &amp; rinks confirmed at enrollment · Halifax / Bedford, NS.</p>
+    <!-- CAMP LIST  ·  target scope = "camps"  (each row [data-tag]) -->
+    <div class="camplist reveal d1" data-filter-target="camps">
+
+      <!-- 1 · Pro Week 2026 -->
+      <article class="camprow" data-tag="camps elite">
+        <div class="datebadge"><div class="dm">Jun</div><div class="dd">25</div><div class="dr">25–28</div></div>
+        <div class="campmain">
+          <h4>Pro Week 2026</h4>
+          <div class="tags"><span class="t lvl">U13–U20</span><span class="t">4-day camp</span><span class="t">Flagship</span></div>
+          <p class="desc">Five mornings of Xtracker vision blocks, afternoons of live reads. Finngoalie's marquee development week.</p>
+        </div>
+        <div class="campside">
+          <div class="urg hot"><span class="pulse"></span>12 spots left</div>
+          <div class="price"><small>from $</small>175</div>
+          <a class="enroll magnetic" href="book.html">Enroll <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <!-- 2 · High Performance Training Camp -->
+      <article class="camprow" data-tag="camps elite">
+        <div class="datebadge"><div class="dm">Jul</div><div class="dd">27</div><div class="dr">27–30</div></div>
+        <div class="campmain">
+          <h4>High Performance Camp 2026</h4>
+          <div class="tags"><span class="t lvl">U13–U20</span><span class="t">4-day camp</span><span class="t">High performance</span></div>
+          <p class="desc">High-tempo crease work for goalies chasing the next tier. Game-speed reads, advanced recovery, full system.</p>
+        </div>
+        <div class="campside">
+          <div class="urg hot"><span class="pulse"></span>Filling up</div>
+          <div class="price"><small>from $</small>299<small>.99</small></div>
+          <a class="enroll magnetic" href="book.html">Enroll <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <!-- 3 · Warrior Week (sale) -->
+      <article class="camprow" data-tag="camps">
+        <div class="datebadge"><div class="dm">Aug</div><div class="dd">11</div><div class="dr">11–14</div></div>
+        <div class="campmain">
+          <h4>Warrior Week 2026</h4>
+          <div class="tags"><span class="t lvl">U9 · U11 · U13</span><span class="t">4-day camp</span><span class="t">Young ages</span></div>
+          <p class="desc">A foundations-first week built for younger goalies — confidence, stance and movement, with the fun turned all the way up.</p>
+        </div>
+        <div class="campside">
+          <div class="urg"><span class="pulse"></span>Early-bird ends soon</div>
+          <div class="price"><span class="was">$450</span>$379<small>.99</small></div>
+          <a class="enroll magnetic" href="book.html">Enroll <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <!-- 4 · GoaliesEdge Summer Camp -->
+      <article class="camprow" data-tag="camps">
+        <div class="datebadge"><div class="dm">Jul</div><div class="dd">14</div><div class="dr">14–17</div></div>
+        <div class="campmain">
+          <h4>GoaliesEdge Summer Camp 2026</h4>
+          <div class="tags"><span class="t lvl">U9–U15</span><span class="t">4-day camp</span><span class="t">Edgework</span></div>
+          <p class="desc">Skating and edgework specialist camp — the footwork foundation every save is built on. Sharper edges, quieter feet.</p>
+        </div>
+        <div class="campside">
+          <div class="urg"><span class="pulse"></span>Filling up</div>
+          <div class="price">$289</div>
+          <a class="enroll magnetic" href="book.html">Enroll <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <!-- 5 · Foundational Goaltender Camp -->
+      <article class="camprow" data-tag="camps">
+        <div class="datebadge"><div class="dm">Jul</div><div class="dd">07</div><div class="dr">07–10</div></div>
+        <div class="campmain">
+          <h4>Foundational Goaltender Camp 2026</h4>
+          <div class="tags"><span class="t lvl">U7–U13</span><span class="t">4-day camp</span><span class="t">First camp</span></div>
+          <p class="desc">The perfect first camp. Core mechanics, stance, and movement taught from the ground up in a patient, encouraging room.</p>
+        </div>
+        <div class="campside">
+          <div class="urg"><span class="pulse"></span>Spots open</div>
+          <div class="price"><small>from $</small>250</div>
+          <a class="enroll magnetic" href="book.html">Enroll <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <!-- 6 · Top Prospects Training Week U13 -->
+      <article class="camprow" data-tag="camps elite">
+        <div class="datebadge"><div class="dm">Aug</div><div class="dd">18</div><div class="dr">18–22</div></div>
+        <div class="campmain">
+          <h4>Top Prospects Training Week U13</h4>
+          <div class="tags"><span class="t lvl">U13 · invite</span><span class="t">5-day camp</span><span class="t">Prospects</span></div>
+          <p class="desc">An invite-level week for the region's standout U13 goalies. Pro-track volume, film, and the highest coaching bar we run.</p>
+        </div>
+        <div class="campside">
+          <div class="urg hot"><span class="pulse"></span>Only 6 spots left</div>
+          <div class="price">$699</div>
+          <a class="enroll magnetic" href="book.html">Enroll <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <!-- 7 · Spring Weekly -->
+      <article class="camprow" data-tag="weekly">
+        <div class="datebadge"><div class="dm">Apr</div><div class="dd">06</div><div class="dr">8 wks</div></div>
+        <div class="campmain">
+          <h4>Spring Weekly Training 2026</h4>
+          <div class="tags"><span class="t lvl">U9–U18</span><span class="t">Weekly block</span><span class="t">Spring</span></div>
+          <p class="desc">Consistent weekly reps through the spring — the quiet, compounding work that shows up next season.</p>
+        </div>
+        <div class="campside">
+          <div class="urg"><span class="pulse"></span>Filling up</div>
+          <div class="price">$329</div>
+          <a class="enroll magnetic" href="book.html">Enroll <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <!-- 8 · Summer Weekly -->
+      <article class="camprow" data-tag="weekly">
+        <div class="datebadge"><div class="dm">Jul</div><div class="dd">02</div><div class="dr">6 wks</div></div>
+        <div class="campmain">
+          <h4>Summer Weekly Training 2026</h4>
+          <div class="tags"><span class="t lvl">U9–U18</span><span class="t">Weekly block</span><span class="t">Summer</span></div>
+          <p class="desc">Stay sharp all summer. One focused weekly session that keeps your tracking and movement from going to sleep.</p>
+        </div>
+        <div class="campside">
+          <div class="urg"><span class="pulse"></span>Spots open</div>
+          <div class="price"><small>from $</small>189<small>.99</small></div>
+          <a class="enroll magnetic" href="book.html">Enroll <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <!-- 9 · AAA / High Performance Summer Weekly U15/U18 -->
+      <article class="camprow" data-tag="weekly elite">
+        <div class="datebadge"><div class="dm">Jul</div><div class="dd">03</div><div class="dr">6 wks</div></div>
+        <div class="campmain">
+          <h4>AAA Summer Weekly U15 / U18</h4>
+          <div class="tags"><span class="t lvl">U15 · U18 · AAA</span><span class="t">Weekly block</span><span class="t">High performance</span></div>
+          <p class="desc">A weekly block built for AAA and high-performance goalies — game-pace reads and the demands of the next level.</p>
+        </div>
+        <div class="campside">
+          <div class="urg hot"><span class="pulse"></span>Filling up</div>
+          <div class="price"><small>from $</small>249<small>.99</small></div>
+          <a class="enroll magnetic" href="book.html">Enroll <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <!-- 10 · In-Season Saturday (Primetime) -->
+      <article class="camprow" data-tag="weekly synthetic">
+        <div class="datebadge"><div class="dm">Sat</div><div class="dd">AM</div><div class="dr">In-season</div></div>
+        <div class="campmain">
+          <h4>In-Season Saturday Training</h4>
+          <div class="tags"><span class="t lvl">U11–U18</span><span class="t">Weekly · primetime ice</span><span class="t">In-season</span></div>
+          <p class="desc">Primetime Saturday ice through the season — keep the edge sharp when games are stacking up and practice time gets thin.</p>
+        </div>
+        <div class="campside">
+          <div class="urg"><span class="pulse"></span>Spots open</div>
+          <div class="price"><small>from $</small>389</div>
+          <a class="enroll magnetic" href="book.html">Enroll <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <!-- 11 · Private On-Ice Weekly Season Package -->
+      <article class="camprow" data-tag="private synthetic">
+        <div class="datebadge tbd"><div class="dm">Sep</div><div class="dd">→</div><div class="dr">Season</div></div>
+        <div class="campmain">
+          <h4>Private On-Ice Weekly Season Package</h4>
+          <div class="tags"><span class="t lvl">All levels</span><span class="t">1-on-1 · full season</span><span class="t">Private</span></div>
+          <p class="desc">The complete commitment: weekly 1-on-1 on-ice all season. One goalie, one coach, one continuous arc from September to spring.</p>
+        </div>
+        <div class="campside">
+          <div class="urg hot"><span class="pulse"></span>Only 3 slots</div>
+          <div class="price">$1,799</div>
+          <a class="enroll magnetic" href="book.html">Enroll <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+    </div><!-- /camplist -->
   </div>
 </section>
 
-<!-- ===== 4. PRIVATE & SYNTHETIC ===== -->
-<section class="section light" id="private">
+<!-- ============================================================
+     PRIVATE & SYNTHETIC SPLIT
+     ============================================================ -->
+<section class="split">
   <div class="wrap">
-    <div class="split">
-      <div data-reveal="left">
-        <span class="eyebrow">Private &amp; synthetic</span>
-        <h2 class="h1 balance" style="margin:0 0 18px">One goalie. One coach.<br>Zero distractions.</h2>
-        <p class="lead">Off-ice synthetic sessions put your goalie under repetition no group setting can match — tracking, edges and mechanics, drilled one-on-one with instant video feedback.</p>
-        <ul style="list-style:none;padding:0;margin:24px 0 0;display:grid;gap:14px">
-          <li style="display:flex;gap:12px;align-items:flex-start">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><strong>Single sessions — from $49.99.</strong> Drop in, get coached, leave with a list. No commitment.</span>
-          </li>
-          <li style="display:flex;gap:12px;align-items:flex-start">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><strong>Synthetic packages — from $325.</strong> Multi-session blocks for spring &amp; summer, priced to repeat.</span>
-          </li>
-          <li style="display:flex;gap:12px;align-items:flex-start">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><strong>Season passes — from $899.99.</strong> Weekly 1:1 all season long with the same coach.</span>
-          </li>
-        </ul>
-        <div class="cta-row" style="margin-top:30px">
-          <a class="btn btn-blue" href="#" data-add><span data-add-label>Book a session</span></a>
-          <a class="btn-text" href="#calendar">See season packages</a>
+    <div class="section-head">
+      <div class="kicker reveal">Two ways to train 1-on-1</div>
+      <h2 class="reveal d1">Private ice. <span class="accent">Synthetic ice.</span></h2>
+      <p class="reveal d2">When you want undivided attention, pick the surface. The coaching obsession is identical on both.</p>
+    </div>
+    <div class="split-grid">
+      <a class="split-card reveal r-left" href="book.html">
+        <div class="bg" style="background-image:url(assets/img/goalie-save.jpg)"></div>
+        <div class="in">
+          <div class="tag">On-ice · 1-on-1</div>
+          <h3>Private On-Ice Sessions</h3>
+          <p>Real ice, real net, real game speed. Pure focus on the parts of your game that decide outcomes — book a single session or a full season.</p>
+          <div class="row"><span class="pr"><small>from $</small>140</span><span class="glink">Book private ice <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
         </div>
-      </div>
-      <div class="split-media" data-reveal="right" aria-hidden="true">
-        <img src="assets/img/goalie-action.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
-        <div style="position:absolute;inset:0;background:linear-gradient(150deg,rgba(7,13,24,.55),rgba(7,13,24,.78))"></div>
-        <div style="position:absolute;inset:0;display:grid;place-items:center;color:var(--on-night);text-align:center;padding:30px;z-index:2">
-          <div>
-            <div style="font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue-2);margin-bottom:14px">Synthetic ice · 1:1</div>
-            <div style="font-size:clamp(1.4rem,2.6vw,2rem);font-weight:700;letter-spacing:-.03em;line-height:1.12">Reps the<br>group can't give.</div>
-          </div>
+      </a>
+      <a class="split-card reveal r-right" href="book.html">
+        <div class="bg" style="background-image:url(assets/img/goalie-action.jpg)"></div>
+        <div class="in">
+          <div class="tag">Synthetic · 1-on-1</div>
+          <h3>Synthetic Training</h3>
+          <p>Off-ice synthetic surface — the lowest-friction, most affordable way to get reps in year-round. Single sessions, packages and season passes.</p>
+          <div class="row"><span class="pr"><small>from $</small>49<small>.99</small></span><span class="glink">Book synthetic <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- ===== 5. PARENT REASSURANCE ===== -->
-<section class="section alt">
+<!-- ============================================================
+     PARENT REASSURANCE TRIO
+     ============================================================ -->
+<section class="reassure">
   <div class="wrap">
-    <div class="shead center" data-reveal="up">
-      <span class="eyebrow">For parents</span>
-      <h2 class="h1 balance">Built to be trusted.</h2>
-      <p class="lead" style="margin:16px auto 0">You're not buying ice time — you're buying development. Here's what every program guarantees.</p>
+    <div class="section-head">
+      <div class="kicker reveal">For the parents</div>
+      <h2 class="reveal d1">Booked with <span class="mute">confidence.</span></h2>
+      <p class="reveal d2">You're trusting us with your goalie. Here's what that trust is built on.</p>
     </div>
-    <div class="grid g3">
-
-      <div class="feature" data-reveal="up" data-reveal-delay="0">
-        <div class="ico" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <h3>Small ratios</h3>
-        <p class="muted">Goalie-specific groups, capped low. Your kid gets real reps and real eyes on every drill — never lost in a crowd of skaters.</p>
+    <div class="reassure-grid stagger">
+      <div class="recard">
+        <div class="ri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h4>13 years in the crease</h4>
+        <p>Every session is run by goalie-specific coaches who have lived the position — not general skills coaches filling a slot.</p>
       </div>
-
-      <div class="feature" data-reveal="up" data-reveal-delay="120">
-        <div class="ico" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8ZM2 6h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z"/></svg>
-        </div>
-        <h3>Video review</h3>
-        <p class="muted">Sessions are filmed and broken down so progress is visible — not guessed. Goalies see exactly what changed, week to week.</p>
+      <div class="recard">
+        <div class="ri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.5a3.2 3.2 0 0 1 0 6M21 20c0-2.6-1.4-4.4-3.5-5.2" stroke-linecap="round"/></svg></div>
+        <h4>Small groups, real attention</h4>
+        <p>Tight goalie-to-coach ratios so your kid gets seen, corrected and encouraged every single rep — never lost in a crowd.</p>
       </div>
-
-      <div class="feature" data-reveal="up" data-reveal-delay="240">
-        <div class="ico" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.4 6.9H22l-6 4.4 2.3 7-6.3-4.6L5.7 20l2.3-7-6-4.4h7.6L12 2Z"/></svg>
-        </div>
-        <h3>All levels welcome</h3>
-        <p class="muted">From a first-year U9 to a U20 prospect, every program meets your goalie where they are and pushes from there. No one's in over their head.</p>
+      <div class="recard">
+        <div class="ri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h7l2 2h7v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z"/><path d="M9 14l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h4>Clear dates &amp; easy booking</h4>
+        <p>No mystery schedules. Every program shows its real dates, ages and price up front, and checks out in a couple of taps.</p>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ===== 6. FAQ ACCORDION ===== -->
-<section class="section light">
-  <div class="wrap" style="max-width:780px">
-    <div class="shead center" data-reveal="up">
-      <span class="eyebrow">Good to know</span>
-      <h2 class="h1 balance">Questions parents ask.</h2>
+<!-- ============================================================
+     FAQ ACCORDION  (shared .accordion + app.js [data-accordion])
+     ============================================================ -->
+<section class="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker reveal">Before you book</div>
+      <h2 class="reveal d1">Good <span class="mute">to know.</span></h2>
     </div>
-    <div data-specs class="specs" data-reveal="fade">
-
-      <div data-specs-item>
-        <button data-specs-head>What should my goalie bring? <span class="pm" aria-hidden="true">+</span></button>
-        <div class="specs-body"><div class="specs-body-inner">Full goalie gear, a water bottle and a stick. For synthetic sessions, regular running shoes are fine off-ice. We supply pucks, nets, Finnpegs anchoring and all training aids — including the Xtracker on vision-focused days. Arrive 15 minutes early to dress.</div></div>
+    <div class="accordion reveal d1" data-accordion>
+      <div class="acc-item" data-acc-item>
+        <button class="acc-head" data-acc-head aria-expanded="false">What level should I pick?<span class="acc-ico"></span></button>
+        <div class="acc-body" data-acc-body><div class="acc-body-in">
+          Pick by your goalie's age and current level — every program lists its age band (e.g. U9–U13) and whether it's foundational, weekly, or elite/AAA. Unsure? Start with a single private session and we'll recommend the right track in person. Or build a <a href="plan.html" style="color:var(--accent)">free training plan</a> and we'll match a program to it.
+        </div></div>
       </div>
-
-      <div data-specs-item>
-        <button data-specs-head>Refunds &amp; rescheduling <span class="pm" aria-hidden="true">+</span></button>
-        <div class="specs-body"><div class="specs-body-inner">Camps and packages can be rescheduled up to 7 days before the start date, subject to availability. Single sessions can be moved up to 48 hours out. Refunds are available before a program begins, less a small admin fee; once a multi-week block has started it's credited, not refunded. Injury? Send us a note — we'll work with you.</div></div>
+      <div class="acc-item" data-acc-item>
+        <button class="acc-head" data-acc-head aria-expanded="false">What's included in a camp?<span class="acc-ico"></span></button>
+        <div class="acc-body" data-acc-body><div class="acc-body-in">
+          Every camp runs the full Finngoalie system: Xtracker vision blocks, live-read drills, edgework and recovery, and small-group coaching. Multi-day camps include daily on-ice plus off-ice vision and movement work. The exact daily schedule and what to bring is sent on enrollment.
+        </div></div>
       </div>
-
-      <div data-specs-item>
-        <button data-specs-head>How do I know which age &amp; level fits? <span class="pm" aria-hidden="true">+</span></button>
-        <div class="specs-body"><div class="specs-body-inner">Every program lists its age band (U9–U20) and level — foundational, all-levels, high-performance, or AAA/elite. Foundational and all-levels suit recreational and most minor-hockey goalies; high-performance, Prospects and AAA streams are for competitive goalies. Unsure? Book a single session first and we'll recommend the right track.</div></div>
+      <div class="acc-item" data-acc-item>
+        <button class="acc-head" data-acc-head aria-expanded="false">Single session vs. package vs. season pass?<span class="acc-ico"></span></button>
+        <div class="acc-body" data-acc-body><div class="acc-body-in">
+          A <b>single session</b> ($49.99+) is the no-commitment way to try the work. A <b>package</b> ($325+) bundles multiple sessions at better value — the sweet spot for most goalies. A <b>season pass</b> ($899.99+) is weekly 1-on-1 ice all year with the same coach for one continuous development arc.
+        </div></div>
       </div>
-
-      <div data-specs-item>
-        <button data-specs-head>Where are sessions held? <span class="pm" aria-hidden="true">+</span></button>
-        <div class="specs-body"><div class="specs-body-inner">Programs run across arenas in the Halifax / Bedford area of Nova Scotia, with synthetic-ice sessions at our dedicated off-ice training space. Each program's exact rink and primetime ice slot are confirmed on your booking and emailed before the first day.</div></div>
+      <div class="acc-item" data-acc-item>
+        <button class="acc-head" data-acc-head aria-expanded="false">Where are sessions held?<span class="acc-ico"></span></button>
+        <div class="acc-body" data-acc-body><div class="acc-body-in">
+          On-ice programs run at partner rinks across the Halifax / Bedford area; synthetic sessions run at our dedicated off-ice training surface. Each program's confirmation includes the exact location, parking and arrival time. Travelling in? Message us — we'll help you plan.
+        </div></div>
       </div>
-
+      <div class="acc-item" data-acc-item>
+        <button class="acc-head" data-acc-head aria-expanded="false">What's the refund &amp; cancellation policy?<span class="acc-ico"></span></button>
+        <div class="acc-body" data-acc-body><div class="acc-body-in">
+          Life happens. Cancel a single session up to 24 hours ahead for a full credit. Camps are transferable and refundable up to two weeks before the start date. Reach out any time and we'll make it right — we'd rather keep a goalie than a deposit.
+        </div></div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ===== CTA BAND + NEWSLETTER ===== -->
-<section class="section cta-band">
-  <div class="hero-glow"></div>
-  <div class="wrap" style="position:relative;z-index:2">
-    <span class="eyebrow">Change your game</span>
-    <h2 class="h1 balance" data-reveal="up">Train your eyes.<br>Stop it cold.</h2>
-    <p class="lead" data-reveal="up" style="margin:18px auto 0;color:var(--muted-d)">Drills, camp drops and product news — no spam, just goalie stuff.</p>
-    <form class="news" onsubmit="return false" data-reveal="up">
-      <input type="email" placeholder="you@email.com" aria-label="Email" />
-      <button class="btn btn-blue">Join the list</button>
-    </form>
+<!-- ============================================================
+     PROMO NUDGE  →  Free Training Plan (plan.html)
+     ============================================================ -->
+<section class="camps">
+  <div class="wrap">
+    <div class="camp-banner reveal d1">
+      <div class="photo" style="background-image:url(assets/img/youth.jpg)"></div>
+      <div class="camp-left">
+        <div class="urg"><span class="pulse"></span>Free · 6 questions</div>
+        <h3>Not sure which program?</h3>
+        <p>Answer six quick questions and get a goalie-specific vision &amp; movement plan built around your level and schedule — then we'll match it to the right camp or session.</p>
+      </div>
+      <div class="camp-right">
+        <div class="spots"><span data-count="0" data-prefix="$">$0</span><small>always free</small></div>
+        <a class="btn magnetic" href="plan.html">Build my plan</a>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-  <div class="wrap-wide">
-    <div class="footer-top">
-      <div>
-        <a href="index.html" class="brand" style="margin-bottom:14px"><svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg> Finngoalie</a>
-        <p class="muted" style="max-width:34ch">Home of The Xtracker. Elite goaltender training &amp; patented goalie tech — engineered in Nova Scotia, Canada.</p>
-        <div class="socials"><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">TikTok</a></div>
+<!-- ============================================================
+     CLOSING CTA
+     ============================================================ -->
+<section class="closing">
+  <div class="wrap">
+    <h2 class="reveal">Find your ice.<br><span class="accent">Pick your level.</span></h2>
+    <p class="reveal d1">Eleven programs open, four seasons covered, one obsession at every tier. Lock your spot before it fills.</p>
+    <a class="btn btn-primary btn-lg magnetic reveal d2" href="#programs">Browse all programs <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER  —  REUSABLE SITE-WIDE BLOCK (copied verbatim)
+     ============================================================ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Finn<b>goalie</b></a>
+        <p>Vision-led goalie training &amp; gear. Built in Nova Scotia, trusted in the crease across 50+ rinks.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="3.5"/><path d="M11 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.3 1.8 3.9 4 4.2v2.7c-1.5 0-2.9-.4-4-1.1v5.7a5.3 5.3 0 1 1-5.3-5.3c.3 0 .5 0 .8.1v2.8a2.6 2.6 0 1 0 1.8 2.4V3H14z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h3.5l4 5.6L16 4h3l-6 7.8L20 20h-3.5l-4.3-6L7 20H4l6.3-8.2z"/></svg></a>
+        </div>
       </div>
-      <div><h4>Train</h4><a href="train.html">Camps &amp; Programs</a><a href="train.html">Private Sessions</a><a href="train.html">Season Passes</a><a href="coaches.html">Mentorship</a></div>
-      <div><h4>Shop</h4><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs P3G</a><a href="shop.html">Goalie Gear</a><a href="shop.html">Apparel</a></div>
-      <div><h4>Company</h4><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="#">Contact</a><a href="#">Shipping &amp; Returns</a></div>
+      <div class="foot-col"><h5>Train</h5><a href="train.html">Private</a><a href="train.html">Camps</a><a href="train.html">Weekly</a><a href="train.html">Pro</a></div>
+      <div class="foot-col"><h5>Shop</h5><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs</a><a href="shop.html">Pro Shop</a><a href="shop.html">Bundles</a></div>
+      <div class="foot-col"><h5>Company</h5><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="shop.html">Reviews</a><a href="about.html">Contact</a></div>
+      <div class="foot-col free"><h5>Free Tools</h5><a href="plan.html">Training Plan</a><a href="vision-test.html">Vision Test</a><a href="club.html">Goalie Club</a></div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Finngoalie · Nova Scotia, Canada</span>
-      <span>hello@finngoalie.shop · Concept redesign</span>
+      <span>© 2026 Finngoalie. All rights reserved.</span>
+      <span class="mono">DESIGNED FOR THE CREASE · NS · CA</span>
     </div>
   </div>
 </footer>
 
-<!-- ===== SCRIPT ===== -->
 <script src="app.js"></script>
 </body>
 </html>

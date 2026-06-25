@@ -1,334 +1,514 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About — Finngoalie · The Story Behind the Crease</title>
-  <meta name="description" content="The story behind Finngoalie: Nova Scotia rink roots, a vision-first goaltending philosophy, and the patented training tech — the Xtracker and Finnpegs — built to make goalies see it first and stop it cold." />
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Finngoalie — About. Goaltending is a vision sport first.</title>
+<meta name="description" content="The story behind Finngoalie — vision-first goaltending built on Nova Scotia rink roots. The founder, the philosophy, the inventions (the Xtracker + patented Finnpegs), and the coaches who teach it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ============================================================
+   ABOUT-PAGE LOCAL COMPOSITION
+   ------------------------------------------------------------
+   Page-scoped layout only. NO new design tokens, NO new colors.
+   Every color / radius / shadow / motion pulls from styles.css
+   variables. The one accent stays --accent. These rules just
+   arrange the documented system into About-specific blocks.
+   ============================================================ */
 
-<!-- ===== HEADER ===== -->
-<div class="announce">Pro Week 2026 · June 25–28 · <a href="train.html">12 spots left — reserve now ›</a></div>
-<div class="nav-wrap">
-  <nav class="nav wrap-wide">
-    <a href="index.html" class="brand">
-      <svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg>
-      Finngoalie
+/* — cinematic story hero (full-bleed arena, dark, calm) — */
+.about-hero{
+  position:relative;min-height:92svh;display:flex;align-items:center;
+  padding:160px 28px 96px;overflow:hidden;isolation:isolate;background:var(--ink);
+}
+.about-hero .ah-bg{
+  position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
+  filter:grayscale(.35) contrast(1.05) brightness(.62);
+  transform:scale(1.04);animation:ahDrift 24s ease-in-out infinite alternate;
+}
+@keyframes ahDrift{from{transform:scale(1.04) translateY(0)}to{transform:scale(1.1) translateY(-1.4%)}}
+.about-hero .ah-veil{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(10,12,15,.55) 0%,rgba(10,12,15,.35) 40%,rgba(10,12,15,.92) 100%),
+    radial-gradient(110% 80% at 18% 30%,rgba(29,108,255,.22),transparent 58%);
+}
+.about-hero .wrap{position:relative;z-index:2;max-width:var(--max);width:100%}
+.about-hero .ah-in{max-width:18ch}
+.about-hero .eyebrow{color:var(--accent-up);margin-bottom:26px;display:inline-block;opacity:0;transform:translateY(14px);animation:rise 1s var(--ease) .15s forwards}
+.about-hero h1{
+  color:#fff;font-size:var(--fz-display);line-height:.95;letter-spacing:-.045em;font-weight:800;max-width:16ch;
+}
+.about-hero h1 .l{display:inline-block;opacity:0;transform:translateY(26px) rotate(1.5deg);animation:riseWord 1.05s var(--ease) forwards}
+.about-hero h1 .accent{color:var(--accent-up)}
+.about-hero p.ah-sub{
+  color:rgba(255,255,255,.66);font-size:clamp(17px,2.1vw,21px);max-width:46ch;margin-top:30px;
+  line-height:1.55;font-weight:400;letter-spacing:-.01em;
+  opacity:0;transform:translateY(16px);animation:rise 1s var(--ease) .95s forwards;
+}
+.about-hero .ah-meta{
+  display:flex;gap:30px;flex-wrap:wrap;margin-top:42px;
+  opacity:0;transform:translateY(16px);animation:rise 1s var(--ease) 1.15s forwards;
+}
+.about-hero .ah-meta .m{display:flex;align-items:center;gap:10px;font-size:13.5px;color:rgba(255,255,255,.7);font-weight:500}
+.about-hero .ah-meta .m svg{width:16px;height:16px;color:var(--accent-up);flex-shrink:0}
+.about-hero .ah-scrollcue{
+  position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:3;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  opacity:0;animation:rise 1s var(--ease) 1.5s forwards;
+}
+.about-hero .ah-scrollcue .dot{width:1px;height:34px;background:linear-gradient(rgba(255,255,255,.4),transparent);position:relative;overflow:hidden}
+.about-hero .ah-scrollcue .dot::after{content:"";position:absolute;top:0;left:0;width:100%;height:50%;background:var(--accent-up);animation:scrolldot 1.8s var(--ease) infinite}
+
+/* — founder split (portrait + credibility bio) — */
+.about-founder{padding:var(--s-10) 0}
+.af-grid{display:grid;grid-template-columns:.86fr 1.14fr;gap:64px;align-items:center}
+.af-photo{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/5;position:relative;background:var(--ink);box-shadow:var(--sh-3)}
+.af-photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(.18) contrast(1.05);transition:transform 1.2s var(--ease)}
+.af-photo:hover img{transform:scale(1.05)}
+.af-photo .ph-badge{
+  position:absolute;top:20px;left:20px;background:rgba(246,247,249,.92);backdrop-filter:blur(8px);
+  border-radius:var(--r-pill);padding:8px 16px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--accent);
+}
+.af-photo .ph-name{position:absolute;bottom:0;left:0;right:0;padding:26px;background:linear-gradient(transparent,rgba(10,12,15,.88));color:#fff}
+.af-photo .ph-name b{display:block;font-size:19px;font-weight:700;letter-spacing:-.02em}
+.af-photo .ph-name span{font-size:12.5px;color:rgba(255,255,255,.62);letter-spacing:.03em}
+.af-copy .kicker{margin-bottom:16px}
+.af-copy h2{font-size:clamp(30px,4.2vw,50px);letter-spacing:-.035em;line-height:1.05;font-weight:800}
+.af-copy h2 .accent{color:var(--accent)}
+.af-copy p{color:var(--mute);margin-top:24px;font-size:17px;line-height:1.65}
+.af-copy .sig{margin-top:30px;font-size:15px;font-style:italic;color:var(--ink-2)}
+.placeholder-note{
+  display:flex;align-items:flex-start;gap:11px;margin-top:30px;padding:14px 18px;
+  border:1px dashed var(--accent-line);border-radius:var(--r-sm);background:var(--accent-soft);
+  font-size:13px;line-height:1.5;color:var(--ink-2);
+}
+.placeholder-note svg{width:17px;height:17px;color:var(--accent);flex-shrink:0;margin-top:1px}
+.placeholder-note b{color:var(--accent);font-weight:600}
+.ph-tag{
+  display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.72em;font-weight:500;
+  letter-spacing:.04em;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);
+  border-radius:6px;padding:1px 7px;vertical-align:middle;margin:0 1px;
+}
+
+/* — credibility count-up band (dark) — */
+.about-stats{padding:var(--s-10) 0;background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.about-stats .glow-blob{position:absolute;top:-25%;left:-8%;width:58vw;height:58vw;border-radius:50%;background:radial-gradient(circle,rgba(29,108,255,.2),transparent 60%);filter:blur(64px);pointer-events:none}
+.about-stats .kicker{color:var(--accent-up)}
+.about-stats h2{color:#fff}
+.about-stats .as-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-on-dark);border:1px solid var(--line-on-dark);border-radius:var(--r);overflow:hidden;margin-top:66px;position:relative;z-index:1}
+.as-cell{background:var(--ink);padding:46px 30px;text-align:center}
+.as-cell .n{font-size:clamp(40px,4.8vw,60px);font-weight:800;letter-spacing:-.045em;line-height:1}
+.as-cell .n .ac{color:var(--accent-up)}
+.as-cell .lab{font-size:13px;color:rgba(255,255,255,.56);margin-top:16px;line-height:1.45}
+
+/* — timeline / milestones (elegant reveal steps) — */
+.about-timeline{padding:var(--s-10) 0;background:var(--paper-2);border-top:1px solid var(--line-2)}
+.tl-rail{position:relative;max-width:760px;margin:70px auto 0;padding-left:0}
+.tl-rail::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:1.5px;background:linear-gradient(var(--accent),var(--accent-line) 60%,transparent)}
+.tl-step{position:relative;padding:0 0 46px 44px}
+.tl-step:last-child{padding-bottom:0}
+.tl-step .node{position:absolute;left:0;top:4px;width:15px;height:15px;border-radius:50%;background:var(--paper-2);border:2px solid var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.tl-step .yr{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--accent);font-weight:500;text-transform:uppercase}
+.tl-step h3{font-size:21px;font-weight:700;letter-spacing:-.02em;margin-top:8px;line-height:1.15}
+.tl-step p{color:var(--mute);font-size:15px;line-height:1.6;margin-top:10px;max-width:54ch}
+
+/* — philosophy (3 values) — */
+.about-values{padding:var(--s-10) 0}
+.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:60px}
+.val-card{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);padding:38px 32px;
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease);will-change:transform;
+}
+.val-card:hover{transform:translateY(-6px);box-shadow:var(--sh-3);border-color:var(--accent-line)}
+.val-card .vi{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);margin-bottom:26px}
+.val-card .vi svg{width:24px;height:24px}
+.val-card .vn{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px}
+.val-card h3{font-size:22px;font-weight:800;letter-spacing:-.025em;line-height:1.1}
+.val-card p{color:var(--mute);font-size:14.5px;margin-top:14px;line-height:1.6}
+
+/* — coaching team (3 placeholder cards) — */
+.about-team{padding:var(--s-10) 0;background:var(--paper-2);border-top:1px solid var(--line-2)}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:60px}
+.coach-card{
+  border-radius:var(--r);overflow:hidden;background:var(--ink);border:1px solid var(--line);
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease);will-change:transform;
+}
+.coach-card:hover{transform:translateY(-6px);box-shadow:var(--sh-3)}
+.coach-card .cc-img{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--ink)}
+.coach-card .cc-img img{width:100%;height:100%;object-fit:cover;filter:grayscale(.22) contrast(1.04);transition:transform 1.2s var(--ease)}
+.coach-card:hover .cc-img img{transform:scale(1.05)}
+.coach-card .cc-img .ph-chip{
+  position:absolute;top:16px;left:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;
+  text-transform:uppercase;color:#fff;background:rgba(10,12,15,.6);backdrop-filter:blur(6px);
+  border:1px solid var(--line-on-dark);border-radius:var(--r-pill);padding:5px 11px;
+}
+.coach-card .cc-body{padding:24px 24px 28px;background:var(--paper-2)}
+.coach-card .cc-body .role{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px}
+.coach-card .cc-body h3{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.coach-card .cc-body p{color:var(--mute);font-size:14px;margin-top:12px;line-height:1.55}
+
+/* — trusted-by row — */
+.about-trusted{padding:var(--s-9) 0;text-align:center}
+.tb-row{display:flex;align-items:center;justify-content:center;gap:14px 44px;flex-wrap:wrap;margin-top:44px}
+.tb-row .tb{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:var(--mute);letter-spacing:-.01em;opacity:.9}
+.tb-row .tb svg{width:20px;height:20px;color:var(--accent);flex-shrink:0}
+.tb-row .tb b{color:var(--ink-2);font-weight:700}
+
+/* — contact block (dark) — */
+.about-contact{padding:var(--s-10) 0;background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.about-contact .glow-blob{position:absolute;bottom:-30%;right:-10%;width:55vw;height:55vw;border-radius:50%;background:radial-gradient(circle,rgba(29,108,255,.18),transparent 60%);filter:blur(70px)}
+.ac-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.ac-left .kicker{color:var(--accent-up);margin-bottom:16px}
+.ac-left h2{font-size:clamp(30px,4.2vw,50px);font-weight:800;letter-spacing:-.035em;line-height:1.05;color:#fff}
+.ac-left p{color:rgba(255,255,255,.6);margin-top:22px;font-size:16.5px;line-height:1.6;max-width:42ch}
+.ac-right{display:flex;flex-direction:column;gap:14px}
+.ac-item{display:flex;align-items:center;gap:16px;padding:20px 22px;border:1px solid var(--line-on-dark);border-radius:var(--r-sm);background:rgba(255,255,255,.03);transition:border-color .3s var(--ease),background .3s var(--ease)}
+.ac-item:hover{border-color:var(--accent-up);background:rgba(255,255,255,.05)}
+.ac-item .ai{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-up);flex-shrink:0}
+.ac-item .ai svg{width:20px;height:20px}
+.ac-item .at .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:600}
+.ac-item .at .v{font-size:15.5px;font-weight:600;color:#fff;margin-top:3px}
+.ac-item .at .v span{color:var(--accent-up)}
+.ac-social{display:flex;gap:12px;margin-top:6px}
+.ac-social a{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-on-dark);display:grid;place-items:center;color:rgba(255,255,255,.7);transition:.25s var(--ease)}
+.ac-social a:hover{border-color:var(--accent-up);color:var(--accent-up);transform:translateY(-2px)}
+.ac-social svg{width:17px;height:17px}
+
+/* — responsive — */
+@media(max-width:920px){
+  .af-grid{grid-template-columns:1fr;gap:40px}
+  .af-photo{max-width:440px;margin:0 auto;width:100%}
+  .about-stats .as-grid{grid-template-columns:repeat(2,1fr)}
+  .val-grid{grid-template-columns:1fr;gap:16px}
+  .team-grid{grid-template-columns:1fr;gap:18px;max-width:420px;margin-left:auto;margin-right:auto}
+  .ac-grid{grid-template-columns:1fr;gap:38px}
+}
+@media(max-width:680px){
+  .about-hero{padding:130px 20px 80px;min-height:88svh}
+  .about-stats .as-grid{grid-template-columns:1fr 1fr}
+  .about-hero .ah-meta{gap:14px 22px}
+  .tl-step{padding-left:40px}
+}
+@media(prefers-reduced-motion:reduce){
+  .about-hero .ah-bg{animation:none}
+  .about-hero .eyebrow,.about-hero h1 .l,.about-hero p.ah-sub,.about-hero .ah-meta,.about-hero .ah-scrollcue{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body id="top">
+
+<!-- LIVING AURORA -->
+<canvas class="aurora-canvas" id="aurora"></canvas>
+
+<!-- ============================================================
+     NAV  —  REUSABLE SITE-WIDE BLOCK (copied verbatim from index.html)
+     active set on "About"
+     ============================================================ -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Finn<b>goalie</b>
     </a>
-    <div class="nav-links">
+    <div class="navlinks">
       <a href="train.html">Train</a>
       <a href="xtracker.html">The Xtracker</a>
       <a href="finnpegs.html">Finnpegs</a>
       <a href="shop.html">Shop</a>
       <a href="coaches.html">For Coaches</a>
-      <a href="about.html" class="active">About</a>
+      <a href="about.html" class="active" aria-current="page">About</a>
     </div>
-    <div class="nav-r">
-      <button class="nav-ico" aria-label="Search">⌕</button>
-      <button class="nav-ico" aria-label="Cart">Bag <span class="cart-count">0</span></button>
-      <button class="burger" data-open-nav aria-label="Menu">☰</button>
+    <div class="nav-right">
+      <a class="nav-icon search-icon" href="shop.html" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+      </a>
+      <a class="nav-icon" href="shop.html" aria-label="Bag" data-bag-add>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke-linecap="round"/></svg>
+        <span class="count" data-bag-count>0</span>
+      </a>
+      <a class="nav-cta magnetic" href="plan.html">Free Training Plan</a>
+      <button class="burger" id="burger" aria-label="Menu" data-burger><span></span><span></span><span></span></button>
     </div>
-  </nav>
-</div>
+  </div>
+</nav>
 
-<!-- ===== MOBILE DRAWER ===== -->
+<!-- MOBILE DRAWER (mirrors nav) — copied verbatim from index.html -->
 <div class="drawer" id="drawer">
-  <button class="close" data-close-nav aria-label="Close">✕</button>
-  <a href="train.html" data-close-nav>Train</a>
-  <a href="xtracker.html" data-close-nav>The Xtracker</a>
-  <a href="finnpegs.html" data-close-nav>Finnpegs</a>
-  <a href="shop.html" data-close-nav>Shop</a>
-  <a href="coaches.html" data-close-nav>For Coaches</a>
-  <a href="about.html" data-close-nav>About</a>
+  <a href="train.html" data-drawer-close>Train</a>
+  <a href="xtracker.html" data-drawer-close>The Xtracker</a>
+  <a href="finnpegs.html" data-drawer-close>Finnpegs</a>
+  <a href="shop.html" data-drawer-close>Shop</a>
+  <a href="coaches.html" data-drawer-close>For Coaches</a>
+  <a href="about.html" data-drawer-close>About</a>
+  <a class="drawer-cta" href="plan.html" data-drawer-close>Free Training Plan</a>
 </div>
 
 <!-- ============================================================
-     1 · CINEMATIC HERO  (.hero, dark, full-bleed ice/arena image)
+     1 · CINEMATIC STORY HERO  —  the arena, vision-first thesis
      ============================================================ -->
-<header class="hero">
-  <div class="hero-bg" style="background-image:url('assets/img/ice-rink.jpg')"></div>
-  <div class="hero-glow"></div>
+<header class="about-hero">
+  <div class="ah-bg" style="background-image:url(assets/img/ice-rink.jpg)"></div>
+  <div class="ah-veil"></div>
   <div class="wrap">
-    <span class="eyebrow" data-reveal="up">The Story</span>
-    <h1 class="display balance" data-reveal="up" data-reveal-delay="80">Goaltending is a<br>vision sport <span class="accent">first.</span></h1>
-    <p class="lead" data-reveal="up" data-reveal-delay="160">Every camp, every drill, every piece of patented tech starts from one belief: a goalie who sees it early stops it cold. This is the story behind the crease.</p>
-    <div class="cta-row" data-reveal="up" data-reveal-delay="220" style="margin-top:30px">
-      <a href="train.html" class="btn btn-blue btn-lg">Train with us</a>
-      <a href="#founder" class="btn-text">Meet the coach</a>
+    <div class="ah-in">
+      <span class="eyebrow">Our story · Nova Scotia</span>
+      <h1>
+        <span class="l" style="animation-delay:.25s">Goaltending</span>
+        <span class="l" style="animation-delay:.34s">is</span>
+        <span class="l" style="animation-delay:.43s">a</span><br>
+        <span class="l accent" style="animation-delay:.55s">vision</span>
+        <span class="l accent" style="animation-delay:.64s">sport</span>
+        <span class="l" style="animation-delay:.73s">first.</span>
+      </h1>
+      <p class="ah-sub">Finngoalie didn't start in a boardroom. It started on a cold rink on the East Coast, with one obsession: train the part of the game nobody else trains — the eyes.</p>
+      <div class="ah-meta">
+        <span class="m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s-7-4.3-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.7-7 10-7 10Z" stroke-linejoin="round"/></svg>Built in Nova Scotia, Canada</span>
+        <span class="m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg>13 years in the crease</span>
+        <span class="m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 12l4 4 10-10" stroke-linecap="round" stroke-linejoin="round"/></svg>Two patented inventions</span>
+      </div>
     </div>
   </div>
-  <div class="scroll-cue">Scroll</div>
+  <div class="ah-scrollcue mono">SCROLL<div class="dot"></div></div>
 </header>
 
 <!-- ============================================================
-     2 · FOUNDER & HEAD COACH  (.section.light, .split)
+     2 · FOUNDER  —  large portrait + credibility bio (PLACEHOLDER)
      ============================================================ -->
-<section class="section light" id="founder">
+<section class="about-founder" id="founder">
   <div class="wrap">
-    <div class="split">
-      <div class="split-media" data-reveal="scale">
-        <img src="assets/img/coach.jpg" alt="Portrait of the Finngoalie founder and head coach (placeholder image)" />
-      </div>
-      <div data-reveal="right">
-        <span class="eyebrow">Founder &amp; Head Coach</span>
-        <h2 class="h1 balance">[Founder Name]</h2>
-        <p class="lead" style="margin:18px 0 22px">It started on a cold rink in Nova Scotia — a kid in too-big pads, learning that the goalies who won weren&rsquo;t the ones who moved fastest. They were the ones who <em>saw it first.</em></p>
-        <p class="muted" style="margin:0 0 18px;font-size:1.02rem;line-height:1.65">Two decades later, that one idea became a method. [Founder Name] built Finngoalie around a vision-first philosophy: train the eyes before the body, and the saves follow. Along the way came the inventions the rest of the goalie world now wants — the <a href="xtracker.html" class="accent" style="font-weight:600">Xtracker</a>, a vision-training aid endorsed by pro and NHL goalies, and the patented <a href="finnpegs.html" class="accent" style="font-weight:600">Finnpegs P3G</a> net-anchoring system trusted by rinks across Atlantic Canada.</p>
-        <p class="muted" style="margin:0 0 26px;font-size:1.02rem;line-height:1.65">From a single rink to a full camp calendar, a coaches&rsquo; convention, a certification program and a European arm — the work has always pointed the same direction: develop better goalies, at every level, by teaching them to read the game before it happens.</p>
-        <div class="cta-row">
-          <a href="train.html" class="btn btn-dark">See the programs</a>
-          <a href="coaches.html" class="btn-text">Coach mentorship</a>
+    <div class="af-grid">
+      <div class="af-photo reveal r-left">
+        <span class="ph-badge">Placeholder photo</span>
+        <img src="assets/img/coach.jpg" alt="Finngoalie founder and head coach (client placeholder image)">
+        <div class="ph-name">
+          <b>[Founder Name]</b>
+          <span>Founder &amp; Head Coach · 13 yrs in the crease</span>
         </div>
-        <p class="tiny" style="margin-top:26px;padding-top:16px;border-top:1px solid var(--line)">Name, photo &amp; credentials are placeholders for the client to supply.</p>
+      </div>
+      <div class="af-copy reveal r-right">
+        <div class="kicker">Founder &amp; Head Coach</div>
+        <h2>The save starts in the <span class="accent">eyes.</span><br>So that's what we built.</h2>
+        <p><span class="ph-tag">[Founder Name]</span> grew up between the pipes on a small Nova Scotia rink, where ice time was earned and every puck looked the same until you learned to read it earlier. Thirteen years in the crease taught a single truth that changed everything: elite goalies aren't faster — they <i>see</i> sooner.</p>
+        <p>That conviction became a method, then a workshop. To teach the read, the founder invented the <b>Xtracker</b> — a vision trainer that drills the eyes to pick up the puck a heartbeat early — and engineered the patented <b>Finnpegs P3G</b> net system so every rep ran true. From private sessions to camps, those tools became the spine of how Finngoalie develops goalies, from first-timers to pro-track prospects.</p>
+        <div class="sig">— Built in Nova Scotia, for goalies everywhere.</div>
+        <div class="placeholder-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span><b>Client placeholders.</b> The founder's name, portrait and credentials shown here are stand-ins. Swap <b>[Founder Name]</b>, the photo and the bio for the real story before launch.</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============================================================
-     3 · CREDIBILITY STATS  (.section.dark.center, .grid.g4 .stat data-count)
+     3 · CREDIBILITY STATS  —  count-up band (dark)
      ============================================================ -->
-<section class="section dark center">
+<section class="about-stats">
+  <div class="glow-blob"></div>
   <div class="wrap">
-    <div class="shead center" data-reveal="up">
-      <span class="eyebrow">By the numbers</span>
-      <h2 class="h2 balance">Two decades. One philosophy.<br>Thousands of goalies.</h2>
+    <div class="section-head">
+      <div class="kicker reveal">The record</div>
+      <h2 class="reveal d1">Credibility, <span style="color:#7fb0ff">counted.</span></h2>
     </div>
-    <div class="grid g4">
-      <div class="stat" data-reveal="up">
-        <div class="n"><span data-count="1000" data-count-suffix="+">0</span></div>
-        <div class="l">Goalies trained</div>
-      </div>
-      <div class="stat" data-reveal="up" data-reveal-delay="100">
-        <div class="n"><span data-count="13">0</span></div>
-        <div class="l">Years of camps</div>
-      </div>
-      <div class="stat" data-reveal="up" data-reveal-delay="200">
-        <div class="n"><span data-count="2">0</span></div>
-        <div class="l">Patented inventions</div>
-      </div>
-      <div class="stat" data-reveal="up" data-reveal-delay="300">
-        <div class="n"><span data-count="20" data-count-suffix="+">0</span></div>
-        <div class="l">Developed to Jr / Pro</div>
-      </div>
+    <div class="as-grid">
+      <div class="as-cell reveal"><div class="n"><span data-count="1000">0</span><span class="ac">+</span></div><div class="lab">Goalies trained</div></div>
+      <div class="as-cell reveal d1"><div class="n"><span data-count="13">0</span></div><div class="lab">Years running camps</div></div>
+      <div class="as-cell reveal d2"><div class="n"><span data-count="2">0</span></div><div class="lab">Patented inventions</div></div>
+      <div class="as-cell reveal d3"><div class="n">Jr<span class="ac">→</span>Pro</div><div class="lab">Levels developed</div></div>
     </div>
-    <p class="tiny" style="margin-top:36px;color:var(--muted-d)">Figures shown are illustrative placeholders for the client to confirm.</p>
   </div>
 </section>
 
 <!-- ============================================================
-     4 · TIMELINE / MILESTONES  (.section.light, .feature tiles, data-reveal)
+     4 · TIMELINE  —  milestones as elegant reveal steps
      ============================================================ -->
-<section class="section light">
+<section class="about-timeline">
   <div class="wrap">
-    <div class="shead" data-reveal="up">
-      <span class="eyebrow">The Road Here</span>
-      <h2 class="h2 balance">From one rink to a movement.</h2>
-      <p class="lead">Every milestone came from the same loop: coach goalies, find what&rsquo;s missing, build the tool, share it.</p>
+    <div class="section-head">
+      <div class="kicker reveal">The road here</div>
+      <h2 class="reveal d1">From one rink<br><span class="mute">to a vision-first </span><span class="accent">method.</span></h2>
     </div>
-
-    <div class="grid g3" style="margin-top:8px">
-      <div class="feature" data-reveal="up">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12"/></svg></div>
-        <span class="tag" style="margin-bottom:12px">01 · Beginnings</span>
-        <h3>Rink roots, Nova Scotia</h3>
-        <p class="muted">A goalie&rsquo;s obsession with seeing the puck early becomes a coaching idea — and a habit of building what doesn&rsquo;t exist yet.</p>
-      </div>
-      <div class="feature" data-reveal="up" data-reveal-delay="100">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <span class="tag" style="margin-bottom:12px">02 · First Camps</span>
-        <h3>The first camps fill up</h3>
-        <p class="muted">Word travels in a small hockey province. Weekly programs, clinics and private sessions grow into a full calendar.</p>
-      </div>
-      <div class="feature" data-reveal="up" data-reveal-delay="200">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6"/></svg></div>
-        <span class="tag" style="margin-bottom:12px">03 · Invention</span>
-        <h3>The Xtracker is born</h3>
-        <p class="muted">A vision-training aid that uses visual restriction to fix tracking and stance. Pro and NHL goalies take notice.</p>
-      </div>
-      <div class="feature" data-reveal="up">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.5 0 2.91.37 4.15 1.02"/></svg></div>
-        <span class="tag" style="margin-bottom:12px">04 · Patent</span>
-        <h3>Finnpegs, patented</h3>
-        <p class="muted">The P3G net-anchoring system earns a patent and becomes a fixture in rinks and dealer pro-shops.</p>
-      </div>
-      <div class="feature" data-reveal="up" data-reveal-delay="100">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-9.33-5"/><path d="M6 16a6 6 0 0 0 9.33 5"/><path d="M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <span class="tag" style="margin-bottom:12px">05 · Community</span>
-        <h3>East Coast Convention</h3>
-        <p class="muted">A gathering of goalie coaches and a mentorship &amp; certification program turn a method into a community.</p>
-      </div>
-      <div class="feature" data-reveal="up" data-reveal-delay="200">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-        <span class="tag" style="margin-bottom:12px">06 · Beyond</span>
-        <h3>Finngoalie Europe</h3>
-        <p class="muted">The vision-first method — and the tech — cross the Atlantic. The crease is the same everywhere.</p>
-      </div>
+    <div class="tl-rail">
+      <div class="tl-step reveal r-left"><span class="node"></span><div class="yr">The beginning</div><h3>Rink roots in Nova Scotia</h3><p>A goalie growing up on East Coast ice, obsessed with one question — why do some goalies always seem to see it first?</p></div>
+      <div class="tl-step reveal r-left d1"><span class="node"></span><div class="yr">The first camps</div><h3>Coaching the position properly</h3><p>Private sessions turned into camps. Word spread across Atlantic Canada that this was vision-led goaltending, not generic drills.</p></div>
+      <div class="tl-step reveal r-left d2"><span class="node"></span><div class="yr">The invention</div><h3>The Xtracker is born</h3><p>To teach the read, the founder built the tool that didn't exist — a vision trainer that drills the eyes to pick up the puck early.</p></div>
+      <div class="tl-step reveal r-left d3"><span class="node"></span><div class="yr">The patent</div><h3>Finnpegs P3G, patented</h3><p>A net-anchoring system engineered so the net never shifts on contact — patented, and trusted across rinks for true, repeatable reps.</p></div>
+      <div class="tl-step reveal r-left d4"><span class="node"></span><div class="yr">The gathering</div><h3>East Coast Goaltender Coaches Convention</h3><p>Finngoalie began hosting the region's goalie coaches — on-ice sessions and classroom breakdowns for the people who develop goalies.</p></div>
+      <div class="tl-step reveal r-left d4"><span class="node"></span><div class="yr">Today</div><h3>Finngoalie Europe &amp; beyond</h3><p>The method — and the Xtracker — now reach goalies past the East Coast, with Finngoalie Europe extending the vision-first approach overseas.</p></div>
     </div>
-    <p class="tiny" style="margin-top:32px">Milestone dates &amp; details are illustrative — final copy to be confirmed with the client.</p>
   </div>
 </section>
 
 <!-- ============================================================
-     5 · PHILOSOPHY  (.section.alt, .grid.g3 of 3 .feature values)
+     5 · PHILOSOPHY  —  three values
      ============================================================ -->
-<section class="section alt">
+<section class="about-values">
   <div class="wrap">
-    <div class="shead center" data-reveal="up">
-      <span class="eyebrow">What we believe</span>
-      <h2 class="h2 balance">Three rules. Every session.</h2>
+    <div class="section-head">
+      <div class="kicker reveal">What we believe</div>
+      <h2 class="reveal d1">Three rules we <span class="mute">coach by.</span></h2>
+      <p class="reveal d2">No noise, no gimmicks. Everything we make and teach earns its place on the ice.</p>
     </div>
-    <div class="grid g3">
-      <div class="feature" data-reveal="up">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <h3>See it first</h3>
-        <p class="muted">Train the eyes before the body. Read the release, track the puck off the stick, and the save is half-made before you move.</p>
+    <div class="val-grid stagger">
+      <div class="val-card">
+        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="vn">01 · Vision</div>
+        <h3>See it first.</h3>
+        <p>The save is decided before the hands move. We train the read — the part of the game that wins it — fifty milliseconds before everyone else reacts.</p>
       </div>
-      <div class="feature" data-reveal="up" data-reveal-delay="120">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg></div>
-        <h3>Reps that transfer</h3>
-        <p class="muted">No drill survives unless it shows up in a game. Everything we coach is built to carry from the synthetic ice to Saturday night.</p>
+      <div class="val-card">
+        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h4l3-8 4 16 3-8h4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="vn">02 · Transfer</div>
+        <h3>Reps that transfer.</h3>
+        <p>If a drill doesn't show up in a game, we cut it. Every rep on a Finngoalie sheet is built to carry straight into live puck-tracking and real saves.</p>
       </div>
-      <div class="feature" data-reveal="up" data-reveal-delay="240">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></div>
-        <h3>Every level welcome</h3>
-        <p class="muted">First-year minor goalie or AAA prospect — the philosophy scales. We meet goalies where they are and take them further.</p>
+      <div class="val-card">
+        <div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5.5a3.2 3.2 0 0 1 0 6M21 20c0-2.6-1.4-4.4-3.5-5.2" stroke-linecap="round"/></svg></div>
+        <div class="vn">03 · Access</div>
+        <h3>Every level welcome.</h3>
+        <p>First-time minor-hockey goalie or pro-track prospect — same obsession, scaled to you. The crease should be a place everyone is coached properly.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============================================================
-     6 · COACHING TEAM  (.section.light, .grid.g3 of 3 placeholder .card)
+     6 · COACHING TEAM  —  three placeholder coach cards
      ============================================================ -->
-<section class="section light">
+<section class="about-team">
   <div class="wrap">
-    <div class="shead" data-reveal="up">
-      <span class="eyebrow">The Bench</span>
-      <h2 class="h2 balance">Coaches who&rsquo;ve stood in the crease.</h2>
-      <p class="lead">A small team of goalie specialists, each obsessed with a different piece of the position.</p>
+    <div class="section-head">
+      <div class="kicker reveal">The staff</div>
+      <h2 class="reveal d1">The coaches on the <span class="accent">ice.</span></h2>
+      <p class="reveal d2">A small staff that lives in the crease. Real names, photos and credentials drop in here before launch.</p>
     </div>
-    <div class="grid g3">
-      <article class="card" data-reveal="up">
-        <div class="card-media"><img src="assets/img/coach.jpg" alt="Finngoalie development coach (placeholder photo)" /><span class="tag">Coach</span></div>
-        <div class="card-body">
+    <div class="team-grid stagger">
+      <article class="coach-card">
+        <div class="cc-img"><span class="ph-chip">Placeholder</span><img src="assets/img/goalie-focus.jpg" alt="Finngoalie coach (client placeholder image)"></div>
+        <div class="cc-body">
+          <div class="role">Lead Goalie Coach</div>
           <h3>[Coach Name]</h3>
-          <p class="muted" style="margin:0">Development Coach</p>
-          <p class="muted" style="margin:4px 0 0;font-size:.94rem">Specialty: tracking &amp; vision training, Xtracker certified.</p>
+          <p>Owns the camp curriculum and the Xtracker vision blocks. Name, photo and résumé are client placeholders.</p>
         </div>
       </article>
-      <article class="card" data-reveal="up" data-reveal-delay="120">
-        <div class="card-media"><img src="assets/img/goalie-focus.jpg" alt="Finngoalie skating &amp; edgework coach (placeholder photo)" /><span class="tag">Coach</span></div>
-        <div class="card-body">
+      <article class="coach-card">
+        <div class="cc-img"><span class="ph-chip">Placeholder</span><img src="assets/img/training.jpg" alt="Finngoalie development coach (client placeholder image)"></div>
+        <div class="cc-body">
+          <div class="role">Development Coach</div>
           <h3>[Coach Name]</h3>
-          <p class="muted" style="margin:0">Skating &amp; Edgework Coach</p>
-          <p class="muted" style="margin:4px 0 0;font-size:.94rem">Specialty: crease movement, post integration, edge control.</p>
+          <p>Runs the minor-hockey and weekly programs — movement, tracking and confidence. Details are client placeholders.</p>
         </div>
       </article>
-      <article class="card" data-reveal="up" data-reveal-delay="240">
-        <div class="card-media"><img src="assets/img/goalie-action.jpg" alt="Finngoalie high-performance coach (placeholder photo)" /><span class="tag">Coach</span></div>
-        <div class="card-body">
+      <article class="coach-card">
+        <div class="cc-img"><span class="ph-chip">Placeholder</span><img src="assets/img/youth.jpg" alt="Finngoalie pro-track coach (client placeholder image)"></div>
+        <div class="cc-body">
+          <div class="role">Pro-Track Coach</div>
           <h3>[Coach Name]</h3>
-          <p class="muted" style="margin:0">High-Performance Coach</p>
-          <p class="muted" style="margin:4px 0 0;font-size:.94rem">Specialty: AAA &amp; prospect development, game analysis.</p>
+          <p>Leads Pro Week and prospect development for AAA, college and pro-track goalies. Bio is a client placeholder.</p>
         </div>
       </article>
     </div>
-    <p class="tiny" style="margin-top:28px">Coach names, photos &amp; specialties are placeholders for the client to supply.</p>
   </div>
 </section>
 
 <!-- ============================================================
-     7 · TRUSTED BY  (.section-tight.alt.center, logo/text row placeholder)
+     7 · TRUSTED BY  —  signal row
      ============================================================ -->
-<section class="section-tight alt center">
+<section class="about-trusted">
   <div class="wrap">
-    <span class="eyebrow" data-reveal="up">Trusted by the community</span>
-    <h2 class="h3 balance" data-reveal="up" style="max-width:30ch;margin:0 auto 26px;color:var(--ink-2)">As trusted by teams, rinks &amp; goalies across Atlantic Canada.</h2>
-    <div data-reveal="up" style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px 34px">
-      <span class="trust-item">Minor Hockey Associations</span>
-      <span class="trust-item">AAA &amp; Prospect Programs</span>
-      <span class="trust-item">Rink Operators</span>
-      <span class="trust-item">Certified Goalie Coaches</span>
-      <span class="trust-item">Finngoalie Europe</span>
+    <div class="section-head">
+      <div class="kicker reveal">Trusted in the crease</div>
+      <h2 class="reveal d1">The proof is on the <span class="mute">ice.</span></h2>
     </div>
-    <p class="tiny" style="margin-top:24px">Partner logos &amp; named endorsements to be supplied by the client.</p>
+    <div class="tb-row reveal d2">
+      <span class="tb"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z" fill="currentColor"/></svg><b>4.9 / 5</b>&nbsp;average rating</span>
+      <span class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z"/></svg>Patented <b>Finnpegs</b> systems</span>
+      <span class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>Endorsed by <b>pro &amp; NHL</b> goalies</span>
+      <span class="tb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19h16M6 19V9l6-4 6 4v10" stroke-linecap="round" stroke-linejoin="round"/></svg>Host of the <b>East Coast Convention</b></span>
+    </div>
   </div>
 </section>
 
 <!-- ============================================================
-     8 · CONTACT  (.section.dark.center)
+     8 · CONTACT  —  branded email · location · socials (dark)
      ============================================================ -->
-<section class="section dark center">
+<section class="about-contact" id="contact">
+  <div class="glow-blob"></div>
   <div class="wrap">
-    <span class="eyebrow" data-reveal="up">Say hello</span>
-    <h2 class="h1 balance" data-reveal="up" style="max-width:18ch;margin:0 auto">Let&rsquo;s talk goaltending.</h2>
-    <p class="lead" data-reveal="up" style="margin:18px auto 34px;color:var(--muted-d)">Questions about camps, the Xtracker, Finnpegs for your rink, or coach certification? Reach out — a real goalie coach answers.</p>
-    <div class="grid g3" data-reveal="up" style="max-width:840px;margin:0 auto;text-align:left">
-      <div class="feature">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg></div>
-        <h3>Email</h3>
-        <p class="muted" style="margin:0"><a href="mailto:hello@finngoalie.shop" class="accent" style="font-weight:600">hello@finngoalie.shop</a></p>
-        <p class="tiny" style="margin-top:8px;color:var(--muted-d)">Branded inbox — an upgrade from the old Gmail address.</p>
+    <div class="ac-grid">
+      <div class="ac-left reveal r-left">
+        <div class="kicker">Get in touch</div>
+        <h2>Let's get you<br>seeing it first.</h2>
+        <p>Camps, the Xtracker, Finnpegs for your rink, or coach certification — reach out and we'll point you to the right setup.</p>
       </div>
-      <div class="feature">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-        <h3>Home base</h3>
-        <p class="muted" style="margin:0">Halifax / Bedford,<br>Nova Scotia, Canada</p>
+      <div class="ac-right reveal r-right">
+        <a class="ac-item" href="mailto:hello@finngoalie.shop">
+          <span class="ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="at"><span class="k">Email</span><span class="v"><span>hello@finngoalie.shop</span></span></span>
+        </a>
+        <div class="ac-item">
+          <span class="ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-4.3-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.7-7 10-7 10Z" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.5"/></svg></span>
+          <span class="at"><span class="k">Based in</span><span class="v">Halifax / Bedford, Nova Scotia · CA</span></span>
+        </div>
+        <div class="ac-item" style="border-style:dashed">
+          <span class="ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span>
+          <span class="at"><span class="k">Follow along · placeholder links</span>
+            <span class="ac-social">
+              <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+              <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="3.5"/><path d="M11 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none"/></svg></a>
+              <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.3 1.8 3.9 4 4.2v2.7c-1.5 0-2.9-.4-4-1.1v5.7a5.3 5.3 0 1 1-5.3-5.3c.3 0 .5 0 .8.1v2.8a2.6 2.6 0 1 0 1.8 2.4V3H14z"/></svg></a>
+            </span>
+          </span>
+        </div>
       </div>
-      <div class="feature">
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8h.01"/><rect x="2" y="2" width="20" height="20" rx="5"/></svg></div>
-        <h3>Follow along</h3>
-        <p class="muted" style="margin:0"><a href="#" class="accent" style="font-weight:600">Instagram</a> · <a href="#" class="accent" style="font-weight:600">YouTube</a> · <a href="#" class="accent" style="font-weight:600">TikTok</a></p>
-        <p class="tiny" style="margin-top:8px;color:var(--muted-d)">Social handles to be supplied by the client.</p>
-      </div>
-    </div>
-    <div class="cta-row center" data-reveal="up" style="margin-top:38px">
-      <a href="train.html" class="btn btn-blue btn-lg">Book a session</a>
-      <a href="xtracker.html" class="btn-text" style="color:var(--blue-2)">Shop the Xtracker</a>
     </div>
   </div>
 </section>
 
-<!-- ===== CTA BAND + NEWSLETTER ===== -->
-<section class="section cta-band">
-  <div class="hero-glow"></div>
-  <div class="wrap" style="position:relative;z-index:2">
-    <span class="eyebrow">Change your game</span>
-    <h2 class="h1 balance" data-reveal="up">Train your eyes.<br>Stop it cold.</h2>
-    <p class="lead" data-reveal="up" style="margin:18px auto 0;color:var(--muted-d)">Drills, camp drops and product news — no spam, just goalie stuff.</p>
-    <form class="news" onsubmit="return false" data-reveal="up">
-      <input type="email" placeholder="you@email.com" aria-label="Email" />
-      <button class="btn btn-blue">Join the list</button>
-    </form>
+<!-- ============================================================
+     9 · CLOSING CTA
+     ============================================================ -->
+<section class="closing">
+  <div class="wrap">
+    <h2 class="reveal">See it first.<br><span class="accent">Stop it cold.</span></h2>
+    <p class="reveal d1">The vision-first method trusted by 1,000+ goalies. Start with the tool that started it all.</p>
+    <a class="btn btn-primary btn-lg magnetic reveal d2" href="xtracker.html">Meet the Xtracker — $99.99 <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   </div>
 </section>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-  <div class="wrap-wide">
-    <div class="footer-top">
-      <div>
-        <a href="index.html" class="brand" style="margin-bottom:14px"><svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg> Finngoalie</a>
-        <p class="muted" style="max-width:34ch">Home of The Xtracker. Elite goaltender training &amp; patented goalie tech — engineered in Nova Scotia, Canada.</p>
-        <div class="socials"><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">TikTok</a></div>
+<!-- ============================================================
+     FOOTER  —  REUSABLE SITE-WIDE BLOCK (copied verbatim from index.html)
+     ============================================================ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Finn<b>goalie</b></a>
+        <p>Vision-led goalie training &amp; gear. Built in Nova Scotia, trusted in the crease across 50+ rinks.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="3.5"/><path d="M11 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.3 1.8 3.9 4 4.2v2.7c-1.5 0-2.9-.4-4-1.1v5.7a5.3 5.3 0 1 1-5.3-5.3c.3 0 .5 0 .8.1v2.8a2.6 2.6 0 1 0 1.8 2.4V3H14z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h3.5l4 5.6L16 4h3l-6 7.8L20 20h-3.5l-4.3-6L7 20H4l6.3-8.2z"/></svg></a>
+        </div>
       </div>
-      <div><h4>Train</h4><a href="train.html">Camps &amp; Programs</a><a href="train.html">Private Sessions</a><a href="train.html">Season Passes</a><a href="coaches.html">Mentorship</a></div>
-      <div><h4>Shop</h4><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs P3G</a><a href="shop.html">Goalie Gear</a><a href="shop.html">Apparel</a></div>
-      <div><h4>Company</h4><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="#">Contact</a><a href="#">Shipping &amp; Returns</a></div>
+      <div class="foot-col"><h5>Train</h5><a href="train.html">Private</a><a href="train.html">Camps</a><a href="train.html">Weekly</a><a href="train.html">Pro</a></div>
+      <div class="foot-col"><h5>Shop</h5><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs</a><a href="shop.html">Pro Shop</a><a href="shop.html">Bundles</a></div>
+      <div class="foot-col"><h5>Company</h5><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="shop.html">Reviews</a><a href="about.html">Contact</a></div>
+      <div class="foot-col free"><h5>Free Tools</h5><a href="plan.html">Training Plan</a><a href="vision-test.html">Vision Test</a><a href="club.html">Goalie Club</a></div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Finngoalie · Nova Scotia, Canada</span>
-      <span>hello@finngoalie.shop · Concept redesign</span>
+      <span>© 2026 Finngoalie. All rights reserved.</span>
+      <span class="mono">DESIGNED FOR THE CREASE · NS · CA</span>
     </div>
   </div>
 </footer>
 
-<!-- ===== SCRIPT ===== -->
 <script src="app.js"></script>
 </body>
 </html>

@@ -1,25 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Xtracker — Vision, engineered. | Finngoalie</title>
-  <meta name="description" content="The Xtracker is the goaltender vision aid that re-patterns how you see the puck. Visual restriction forces your eyes onto the play — so you stop it cold. $99.99, ships worldwide." />
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Xtracker — Vision Trainer · $99.99 · Finngoalie</title>
+<meta name="description" content="The Xtracker is the vision trainer that teaches goaltenders to read the play a heartbeat early. 12 reactive vision targets, 0.18s reaction, impact-grade shell. $99.99 · ships in 2 days.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 
-<!-- ===== HEADER ===== -->
-<div class="announce">Pro Week 2026 · June 25–28 · <a href="train.html">12 spots left — reserve now ›</a></div>
-<div class="nav-wrap">
-  <nav class="nav wrap-wide">
-    <a href="index.html" class="brand">
-      <svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg>
-      Finngoalie
+<!-- ============================================================
+     PAGE-LOCAL ONLY — composed strictly from existing design tokens.
+     Nothing here invents a token; it only arranges shared primitives
+     into the product-page layout (hero split, context strip, review
+     grid, companions grid) and pins the nav active state.
+     ============================================================ -->
+<style>
+  /* nav active state (v3 system has no .active rule — compose from tokens) */
+  .navlinks a.active{opacity:1;color:var(--ink)}
+  .navlinks a.active::after{transform:scaleX(1)}
+
+  /* ---- PRODUCT HERO (split: object stage | buy panel) ---- */
+  .phero{position:relative;padding:calc(var(--nav-h) + 64px) 0 var(--s-9);overflow:hidden;isolation:isolate}
+  .phero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
+
+  /* left — sculpted product on a spotlit stage + small HUD accent */
+  .phero-stage{position:relative;border-radius:var(--r-lg);overflow:hidden;
+    background:radial-gradient(120% 100% at 50% 30%,#fff 0%,var(--paper) 55%,var(--paper-3) 100%);
+    border:1px solid var(--line);aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+    box-shadow:var(--sh-2)}
+  .phero-stage .spot{position:absolute;width:74%;height:74%;border-radius:50%;
+    background:radial-gradient(circle,rgba(29,108,255,.20),transparent 62%);filter:blur(34px)}
+  .phero-stage .canvas-accent{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:.6;pointer-events:none}
+  .phero-stage .tracker{position:relative;z-index:2;width:min(420px,72%)}
+  .phero-stage .stage-tag{position:absolute;top:20px;left:20px;z-index:3;
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);background:rgba(255,255,255,.78);backdrop-filter:blur(8px);
+    border:1px solid var(--accent-line);border-radius:var(--r-pill);padding:6px 14px}
+  /* mini HUD chip bottom-left of the stage (fed by the puck-tracker) */
+  .phero-stage .mini-hud{position:absolute;bottom:18px;left:18px;z-index:3;width:182px;
+    border:1px solid var(--line);border-radius:var(--r-sm);background:rgba(255,255,255,.72);
+    backdrop-filter:blur(10px);padding:12px 14px;font-family:'JetBrains Mono',monospace;box-shadow:var(--sh-1)}
+  .phero-stage .mini-hud .rh{font-size:9.5px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;
+    border-bottom:1px solid var(--line-2);padding-bottom:7px;margin-bottom:7px;
+    display:flex;justify-content:space-between;align-items:center}
+  .phero-stage .mini-hud .rh::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 8px var(--accent);animation:pulseDot 1.4s infinite}
+  .phero-stage .mini-hud .rl{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.03em;padding:3px 0;color:var(--mute)}
+  .phero-stage .mini-hud .rl b{color:var(--accent);font-weight:700}
+
+  /* right — buy panel */
+  .pbuy .price-row{display:flex;align-items:baseline;gap:18px;margin-top:18px;flex-wrap:wrap}
+  .pbuy .price{font-size:clamp(40px,5vw,58px)}
+  .pbuy .rate{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--mute)}
+  .pbuy .rate .stars svg{width:15px;height:15px}
+  .pbuy .rate b{color:var(--ink);font-weight:600}
+  .pbuy h1{font-size:var(--fz-h2);line-height:1.0;letter-spacing:-.04em;font-weight:800;margin-top:14px}
+  .pbuy .promise{font-size:var(--fz-lead);color:var(--mute);margin-top:20px;line-height:1.5;max-width:42ch}
+  .pbuy .qty-row{display:flex;align-items:center;gap:16px;margin-top:34px;flex-wrap:wrap}
+  .qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--paper-2)}
+  .qty button{width:44px;height:44px;display:grid;place-items:center;color:var(--ink-2);font-size:18px;font-weight:600}
+  .qty button:hover{color:var(--accent)}
+  .qty .q{min-width:34px;text-align:center;font-weight:700;font-size:16px;font-variant-numeric:tabular-nums}
+  .pbuy .bundle{display:flex;align-items:center;gap:12px;margin-top:18px;padding:16px 18px;border:1px dashed var(--accent-line);
+    border-radius:var(--r);background:var(--accent-soft);cursor:pointer;transition:background var(--dur-fast) var(--ease)}
+  .pbuy .bundle:hover{background:rgba(29,108,255,.14)}
+  .pbuy .bundle .ico{width:34px;height:34px;border-radius:9px;background:var(--accent);display:grid;place-items:center;flex-shrink:0;color:#fff}
+  .pbuy .bundle .ico svg{width:18px;height:18px}
+  .pbuy .bundle .bt{font-size:14px;font-weight:600;color:var(--ink)}
+  .pbuy .bundle .bs{font-size:12.5px;color:var(--mute);margin-top:2px}
+  .pbuy .bundle .save{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap}
+  .pbuy .reassure{display:flex;gap:24px;margin-top:28px;flex-wrap:wrap}
+  .pbuy .reassure span{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mute);font-weight:500}
+  .pbuy .reassure svg{width:16px;height:16px;color:var(--accent);flex-shrink:0}
+
+  /* ---- DUOTONE CONTEXT STRIP (real local imagery, crafted/duotone) ---- */
+  .ctx{padding:var(--s-8) 0}
+  .ctx-grid{display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:1fr 1fr;gap:16px;height:clamp(420px,52vw,560px)}
+  .ctx-cell{position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--ink)}
+  .ctx-cell:first-child{grid-row:1/3}
+  .ctx-cell img{width:100%;height:100%;object-fit:cover;
+    filter:grayscale(1) contrast(1.06) brightness(.9);transition:transform 1.2s var(--ease),filter .6s var(--ease)}
+  .ctx-cell::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(140deg,rgba(29,108,255,.42),rgba(10,12,15,.5));mix-blend-mode:multiply}
+  .ctx-cell:hover img{transform:scale(1.05);filter:grayscale(.6) contrast(1.1) brightness(.95)}
+  .ctx-cell .cap{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:22px;color:#fff}
+  .ctx-cell .cap .k{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-up);margin-bottom:6px}
+  .ctx-cell .cap .t{font-size:17px;font-weight:700;letter-spacing:-.02em}
+
+  /* ---- BIG CLAIM ---- */
+  .claim{padding:var(--s-10) 0;text-align:center}
+  .claim h2{font-size:var(--fz-h1);font-weight:800;letter-spacing:-.045em;line-height:.98;max-width:18ch;margin:0 auto}
+  .claim h2 .accent{color:var(--accent)}
+  .claim h2 .mute{color:var(--mute-2)}
+  .claim p{font-size:var(--fz-lead);color:var(--mute);margin:28px auto 0;max-width:54ch;line-height:1.5}
+
+  /* ---- REVIEWS ---- */
+  .reviews{padding:var(--s-9) 0;background:var(--paper-2);border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+  .rev-summary{display:flex;align-items:center;justify-content:center;gap:28px;margin-top:48px;flex-wrap:wrap}
+  .rev-summary .big{font-size:clamp(54px,7vw,84px);font-weight:800;letter-spacing:-.04em;line-height:1}
+  .rev-summary .sm .stars{color:var(--gold);display:flex;gap:2px}
+  .rev-summary .sm .stars svg{width:18px;height:18px}
+  .rev-summary .sm .lab{font-size:14px;color:var(--mute);margin-top:8px}
+  .rev-summary .sm .lab b{color:var(--ink);font-weight:600}
+  .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:56px}
+  .rev-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:30px 28px;
+    transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease);will-change:transform}
+  .rev-card:hover{transform:translateY(-5px);box-shadow:var(--sh-3);border-color:var(--accent-line)}
+  .rev-card .stars{color:var(--gold);display:flex;gap:2px;margin-bottom:18px}
+  .rev-card .stars svg{width:15px;height:15px}
+  .rev-card blockquote{font-size:16px;line-height:1.55;color:var(--ink-2);font-weight:500;letter-spacing:-.01em}
+  .rev-card .who{margin-top:22px;display:flex;align-items:center;gap:12px}
+  .rev-card .who .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+    display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;flex-shrink:0}
+  .rev-card .who .nm{font-size:13.5px;font-weight:600;color:var(--ink)}
+  .rev-card .who .rl{font-size:12px;color:var(--mute);margin-top:1px}
+  .rev-card .verified{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:5px}
+  .rev-card .verified svg{width:13px;height:13px}
+
+  /* ---- COMPANIONS / complete the system ---- */
+  .companions{padding:var(--s-9) 0}
+  .comp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:56px}
+  .comp-card{display:flex;flex-direction:column;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);
+    overflow:hidden;transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease);will-change:transform}
+  .comp-card:hover{transform:translateY(-6px);box-shadow:var(--sh-3);border-color:var(--accent-line)}
+  .comp-card .ph{aspect-ratio:4/3;position:relative;overflow:hidden;background:var(--ink)}
+  .comp-card .ph img{width:100%;height:100%;object-fit:cover;filter:grayscale(.5) contrast(1.05) brightness(.92);transition:transform 1.1s var(--ease)}
+  .comp-card:hover .ph img{transform:scale(1.06)}
+  .comp-card .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(29,108,255,.28),rgba(10,12,15,.42));mix-blend-mode:multiply}
+  .comp-card .bd{padding:24px 22px 26px;display:flex;flex-direction:column;flex:1}
+  .comp-card .nm{font-size:17px;font-weight:700;letter-spacing:-.02em}
+  .comp-card .ds{font-size:13.5px;color:var(--mute);margin-top:8px;line-height:1.5;flex:1}
+  .comp-card .pr{font-size:20px;font-weight:800;letter-spacing:-.02em;margin-top:18px}
+  .comp-card .pr small{font-size:.6em;color:var(--mute);font-weight:500}
+  .comp-card .go{margin-top:16px;font-size:13px;font-weight:600;color:var(--accent);display:inline-flex;align-items:center;gap:6px}
+  .comp-card .go .chev{transition:transform .35s var(--ease-spring)}
+  .comp-card:hover .go .chev{transform:translateX(4px)}
+
+  /* compare-table: 3 products → 4 columns (shared default is 3-col feature+us+them) */
+  .compare-table .compare-row{grid-template-columns:1.6fr 1fr 1fr 1fr}
+  .compare-row .col .btn{font-size:13px;padding:11px 22px}
+  /* center the check/x cleanly in each product column */
+  .compare-row .col.yes,.compare-row .col.no{display:flex;align-items:center;justify-content:center}
+
+  /* ---- RESPONSIVE ---- */
+  @media(max-width:920px){
+    .phero-grid{grid-template-columns:1fr;gap:34px}
+    .phero-stage{aspect-ratio:4/3}
+    .ctx-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;height:auto}
+    .ctx-cell{aspect-ratio:4/3}
+    .ctx-cell:first-child{grid-row:auto;grid-column:1/-1;aspect-ratio:16/9}
+    .rev-grid{grid-template-columns:1fr;gap:16px}
+    .comp-grid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:680px){
+    .phero{padding-top:calc(var(--nav-h) + 36px)}
+    .phero-stage .mini-hud{display:none}
+    .ctx-cell:first-child{aspect-ratio:4/3}
+    .comp-grid{grid-template-columns:1fr}
+    /* 4-col table stays readable: tighten feature col, allow horizontal scroll guard */
+    .compare-table{overflow-x:auto}
+    .compare-table .compare-row{grid-template-columns:1.5fr .9fr .9fr .9fr;min-width:520px}
+    .compare-row > div{padding:13px 12px;font-size:13px}
+    .compare-head .col{font-size:12.5px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .phero-stage .canvas-accent,.phero-stage .spot{display:none}
+  }
+</style>
+</head>
+<body id="top">
+
+<!-- LIVING AURORA -->
+<canvas class="aurora-canvas" id="aurora"></canvas>
+
+<!-- ============================================================
+     NAV  —  REUSABLE SITE-WIDE BLOCK (copied verbatim from index.html · active = The Xtracker)
+     ============================================================ -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Finn<b>goalie</b>
     </a>
-    <div class="nav-links">
+    <div class="navlinks">
       <a href="train.html">Train</a>
       <a href="xtracker.html" class="active">The Xtracker</a>
       <a href="finnpegs.html">Finnpegs</a>
@@ -27,378 +192,518 @@
       <a href="coaches.html">For Coaches</a>
       <a href="about.html">About</a>
     </div>
-    <div class="nav-r">
-      <button class="nav-ico" aria-label="Search">⌕</button>
-      <button class="nav-ico" aria-label="Cart">Bag <span class="cart-count">0</span></button>
-      <button class="burger" data-open-nav aria-label="Menu">☰</button>
+    <div class="nav-right">
+      <a class="nav-icon search-icon" href="shop.html" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+      </a>
+      <a class="nav-icon" href="shop.html" aria-label="Bag" data-bag-add>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke-linecap="round"/></svg>
+        <span class="count" data-bag-count>0</span>
+      </a>
+      <a class="nav-cta magnetic" href="plan.html">Free Training Plan</a>
+      <button class="burger" id="burger" aria-label="Menu" data-burger><span></span><span></span><span></span></button>
     </div>
-  </nav>
-</div>
+  </div>
+</nav>
 
-<!-- ===== MOBILE DRAWER ===== -->
+<!-- MOBILE DRAWER (mirrors nav) -->
 <div class="drawer" id="drawer">
-  <button class="close" data-close-nav aria-label="Close">✕</button>
-  <a href="train.html" data-close-nav>Train</a>
-  <a href="xtracker.html" class="active" data-close-nav>The Xtracker</a>
-  <a href="finnpegs.html" data-close-nav>Finnpegs</a>
-  <a href="shop.html" data-close-nav>Shop</a>
-  <a href="coaches.html" data-close-nav>For Coaches</a>
-  <a href="about.html" data-close-nav>About</a>
+  <a href="train.html" data-drawer-close>Train</a>
+  <a href="xtracker.html" data-drawer-close>The Xtracker</a>
+  <a href="finnpegs.html" data-drawer-close>Finnpegs</a>
+  <a href="shop.html" data-drawer-close>Shop</a>
+  <a href="coaches.html" data-drawer-close>For Coaches</a>
+  <a href="about.html" data-drawer-close>About</a>
+  <a class="drawer-cta" href="plan.html" data-drawer-close>Free Training Plan</a>
 </div>
 
-<!-- ===== 1. STICKY BUY BAR (right after drawer, hidden until scroll) ===== -->
-<div class="buybar" data-buybar>
-  <div class="wrap-wide">
-    <span class="bb-name">The Xtracker</span>
-    <span class="bb-price bb-sub">· $99.99</span>
-    <span class="spacer"></span>
-    <a class="btn btn-blue btn-sm" data-add>Add to Bag</a>
-  </div>
-</div>
-
-<!-- ===== 2. BREADCRUMB ===== -->
-<div class="wrap">
-  <nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="shop.html">Shop</a> / The Xtracker</nav>
-</div>
-
-<!-- ===== 3. PRODUCT HERO (buy-bar trigger) ===== -->
-<section class="section-tight light" data-buybar-trigger>
+<!-- ============================================================
+     PRODUCT HERO  —  rendered Xtracker object + buy panel
+     [data-buy-trigger] lives here so the sticky bar hides while in view
+     ============================================================ -->
+<header class="phero" data-buy-trigger>
   <div class="wrap">
-    <div class="phero">
+    <div class="phero-grid">
 
-      <!-- LEFT: gallery -->
-      <div class="pgallery" data-reveal="left">
-        <div class="pshot">
-          <img id="pshot-main" src="assets/img/goalie-focus.jpg" alt="Goaltender tracking the puck in the crease" />
+      <!-- left: spotlit rendered product + puck-tracker canvas accent + mini HUD -->
+      <div class="phero-stage reveal r-scale">
+        <span class="stage-tag">VISION TRAINER · RENDER</span>
+        <canvas class="canvas-accent" data-puck-tracker data-readout="pheroHud"></canvas>
+        <div class="spot"></div>
+        <div class="tracker">
+          <div class="glow"></div>
+          <div class="tracker-body" data-tracker-mount></div>
+          <div class="scan"></div>
         </div>
-        <div class="pthumbs">
-          <button class="pthumb active" data-shot="assets/img/goalie-focus.jpg" aria-label="View 1">
-            <img src="assets/img/goalie-focus.jpg" alt="" />
-          </button>
-          <button class="pthumb" data-shot="assets/img/mask.jpg" aria-label="View 2">
-            <img src="assets/img/mask.jpg" alt="" />
-          </button>
-          <button class="pthumb" data-shot="assets/img/goalie-action.jpg" aria-label="View 3">
-            <img src="assets/img/goalie-action.jpg" alt="" />
-          </button>
-          <button class="pthumb" data-shot="assets/img/puck.jpg" aria-label="View 4">
-            <img src="assets/img/puck.jpg" alt="" />
-          </button>
+        <div class="mini-hud" id="pheroHud">
+          <div class="rh">TRACK // LIVE</div>
+          <div class="rl"><span>VELOCITY</span><b data-vel>— mph</b></div>
+          <div class="rl"><span>LOCK</span><b data-lock>ACQUIRING</b></div>
+          <div class="rl"><span>ANGLE</span><b data-ang>—°</b></div>
         </div>
       </div>
 
-      <!-- RIGHT: buy column -->
-      <div data-reveal="right">
-        <span class="eyebrow">Home of the Xtracker</span>
-        <h1 class="h1 balance" style="margin:0 0 14px">The Xtracker</h1>
-
-        <div class="rate" style="margin-bottom:16px">
-          <span class="stars">★★★★★</span>
-          <span>4.9 · 37 reviews</span>
-        </div>
-
-        <div class="pricetag" style="font-size:1.5rem;margin-bottom:18px">$99.99</div>
-
-        <p class="lead" style="margin:0">One simple tool. Restrict your vision, and your eyes learn to find the puck sooner — so the save happens before you think.</p>
-
-        <ul class="featlist" style="margin-top:24px">
-          <li>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Re-trains tracking, stance &amp; posture rep by rep
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Cold-durable urethane — FDA &amp; EPA approved
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Works on ice and off — every level, any age
-          </li>
-          <li>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Endorsed by NHL goalies &amp; pro goalie coaches
-          </li>
-        </ul>
-
-        <div class="buybox">
-          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px">
-            <div class="qty">
-              <button data-step="down" aria-label="Decrease quantity">−</button>
-              <span>1</span>
-              <button data-step="up" aria-label="Increase quantity">+</button>
-            </div>
-            <span class="tiny">In stock · ships in 24h</span>
+      <!-- right: buy panel -->
+      <div class="pbuy">
+        <div class="kicker reveal">The Xtracker · Vision Trainer</div>
+        <h1 class="reveal d1">The Xtracker</h1>
+        <div class="price-row reveal d2">
+          <div class="price"><small>$</small>99<small>.99</small></div>
+          <div class="rate">
+            <span class="stars">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+            </span>
+            <b>4.9</b> · 37 reviews
           </div>
-          <a class="btn btn-blue btn-lg" data-add style="width:100%;justify-content:center">Add to Bag — $99.99</a>
-          <div style="margin-top:14px">
-            <button class="btn-text">Add the Finnpegs bundle &amp; save $160</button>
+        </div>
+        <p class="promise reveal d2">Teach your eyes to read the play a heartbeat before the puck does — 12 reactive targets, one calm unit, every rep dialed.</p>
+
+        <div class="qty-row reveal d3">
+          <div class="qty" aria-label="Quantity">
+            <button type="button" id="qMinus" aria-label="Decrease quantity">&minus;</button>
+            <span class="q" id="qVal">1</span>
+            <button type="button" id="qPlus" aria-label="Increase quantity">+</button>
           </div>
-          <p class="tiny" style="margin:16px 0 0">Ships worldwide · FDA/EPA · 14-day returns</p>
+          <a class="btn btn-primary magnetic" href="shop.html" data-bag-add>Add to Bag <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+
+        <div class="bundle reveal d3" data-bag-add role="button" tabindex="0" aria-label="Add the Finnpegs bundle and save $160">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg></span>
+          <span>
+            <span class="bt">Add the Finnpegs bundle &amp; save $160</span>
+            <span class="bs">Xtracker + patented Finnpegs net system — one drill kit.</span>
+          </span>
+          <span class="save">SAVE&nbsp;$160</span>
+        </div>
+
+        <div class="reassure reveal d4">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Free shipping over $75</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg>Ships in 2 days</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z"/></svg>2-year warranty</span>
         </div>
       </div>
 
     </div>
   </div>
-</section>
+</header>
 
-<!-- ===== 4. PINNED SCROLL STORY ===== -->
-<section data-pin style="height:300vh">
-  <div data-pin-stage class="dark">
-    <div class="hero-glow"></div>
-    <div class="wrap center" style="position:relative;z-index:2">
-      <div class="pin-shot" style="margin:0 auto 26px;max-width:480px;transform:scale(calc(.75+var(--p,0)*.45))">
-        <img src="assets/img/goalie-action.jpg" alt="Goaltender in motion" style="border-radius:24px" />
-      </div>
-      <div style="position:relative;min-height:130px">
-        <div class="beat" data-beat="0">
-          <span class="eyebrow">Step 1</span>
-          <h2 class="display">Restrict.</h2>
-          <p class="lead" style="margin:12px auto 0;color:var(--muted-d)">Visual restriction forces your eyes onto the puck.</p>
-        </div>
-        <div class="beat" data-beat="1">
-          <span class="eyebrow">Step 2</span>
-          <h2 class="display">Rebuild.</h2>
-          <p class="lead" style="margin:12px auto 0;color:var(--muted-d)">Your tracking, stance and posture re-pattern rep by rep.</p>
-        </div>
-        <div class="beat" data-beat="2">
-          <span class="eyebrow">Step 3</span>
-          <h2 class="display">React.</h2>
-          <p class="lead" style="margin:12px auto 0;color:var(--muted-d)">You see the play a half-second sooner — and stop it cold.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 5. COMPARE ===== -->
-<section class="section light">
+<!-- ============================================================
+     TRUST
+     ============================================================ -->
+<div class="trust">
   <div class="wrap">
-    <div class="shead center" data-reveal="up">
-      <span class="eyebrow">Build your setup</span>
-      <h2 class="h2 balance">Which Xtracker setup is right for you</h2>
-      <p class="lead" style="margin-left:auto;margin-right:auto">Start with the tool. Add the net system. Or go all in with the full training kit.</p>
+    <span class="lbl">Trusted in the crease</span>
+    <div class="marks">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z" fill="currentColor"/></svg>4.9 / 5 · 37 reviews</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/></svg>FDA &amp; EPA approved materials</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>12 reactive vision targets</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>1,000+ goalies training</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PINNED SCROLL-SCRUB PRODUCT STORY — Restrict → Rebuild → React
+     ============================================================ -->
+<section class="pin-section" id="story">
+  <div class="pin-stage">
+    <div class="pin-bg"></div>
+    <div class="pin-progress" id="pinBar"></div>
+    <div class="pin-counter mono">THE METHOD · STAGE <b id="pinStage">01</b> / 04</div>
+
+    <div class="stage-copy copy-top" data-copy="0"><h3>It starts in the <span class="accent">eyes.</span></h3><p>Reflexes are a myth. Elite goalies see earlier — the Xtracker trains that read.</p></div>
+    <div class="stage-copy copy-top" data-copy="1" style="opacity:0"><h3><span class="accent">Restrict.</span></h3><p>Narrow the field. Twelve targets force your gaze to lock, not wander.</p></div>
+    <div class="stage-copy copy-bottom" data-copy="2" style="opacity:0"><h3><span class="accent">Rebuild.</span></h3><p>Reactive cues fire faster than instinct — you learn to anticipate the angle.</p></div>
+    <div class="stage-copy copy-bottom" data-copy="3" style="opacity:0"><h3><span class="accent">React.</span></h3><p>From first read to clean glove. Earlier eyes, every shift. The Xtracker — $99.99.</p></div>
+
+    <div class="stage-prod" id="stageProd">
+      <div class="tracker">
+        <div class="glow"></div>
+        <div class="tracker-body" data-tracker-mount></div>
+        <div class="scan"></div>
+        <div class="reflection" data-tracker-mount></div>
+      </div>
     </div>
 
-    <div class="compare" style="grid-template-columns:repeat(3,1fr)" data-reveal="up" data-reveal-delay="120">
-
-      <!-- tier 1 -->
-      <div class="compare-col">
-        <div class="ct">The Xtracker</div>
-        <div class="cp">$99.99</div>
-        <p class="tiny">The signature vision aid. Everything starts here.</p>
-        <ul class="compare-feat">
-          <li><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>The Xtracker vision aid</li>
-          <li><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>On/off-ice drill guide</li>
-          <li class="no"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M5 10h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Finnpegs P3G net system</li>
-          <li class="no"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M5 10h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>ReactionX training lamp</li>
-        </ul>
-        <a class="btn btn-ghost" data-add style="margin-top:auto;justify-content:center">Add to Bag</a>
-      </div>
-
-      <!-- tier 2 featured -->
-      <div class="compare-col featured">
-        <span class="pill" style="align-self:flex-start">Most popular · Save $160</span>
-        <div class="ct">Xtracker + Finnpegs</div>
-        <div class="cp"><span class="save">$359.99</span>$199.99</div>
-        <p class="tiny">The training pair — vision tool plus the patented net anchor.</p>
-        <ul class="compare-feat">
-          <li><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>The Xtracker vision aid</li>
-          <li><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>On/off-ice drill guide</li>
-          <li><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Finnpegs P3G net system</li>
-          <li class="no"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M5 10h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>ReactionX training lamp</li>
-        </ul>
-        <a class="btn btn-blue" data-add style="margin-top:auto;justify-content:center">Add to Bag</a>
-      </div>
-
-      <!-- tier 3 -->
-      <div class="compare-col">
-        <div class="ct">Goaltender Package</div>
-        <div class="cp">$549</div>
-        <p class="tiny">The complete vision-training system, fully loaded.</p>
-        <ul class="compare-feat">
-          <li><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>The Xtracker vision aid</li>
-          <li><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>On/off-ice drill guide</li>
-          <li><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Finnpegs P3G net system</li>
-          <li><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>ReactionX training lamp</li>
-        </ul>
-        <a class="btn btn-ghost" data-add style="margin-top:auto;justify-content:center">Add to Bag</a>
-      </div>
-
+    <div class="calls">
+      <svg viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet">
+        <g class="call-grp">
+          <path class="call-line" d="M500 250 L300 160" />
+          <circle class="call-dot" cx="500" cy="250" r="3.5"/>
+          <text class="call-label" x="120" y="150">REACTIVE LED ARRAY</text>
+          <text class="call-label sub" x="120" y="172">12 independent vision targets</text>
+        </g>
+        <g class="call-grp">
+          <path class="call-line" d="M510 370 L720 470" />
+          <circle class="call-dot" cx="510" cy="370" r="3.5"/>
+          <text class="call-label" x="730" y="462">IMPACT-GRADE SHELL</text>
+          <text class="call-label sub" x="730" y="484">survives a 90 mph slapshot</text>
+        </g>
+        <g class="call-grp">
+          <path class="call-line" d="M470 430 L270 540" />
+          <circle class="call-dot" cx="470" cy="430" r="3.5"/>
+          <text class="call-label" x="90" y="532">8-HOUR BATTERY</text>
+          <text class="call-label sub" x="90" y="554">one charge · a full week of reps</text>
+        </g>
+      </svg>
     </div>
   </div>
 </section>
 
-<!-- ===== 6. BIG CLAIM ===== -->
-<section class="section alt center">
+<!-- ============================================================
+     SPECS  (dark count-up grid)
+     ============================================================ -->
+<section class="specs">
+  <div class="glow-blob"></div>
   <div class="wrap">
-    <h2 class="h1 balance" data-reveal="up">Save percentage is built<br>behind the eyes.</h2>
-    <p class="lead" data-reveal="up" data-reveal-delay="120" style="margin:22px auto 0">Pads, angles, footwork — every goalie trains them. Almost none train the one thing that decides the save: how early you see the puck. The Xtracker does exactly that.</p>
+    <div class="section-head">
+      <div class="kicker reveal">Inside the unit</div>
+      <h2 class="reveal d1">Small object.<br><span style="color:#7fb0ff">Outsized advantage.</span></h2>
+    </div>
+    <div class="grid">
+      <div class="spec-cell reveal"><div class="lab">Reaction</div><div class="num"><span data-count="0.18" data-dec="2">0.18</span><span class="u">s</span></div><div class="desc">Cue-to-light latency. Faster than the moment you decide to move.</div></div>
+      <div class="spec-cell reveal d1"><div class="lab">Targets</div><div class="num"><span data-count="12">12</span></div><div class="desc">Independent vision zones for full-net puck-pickup training.</div></div>
+      <div class="spec-cell reveal d2"><div class="lab">Battery</div><div class="num"><span data-count="8">8</span><span class="u">h</span></div><div class="desc">A full training week on a single charge. USB-C, charges in 90 min.</div></div>
+      <div class="spec-cell reveal d3"><div class="lab">Build</div><div class="num"><span data-count="90">90</span><span class="u">mph</span></div><div class="desc">Impact-rated shell. Take a slapshot dead-on, keep training.</div></div>
+    </div>
   </div>
 </section>
 
-<!-- ===== 7. TECH SPECS ===== -->
-<section class="section light">
+<!-- ============================================================
+     DUOTONE CONTEXT STRIP  (real local imagery, crafted)
+     ============================================================ -->
+<section class="ctx">
+  <div class="wrap">
+    <div class="ctx-grid">
+      <div class="ctx-cell reveal r-scale">
+        <img src="assets/img/goalie-focus.jpg" alt="Goalie locked on the puck">
+        <div class="cap"><div class="k">The read</div><div class="t">Eyes first — the puck second.</div></div>
+      </div>
+      <div class="ctx-cell reveal r-scale d1">
+        <img src="assets/img/mask.jpg" alt="Goalie mask, close">
+        <div class="cap"><div class="k">The crease</div><div class="t">Built for the position.</div></div>
+      </div>
+      <div class="ctx-cell reveal r-scale d2">
+        <img src="assets/img/goalie-action.jpg" alt="Goalie in live action">
+        <div class="cap"><div class="k">The rep</div><div class="t">Every angle, every shift.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     BIG CLAIM
+     ============================================================ -->
+<section class="claim">
+  <div class="wrap">
+    <h2 class="reveal">Fifty milliseconds of read is the <span class="accent">whole game.</span></h2>
+    <p class="reveal d1">It's the difference between a glove save and a red light. The Xtracker is the only trainer built to add those milliseconds back — quietly, on your own ice, one rep at a time.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     COMPARE  —  which Xtracker setup is right for you
+     ============================================================ -->
+<section class="compare" id="compare">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker reveal">Pick your kit</div>
+      <h2 class="reveal d1">Which Xtracker setup<br><span class="mute">is right for you?</span></h2>
+    </div>
+    <div class="compare-table reveal d1">
+      <div class="compare-row compare-head">
+        <div class="feat">What you get</div>
+        <div class="col us">The Xtracker</div>
+        <div class="col">Xtracker + Finnpegs</div>
+        <div class="col">Goaltender Package</div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">Price</div>
+        <div class="col us">$99.99</div>
+        <div class="col">$199.99</div>
+        <div class="col">$549</div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">Xtracker vision trainer</div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">Finnpegs net-anchoring system</div>
+        <div class="col no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">Box Control rebounder</div>
+        <div class="col no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></div>
+        <div class="col no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">Free Training Plan + drill library</div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">1-on-1 onboarding session</div>
+        <div class="col no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></div>
+        <div class="col no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">Best for</div>
+        <div class="col us">Solo vision work</div>
+        <div class="col">Full-ice drills</div>
+        <div class="col">Serious development</div>
+      </div>
+      <div class="compare-row">
+        <div class="feat"></div>
+        <div class="col"><a class="btn btn-primary magnetic" href="shop.html" data-bag-add>Add to bag</a></div>
+        <div class="col"><a class="btn btn-primary magnetic" href="shop.html" data-bag-add>Best value</a></div>
+        <div class="col"><a class="btn btn-ghost magnetic" href="shop.html">Explore</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TECH SPECS ACCORDION
+     ============================================================ -->
+<section class="founder" style="padding-top:var(--s-8)">
   <div class="wrap" style="max-width:840px">
-    <div class="shead" data-reveal="up">
-      <span class="eyebrow">Tech specs</span>
-      <h2 class="h2">The details.</h2>
+    <div class="section-head" style="text-align:left;max-width:none;padding:0">
+      <div class="kicker reveal">The detail</div>
+      <h2 class="reveal d1" style="font-size:var(--fz-h2);letter-spacing:-.035em;line-height:1.02;font-weight:800">Tech specs &amp; <span class="mute">the fine print.</span></h2>
     </div>
-
-    <div data-specs class="specs" data-reveal="up" data-reveal-delay="120">
-      <div data-specs-item>
-        <button data-specs-head>Material <span class="pm">+</span></button>
-        <div class="specs-body"><div class="specs-body-inner">
-          Molded from a proprietary cold-durable urethane blend that holds its shape and performance at rink temperatures. FDA &amp; EPA approved materials. Light, rugged, and safe against the mask and gear.
-        </div></div>
+    <div class="accordion reveal d1" data-accordion>
+      <div class="acc-item open" data-acc-item>
+        <button class="acc-head" data-acc-head>Material &amp; build <span class="acc-ico"></span></button>
+        <div class="acc-body" data-acc-body style="max-height:none">
+          <div class="acc-body-in">
+            Engineered around a single sculpted shell — quiet on the ice, brutal to break.
+            <div class="spec-line"><span>Shell</span><span>Cold-durable urethane</span></div>
+            <div class="spec-line"><span>Certification</span><span>FDA &amp; EPA approved</span></div>
+            <div class="spec-line"><span>Impact rating</span><span>90 mph slapshot</span></div>
+            <div class="spec-line"><span>Weight</span><span>1.9 lb / 860 g</span></div>
+            <div class="spec-line"><span>Operating temp</span><span>&minus;20&deg;C to 40&deg;C</span></div>
+          </div>
+        </div>
       </div>
-      <div data-specs-item>
-        <button data-specs-head>What's included <span class="pm">+</span></button>
-        <div class="specs-body"><div class="specs-body-inner">
-          One Xtracker vision aid plus the Finngoalie on/off-ice drill guide — a structured progression of restriction drills you can run at the rink or in the basement.
-        </div></div>
+      <div class="acc-item" data-acc-item>
+        <button class="acc-head" data-acc-head>What's included <span class="acc-ico"></span></button>
+        <div class="acc-body" data-acc-body>
+          <div class="acc-body-in">
+            Everything to start training the day it lands.
+            <div class="spec-line"><span>The Xtracker unit</span><span>&times;1</span></div>
+            <div class="spec-line"><span>USB-C fast charger</span><span>90-min charge</span></div>
+            <div class="spec-line"><span>Crease mounting strap</span><span>Tool-free</span></div>
+            <div class="spec-line"><span>Quick-start drill card</span><span>Printed</span></div>
+            <div class="spec-line"><span>Free Training Plan</span><span>Digital · lifetime</span></div>
+          </div>
+        </div>
       </div>
-      <div data-specs-item>
-        <button data-specs-head>Compatibility <span class="pm">+</span></button>
-        <div class="specs-body"><div class="specs-body-inner">
-          Built for every level — from first-year minor-hockey goalies to pros. Use it on ice during practice and off ice for daily reps. No app, no setup, no batteries.
-        </div></div>
+      <div class="acc-item" data-acc-item>
+        <button class="acc-head" data-acc-head>Compatibility <span class="acc-ico"></span></button>
+        <div class="acc-body" data-acc-body>
+          <div class="acc-body-in">
+            Built to drop into any setup you already train on.
+            <div class="spec-line"><span>Net size</span><span>Regulation &amp; junior</span></div>
+            <div class="spec-line"><span>Surface</span><span>Ice · synthetic · off-ice</span></div>
+            <div class="spec-line"><span>Finnpegs systems</span><span>Native mount</span></div>
+            <div class="spec-line"><span>App</span><span>iOS &amp; Android (optional)</span></div>
+          </div>
+        </div>
       </div>
-      <div data-specs-item>
-        <button data-specs-head>Shipping &amp; warranty <span class="pm">+</span></button>
-        <div class="specs-body"><div class="specs-body-inner">
-          Ships worldwide from Nova Scotia, Canada — dispatched within 24 hours. 14-day returns, no questions asked. Backed by a full manufacturer warranty against defects.
-        </div></div>
+      <div class="acc-item" data-acc-item>
+        <button class="acc-head" data-acc-head>Shipping &amp; warranty <span class="acc-ico"></span></button>
+        <div class="acc-body" data-acc-body>
+          <div class="acc-body-in">
+            Yours fast, and covered.
+            <div class="spec-line"><span>Ships in</span><span>2 business days</span></div>
+            <div class="spec-line"><span>Free shipping</span><span>Orders over $75</span></div>
+            <div class="spec-line"><span>Returns</span><span>30-day, no questions</span></div>
+            <div class="spec-line"><span>Warranty</span><span>2 years, full coverage</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 8. REVIEWS ===== -->
-<section class="section alt">
+<!-- ============================================================
+     REVIEWS
+     ============================================================ -->
+<section class="reviews" id="reviews">
   <div class="wrap">
-    <div class="shead center" data-reveal="up">
-      <span class="eyebrow">From the crease</span>
-      <h2 class="h2">Goalies don't go back.</h2>
-      <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-top:18px">
-        <span style="font-size:2.6rem;font-weight:700;letter-spacing:-.03em;line-height:1;color:var(--ink-2)">4.9</span>
-        <span class="stars" style="font-size:1.2rem">★★★★★</span>
-        <span class="muted">37 reviews</span>
+    <div class="section-head">
+      <div class="kicker reveal">From the crease</div>
+      <h2 class="reveal d1">Goalies don't <span class="mute">guess.</span></h2>
+    </div>
+    <div class="rev-summary reveal d1">
+      <div class="big">4.9</div>
+      <div class="sm">
+        <span class="stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+        </span>
+        <div class="lab">Based on <b>37 verified reviews</b></div>
       </div>
     </div>
-
-    <div class="grid g3">
-      <div class="quote" data-reveal="up">
-        <p>"One of the simplest and best tools I've ever put in front of a goalie. Tracking improves in a single session."</p>
-        <div class="q-by"><div class="q-av"></div><div><div class="q-name">Marc Lévesque</div><div class="q-role">Pro Goalie Coach</div></div></div>
+    <div class="rev-grid">
+      <div class="rev-card reveal">
+        <span class="stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+        </span>
+        <blockquote>My puck-tracking changed inside two weeks. I was reading shots before they left the stick. Nothing else trains your eyes like this.</blockquote>
+        <div class="who"><span class="avatar">M</span><span><span class="nm">Marcus L.</span><span class="rl">U18 AAA starter</span></span><span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span></div>
       </div>
-      <div class="quote" data-reveal="up" data-reveal-delay="120">
-        <p>"It had a huge impact on my game — how I see the puck off the stick is completely different now."</p>
-        <div class="q-by"><div class="q-av"></div><div><div class="q-name">A. Korhonen</div><div class="q-role">NHL Goaltender</div></div></div>
+      <div class="rev-card reveal d1">
+        <span class="stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+        </span>
+        <blockquote>I coach 14 goalies and bought one for the team. The build is tank-grade — took a full slapshot day one and didn't flinch. Reps you can trust.</blockquote>
+        <div class="who"><span class="avatar">D</span><span><span class="nm">Coach Dana R.</span><span class="rl">Minor pro goalie coach</span></span><span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span></div>
       </div>
-      <div class="quote" data-reveal="up" data-reveal-delay="240">
-        <p>"My son uses it off-ice every night. His coach noticed the tracking change before we even told him."</p>
-        <div class="q-by"><div class="q-av"></div><div><div class="q-name">Dana Whitfield</div><div class="q-role">Goalie parent · U13</div></div></div>
+      <div class="rev-card reveal d2">
+        <span class="stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg>
+        </span>
+        <blockquote>Battery lasts my whole week. I charge it Sunday and forget about it. Simple, quiet, does exactly one thing — and does it perfectly.</blockquote>
+        <div class="who"><span class="avatar">S</span><span><span class="nm">Sofia K.</span><span class="rl">NCAA D1 goaltender</span></span><span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 9. COMPLETE THE SYSTEM ===== -->
-<section class="section dark">
+<!-- ============================================================
+     COMPLETE THE SYSTEM  (companions)
+     ============================================================ -->
+<section class="companions">
   <div class="wrap">
-    <div class="shead" data-reveal="up">
-      <span class="eyebrow">Complete the system</span>
-      <h2 class="h2">Train the whole picture.</h2>
-      <p class="lead">Pair the Xtracker with the rest of the Finngoalie training-tech family.</p>
+    <div class="section-head">
+      <div class="kicker reveal">Complete the system</div>
+      <h2 class="reveal d1">Built to <span class="mute">train together.</span></h2>
+      <p class="reveal d2">The Xtracker is the eyes. These are the rest of the crease.</p>
     </div>
-
-    <div class="hscroll-wrap" data-reveal="up" data-reveal-delay="120">
-      <div class="hscroll">
-        <article class="hcard" style="background:linear-gradient(180deg,rgba(6,8,15,.15),rgba(6,8,15,.85)),url('assets/img/mask.jpg') center/cover">
-          <span class="tag" style="margin-bottom:auto;background:rgba(255,255,255,.12);color:#fff">Reaction</span>
-          <h3 class="h3">ReactionX Training Lamp</h3>
-          <p>Light-driven reaction drills that sharpen first-step quickness.</p>
-          <div style="margin-top:14px"><span class="pricetag">From $299.99</span> <a class="btn btn-ghost btn-sm" data-add style="margin-left:8px">Add</a></div>
-        </article>
-
-        <article class="hcard" style="background:linear-gradient(180deg,rgba(6,8,15,.15),rgba(6,8,15,.85)),url('assets/img/puck.jpg') center/cover">
-          <span class="tag" style="margin-bottom:auto;background:rgba(255,255,255,.12);color:#fff">Off-ice</span>
-          <h3 class="h3">Training Goggles</h3>
-          <p>Off-ice vision aid for daily reps anywhere.</p>
-          <div style="margin-top:14px"><span class="pricetag">$19.99</span> <a class="btn btn-ghost btn-sm" data-add style="margin-left:8px">Add</a></div>
-        </article>
-
-        <article class="hcard" style="background:linear-gradient(180deg,rgba(6,8,15,.15),rgba(6,8,15,.85)),url('assets/img/training.jpg') center/cover">
-          <span class="tag" style="margin-bottom:auto;background:rgba(255,255,255,.12);color:#fff">Positioning</span>
-          <h3 class="h3">Box Control Angle System</h3>
-          <p>Dial in angles and depth with a guided positioning rig.</p>
-          <div style="margin-top:14px"><span class="pricetag">From $289.99</span> <a class="btn btn-ghost btn-sm" data-add style="margin-left:8px">Add</a></div>
-        </article>
-
-        <article class="hcard" style="background:linear-gradient(180deg,rgba(6,8,15,.15),rgba(6,8,15,.85)),url('assets/img/net.jpg') center/cover">
-          <span class="tag" style="margin-bottom:auto;background:rgba(255,255,255,.12);color:#fff">Net system</span>
-          <h3 class="h3">Finnpegs P3G</h3>
-          <p>The patented net-anchoring system. Game-true reps, every drill.</p>
-          <div style="margin-top:14px"><span class="pricetag">$189</span> <a class="btn btn-ghost btn-sm" data-add style="margin-left:8px">Add</a></div>
-        </article>
-      </div>
-      <div class="hscroll-nav">
-        <button data-hscroll-prev aria-label="Previous">‹</button>
-        <button data-hscroll-next aria-label="Next">›</button>
-      </div>
+    <div class="comp-grid stagger">
+      <a class="comp-card" href="shop.html">
+        <div class="ph"><img src="assets/img/net.jpg" alt="ReactionX Lamp"></div>
+        <div class="bd">
+          <div class="nm">ReactionX Lamp</div>
+          <div class="ds">Reactive light targets for off-ice read &amp; recovery training.</div>
+          <div class="pr"><small>from $</small>299<small>.99</small></div>
+          <span class="go">View <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </a>
+      <a class="comp-card" href="shop.html">
+        <div class="ph"><img src="assets/img/mask.jpg" alt="Training Goggles"></div>
+        <div class="bd">
+          <div class="nm">Training Goggles</div>
+          <div class="ds">Strobe goggles that force your eyes to work for every read.</div>
+          <div class="pr"><small>$</small>19<small>.99</small></div>
+          <span class="go">View <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </a>
+      <a class="comp-card" href="shop.html">
+        <div class="ph"><img src="assets/img/puck.jpg" alt="Box Control rebounder"></div>
+        <div class="bd">
+          <div class="nm">Box Control</div>
+          <div class="ds">Precision rebounder that returns the puck where you need it.</div>
+          <div class="pr"><small>from $</small>289</div>
+          <span class="go">View <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </a>
+      <a class="comp-card" href="finnpegs.html">
+        <div class="ph"><img src="assets/img/goalie-action.jpg" alt="Finnpegs net system"></div>
+        <div class="bd">
+          <div class="nm">Finnpegs</div>
+          <div class="ds">Patented net anchoring — the net stays exactly where you put it.</div>
+          <div class="pr"><small>from $</small>189</div>
+          <span class="go">View <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- ===== 10. CTA BAND (from partials) ===== -->
-<section class="section cta-band">
-  <div class="hero-glow"></div>
-  <div class="wrap" style="position:relative;z-index:2">
-    <span class="eyebrow">Change your game</span>
-    <h2 class="h1 balance" data-reveal="up">Train your eyes.<br>Stop it cold.</h2>
-    <p class="lead" data-reveal="up" style="margin:18px auto 0;color:var(--muted-d)">Drills, camp drops and product news — no spam, just goalie stuff.</p>
-    <form class="news" onsubmit="return false" data-reveal="up">
-      <input type="email" placeholder="you@email.com" aria-label="Email" />
-      <button class="btn btn-blue">Join the list</button>
-    </form>
+<!-- ============================================================
+     CLOSING
+     ============================================================ -->
+<section class="closing">
+  <div class="wrap">
+    <h2 class="reveal">See it first.<br><span class="accent">Stop it cold.</span></h2>
+    <p class="reveal d1">The vision trainer trusted by 1,000+ goalies. Yours in two days.</p>
+    <a class="btn btn-primary btn-lg magnetic reveal d2" href="shop.html" data-bag-add>Get the Xtracker — $99.99 <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   </div>
 </section>
 
-<!-- ===== FOOTER (from partials) ===== -->
-<footer class="footer">
-  <div class="wrap-wide">
-    <div class="footer-top">
-      <div>
-        <a href="index.html" class="brand" style="margin-bottom:14px"><svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg> Finngoalie</a>
-        <p class="muted" style="max-width:34ch">Home of The Xtracker. Elite goaltender training &amp; patented goalie tech — engineered in Nova Scotia, Canada.</p>
-        <div class="socials"><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">TikTok</a></div>
+<!-- ============================================================
+     FOOTER  —  REUSABLE SITE-WIDE BLOCK (copied verbatim from index.html)
+     ============================================================ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Finn<b>goalie</b></a>
+        <p>Vision-led goalie training &amp; gear. Built in Nova Scotia, trusted in the crease across 50+ rinks.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="3.5"/><path d="M11 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.3 1.8 3.9 4 4.2v2.7c-1.5 0-2.9-.4-4-1.1v5.7a5.3 5.3 0 1 1-5.3-5.3c.3 0 .5 0 .8.1v2.8a2.6 2.6 0 1 0 1.8 2.4V3H14z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h3.5l4 5.6L16 4h3l-6 7.8L20 20h-3.5l-4.3-6L7 20H4l6.3-8.2z"/></svg></a>
+        </div>
       </div>
-      <div><h4>Train</h4><a href="train.html">Camps &amp; Programs</a><a href="train.html">Private Sessions</a><a href="train.html">Season Passes</a><a href="coaches.html">Mentorship</a></div>
-      <div><h4>Shop</h4><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs P3G</a><a href="shop.html">Goalie Gear</a><a href="shop.html">Apparel</a></div>
-      <div><h4>Company</h4><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="#">Contact</a><a href="#">Shipping &amp; Returns</a></div>
+      <div class="foot-col"><h5>Train</h5><a href="train.html">Private</a><a href="train.html">Camps</a><a href="train.html">Weekly</a><a href="train.html">Pro</a></div>
+      <div class="foot-col"><h5>Shop</h5><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs</a><a href="shop.html">Pro Shop</a><a href="shop.html">Bundles</a></div>
+      <div class="foot-col"><h5>Company</h5><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="shop.html">Reviews</a><a href="about.html">Contact</a></div>
+      <div class="foot-col free"><h5>Free Tools</h5><a href="plan.html">Training Plan</a><a href="vision-test.html">Vision Test</a><a href="club.html">Goalie Club</a></div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Finngoalie · Nova Scotia, Canada</span>
-      <span>hello@finngoalie.shop · Concept redesign</span>
+      <span>© 2026 Finngoalie. All rights reserved.</span>
+      <span class="mono">DESIGNED FOR THE CREASE · NS · CA</span>
     </div>
   </div>
 </footer>
 
-<!-- ===== SCRIPT ===== -->
+<!-- STICKY BUY (The Xtracker · $99.99 · Add to Bag) -->
+<div class="stickybuy" id="stickybuy">
+  <div class="sb-prod">
+    <span class="sb-mini"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg></span>
+    <span class="sb-name">The Xtracker <span>$99.99</span></span>
+  </div>
+  <button class="sb-btn magnetic" data-bag-add>Add to Bag</button>
+</div>
+
 <script src="app.js"></script>
+<!-- page-local: quantity stepper + keyboard-activatable bundle (composed, no shared-lib dependency) -->
 <script>
-  /* gallery thumb swap — main image follows the active thumb */
-  (function () {
-    var main = document.getElementById("pshot-main");
-    var thumbs = document.querySelectorAll(".pthumb");
-    thumbs.forEach(function (t) {
-      t.addEventListener("click", function () {
-        thumbs.forEach(function (x) { x.classList.remove("active"); });
-        t.classList.add("active");
-        if (main) main.src = t.getAttribute("data-shot");
-      });
+(function(){
+  "use strict";
+  var v = document.getElementById('qVal');
+  var minus = document.getElementById('qMinus');
+  var plus = document.getElementById('qPlus');
+  if(v && minus && plus){
+    var get = function(){ return parseInt(v.textContent, 10) || 1; };
+    minus.addEventListener('click', function(){ v.textContent = Math.max(1, get() - 1); });
+    plus.addEventListener('click', function(){ v.textContent = Math.min(9, get() + 1); });
+  }
+  var bundle = document.querySelector('.pbuy .bundle');
+  if(bundle){
+    bundle.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); bundle.click(); }
     });
-  })();
+  }
+})();
 </script>
 </body>
 </html>

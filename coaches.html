@@ -1,43 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>For Coaches — Mentorship, Certification & Convention | Finngoalie</title>
-  <meta name="description" content="Finngoalie's coach-development ecosystem: Season Academy mentorship, the East Coast Goaltender Coaches Convention, the Certified Partner Program, Finnpegs dealer access and sponsorship. Coach the position properly." />
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    /* page-local: application form styled with the .news input look on dark */
-    .apply-form{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:720px;margin:36px auto 0;text-align:left}
-    .apply-field{display:flex;flex-direction:column;gap:8px}
-    .apply-field label{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-d)}
-    .apply-field input,.apply-field select{
-      background:rgba(255,255,255,.07);border:1px solid var(--line-d);color:var(--on-night);
-      border-radius:var(--r-sm);padding:14px 16px;font:inherit;font-size:1rem;
-      transition:border-color .25s var(--ease),background .25s var(--ease)}
-    .apply-field input::placeholder{color:var(--muted-d)}
-    .apply-field input:focus,.apply-field select:focus{outline:none;border-color:var(--blue-2);background:rgba(255,255,255,.1)}
-    .apply-field select{appearance:none;-webkit-appearance:none;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%23A9B4C8' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat:no-repeat;background-position:right 16px center}
-    .apply-field option{color:#0B0B0F}
-    .apply-submit{grid-column:1 / -1;display:flex;justify-content:center;margin-top:6px}
-    @media(max-width:640px){.apply-form{grid-template-columns:1fr}}
-  </style>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Finngoalie — For Coaches. Coach the position properly.</title>
+<meta name="description" content="Mentorship, certification, and the East Coast Goaltender Coaches Convention. Become a Finngoalie Certified Partner, access Finnpegs dealer pricing, and sponsor the program. Built in Nova Scotia, for the coaches who develop the next generation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ============================================================
+   COACHES — page-local composition only.
+   Builds atop the shared design system. ONE blue accent,
+   same hairlines / grain / rhythm as the homepage.
+   ============================================================ */
 
-<!-- ===== HEADER ===== -->
-<div class="announce">Season Academy 2025–26 · Cohort open · <a href="#apply">Apply for mentorship ›</a></div>
-<div class="nav-wrap">
-  <nav class="nav wrap-wide">
-    <a href="index.html" class="brand">
-      <svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg>
-      Finngoalie
+/* compare table — three programs (feat + 3 cols). The shared .compare-row is a
+   feat + 2-col grid; this scoped override extends it to 4 columns. Page-local. */
+[data-compare] .compare-row{grid-template-columns:1.5fr 1fr 1fr 1fr}
+@media(max-width:680px){
+  [data-compare] .compare-row{grid-template-columns:1.3fr .8fr .9fr .8fr}
+  [data-compare] .compare-row > div{padding:12px 9px;font-size:12.5px}
+  [data-compare] .compare-head .col{font-size:12px}
+}
+
+/* active nav marker — pins the system's underline + full opacity (page-local;
+   the shared bar-setter has no .active rule, this composes its underline mechanic) */
+.navlinks a.active{opacity:1;color:var(--ink)}
+.navlinks a.active::after{transform:scaleX(1)}
+
+/* ---- cinematic-but-clean coaches hero ---- */
+.chero{
+  position:relative;min-height:92svh;display:flex;align-items:center;
+  padding:148px 28px 92px;overflow:hidden;isolation:isolate;
+}
+.chero-media{position:absolute;inset:0;z-index:0}
+.chero-media .a,.chero-media .b{position:absolute;inset:0;background-size:cover;background-position:center;filter:grayscale(.32) contrast(1.06)}
+.chero-media .a{background-image:url(assets/img/coach.jpg);opacity:.9}
+.chero-media .b{
+  left:auto;right:0;width:42%;background-image:url(assets/img/training.jpg);
+  opacity:.5;-webkit-mask-image:linear-gradient(90deg,transparent,#000 55%);mask-image:linear-gradient(90deg,transparent,#000 55%);
+}
+.chero-veil{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(105deg,var(--paper) 8%,rgba(246,247,249,.86) 40%,rgba(246,247,249,.45) 70%,rgba(246,247,249,.78) 100%);
+}
+.chero-veil::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 12% 50%,transparent 30%,var(--paper) 92%)}
+.chero-in{position:relative;z-index:3;max-width:var(--max);margin:0 auto;width:100%}
+.chero-eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;margin-bottom:26px;display:inline-flex;align-items:center;gap:10px;
+  opacity:0;transform:translateY(14px);animation:rise 1s var(--ease) .15s forwards;
+}
+.chero-eyebrow .dt{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:pulseDot 1.4s infinite}
+.chero h1{
+  font-size:var(--fz-h1);line-height:.96;font-weight:800;letter-spacing:-.045em;max-width:15ch;
+}
+.chero h1 .l{display:inline-block;opacity:0;transform:translateY(26px) rotate(1.4deg);animation:riseWord 1.05s var(--ease) forwards}
+.chero h1 .accent{color:var(--accent)}
+.chero .sub{
+  font-size:clamp(16px,2vw,21px);color:var(--mute);max-width:46ch;margin-top:30px;line-height:1.5;font-weight:400;
+  opacity:0;transform:translateY(16px);animation:rise 1s var(--ease) .9s forwards;
+}
+.chero-cta{display:flex;gap:14px;margin-top:42px;flex-wrap:wrap;opacity:0;transform:translateY(16px);animation:rise 1s var(--ease) 1.05s forwards}
+/* authority chip, mirrors the homepage HUD readout */
+.chero-chip{
+  position:absolute;top:130px;right:28px;z-index:4;width:230px;
+  border:1px solid var(--line);border-radius:var(--r-sm);
+  background:rgba(255,255,255,.72);backdrop-filter:blur(10px);padding:16px 18px;
+  font-family:'JetBrains Mono',monospace;box-shadow:var(--sh-2);
+  opacity:0;transform:translateY(10px);animation:rise 1s var(--ease) 1.25s forwards;
+}
+.chero-chip .ch{font-size:10px;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;border-bottom:1px solid var(--line-2);padding-bottom:9px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center}
+.chero-chip .ch::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulseDot 1.4s infinite}
+.chero-chip .cl{display:flex;justify-content:space-between;font-size:11.5px;letter-spacing:.03em;padding:5px 0;color:var(--mute)}
+.chero-chip .cl b{color:var(--ink);font-weight:700}
+
+/* ---- left-aligned section heading helper ---- */
+.section-pad{padding:var(--s-9) 0}
+.head-row{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;flex-wrap:wrap;text-align:left}
+.head-row .h-l{max-width:560px}
+.head-row h2{font-size:var(--fz-h2);line-height:1.02;letter-spacing:-.035em;font-weight:800}
+.head-row h2 .mute{color:var(--mute-2)}
+.head-row h2 .accent{color:var(--accent)}
+.head-row .h-r{font-size:15px;color:var(--mute);max-width:340px;line-height:1.55}
+
+/* ---- program cards (3) ---- */
+.prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:54px}
+.prog-card{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);
+  padding:34px 30px;position:relative;overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease);will-change:transform;
+}
+.prog-card:hover{transform:translateY(-6px);box-shadow:var(--sh-3);border-color:var(--accent-line)}
+.prog-card .pc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.prog-card .pc-ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
+.prog-card .pc-ico svg{width:24px;height:24px}
+.prog-card .tag{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--mute-2);font-weight:600}
+.prog-card h3{font-size:23px;font-weight:800;letter-spacing:-.025em;line-height:1.12}
+.prog-card .lede{font-size:14.5px;color:var(--mute);margin-top:12px;line-height:1.55}
+.prog-card .feat-list{list-style:none;margin:24px 0 0;padding:24px 0 0;border-top:1px solid var(--line-2)}
+.prog-card .feat-list li{display:flex;gap:11px;align-items:flex-start;font-size:14px;color:var(--ink-2);padding:7px 0}
+.prog-card .feat-list li svg{width:16px;height:16px;color:var(--accent);flex-shrink:0;margin-top:2px}
+.prog-card .pc-foot{margin-top:auto;padding-top:26px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+.prog-card .p{font-size:clamp(26px,3vw,34px);font-weight:800;letter-spacing:-.03em;line-height:1}
+.prog-card .p small{font-size:.42em;color:var(--mute);font-weight:500}
+.prog-card .p .free{color:var(--accent)}
+.prog-card .go{font-size:13.5px;font-weight:600;color:var(--accent);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.prog-card .go .chev{transition:transform .35s var(--ease-spring)}
+.prog-card:hover .go .chev{transform:translateX(4px)}
+/* featured (dark) middle card — the convention */
+.prog-card.feat{background:var(--ink);color:#fff;border-color:transparent}
+.prog-card.feat::before{content:"";position:absolute;inset:0;z-index:0;opacity:.6;background:radial-gradient(120% 80% at 80% 0%,rgba(29,108,255,.34),transparent 58%)}
+.prog-card.feat > *{position:relative;z-index:1}
+.prog-card.feat .pc-ico{background:rgba(255,255,255,.08);border-color:var(--line-on-dark);color:#fff}
+.prog-card.feat .tag{color:var(--signal)}
+.prog-card.feat h3{color:#fff}
+.prog-card.feat .lede{color:rgba(255,255,255,.6)}
+.prog-card.feat .feat-list{border-top-color:var(--line-on-dark)}
+.prog-card.feat .feat-list li{color:rgba(255,255,255,.82)}
+.prog-card.feat .feat-list li svg{color:var(--accent-up)}
+.prog-card.feat .go{color:var(--accent-up)}
+.prog-card.feat .p small{color:rgba(255,255,255,.5)}
+
+/* ---- dealer callout split ---- */
+.dealer{padding:var(--s-10) 0;background:var(--paper-2);border-top:1px solid var(--line-2);overflow:hidden}
+.dealer-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:60px;align-items:center}
+.dealer-copy .kicker{margin-bottom:14px}
+.dealer-copy h2{font-size:clamp(30px,4.2vw,50px);letter-spacing:-.035em;line-height:1.04;font-weight:800}
+.dealer-copy p{color:var(--mute);margin-top:22px;font-size:16.5px;line-height:1.6;max-width:46ch}
+.dealer-pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.dealer-pills span{font-size:12.5px;font-weight:500;color:var(--ink-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:8px 16px;background:var(--paper)}
+.dealer-copy .btn{margin-top:30px}
+.dealer-visual{position:relative;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/3;background:var(--ink)}
+.dealer-visual img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.dealer-visual:hover img{transform:scale(1.05)}
+.dealer-visual .badge{position:absolute;top:22px;left:22px;background:rgba(246,247,249,.9);backdrop-filter:blur(8px);border-radius:var(--r-pill);padding:8px 16px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--accent)}
+.dealer-visual .spot{position:absolute;bottom:22px;right:22px;background:rgba(10,12,15,.78);backdrop-filter:blur(8px);color:#fff;border-radius:var(--r-sm);padding:12px 16px;font-family:'JetBrains Mono',monospace;text-align:right}
+.dealer-visual .spot b{font-size:20px;color:var(--accent-up);font-weight:700;display:block}
+.dealer-visual .spot span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+
+/* ---- sponsorship tiers (3) ---- */
+.sponsor{padding:var(--s-9) 0}
+.sponsor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:54px}
+.tier-card{
+  background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);
+  padding:34px 30px;position:relative;overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease);will-change:transform;
+}
+.tier-card:hover{transform:translateY(-6px);box-shadow:var(--sh-3);border-color:var(--accent-line)}
+.tier-card .tn{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:18px}
+.tier-card h3{font-size:var(--fz-h4);font-weight:700;letter-spacing:-.02em}
+.tier-card .tp{font-size:clamp(34px,4vw,46px);font-weight:800;letter-spacing:-.035em;margin-top:18px;line-height:1}
+.tier-card .tp small{font-size:.36em;color:var(--mute);font-weight:500;vertical-align:super}
+.tier-card .ts{font-size:13px;color:var(--mute-2);margin-top:8px}
+.tier-card .feat-list{list-style:none;margin:24px 0 0;padding:24px 0 0;border-top:1px solid var(--line-2)}
+.tier-card .feat-list li{display:flex;gap:11px;align-items:flex-start;font-size:14px;color:var(--ink-2);padding:7px 0}
+.tier-card .feat-list li svg{width:16px;height:16px;color:var(--accent);flex-shrink:0;margin-top:2px}
+.tier-card .go{margin-top:auto;padding-top:26px;font-size:13.5px;font-weight:600;color:var(--accent);display:inline-flex;align-items:center;gap:6px}
+.tier-card .go .chev{transition:transform .35s var(--ease-spring)}
+.tier-card:hover .go .chev{transform:translateX(4px)}
+.tier-card.gold{border-color:var(--accent-line)}
+.tier-card.gold::after{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent)}
+.tier-card .feature-flag{position:absolute;top:22px;right:22px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent-line);border-radius:var(--r-pill);padding:4px 11px}
+
+/* ---- apply form ---- */
+.apply{padding:var(--s-10) 0;background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.apply .glow-blob{position:absolute;top:-25%;left:-8%;width:55vw;height:55vw;border-radius:50%;background:radial-gradient(circle,rgba(29,108,255,.2),transparent 60%);filter:blur(70px);pointer-events:none}
+.apply .wrap{position:relative;z-index:1}
+.apply-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:start}
+.apply-copy .kicker{color:var(--accent-up);margin-bottom:16px}
+.apply-copy h2{font-size:clamp(30px,4vw,52px);letter-spacing:-.035em;line-height:1.02;font-weight:800;color:#fff}
+.apply-copy p{color:rgba(255,255,255,.62);margin-top:22px;font-size:16px;line-height:1.6;max-width:40ch}
+.apply-copy .reassure{list-style:none;margin-top:30px}
+.apply-copy .reassure li{display:flex;gap:11px;align-items:center;font-size:14px;color:rgba(255,255,255,.78);padding:8px 0}
+.apply-copy .reassure li svg{width:17px;height:17px;color:var(--accent-up);flex-shrink:0}
+.apply-form{
+  background:rgba(255,255,255,.035);border:1px solid var(--line-on-dark);border-radius:var(--r-lg);
+  padding:36px;backdrop-filter:blur(8px);
+}
+.apply-form .frow{margin-bottom:20px}
+.apply-form .frow.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.apply-form label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-up);font-weight:600;margin-bottom:9px}
+.apply-form input,.apply-form select{
+  width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line-on-dark);border-radius:var(--r-sm);
+  padding:14px 16px;color:#fff;font-family:inherit;font-size:15px;outline:none;
+  transition:border-color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease);
+}
+.apply-form input::placeholder{color:rgba(255,255,255,.34)}
+.apply-form input:focus,.apply-form select:focus{border-color:var(--accent-up);background:rgba(255,255,255,.06)}
+.apply-form select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237fb0ff' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.apply-form select option{color:#0a0c0f}
+.apply-form .submit-row{margin-top:30px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.apply-form .submit-row .note{font-size:12.5px;color:rgba(255,255,255,.45)}
+.apply-form button[type=submit]{background:var(--accent);color:#fff;box-shadow:var(--sh-accent)}
+.apply-form button[type=submit]:hover{background:var(--accent-deep);box-shadow:var(--sh-accent-lg)}
+.apply-form .ok-msg{display:none;margin-top:20px;padding:16px 18px;border-radius:var(--r-sm);background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-up);font-size:14px;font-weight:500}
+.apply-form .ok-msg.show{display:flex;align-items:center;gap:10px}
+.apply-form .ok-msg svg{width:18px;height:18px;flex-shrink:0}
+
+@media(max-width:920px){
+  .prog-grid{grid-template-columns:1fr}
+  .sponsor-grid{grid-template-columns:1fr}
+  .dealer-grid{grid-template-columns:1fr;gap:36px}
+  .apply-grid{grid-template-columns:1fr;gap:40px}
+  .chero-chip{display:none}
+  .head-row{flex-direction:column;align-items:flex-start;gap:14px}
+}
+@media(max-width:680px){
+  .chero{min-height:auto;padding:120px 20px 64px}
+  .chero-media .b{display:none}
+  .apply-form{padding:26px 22px}
+  .apply-form .frow.two{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  .chero-eyebrow,.chero h1 .l,.chero .sub,.chero-cta,.chero-chip{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body id="top">
+
+<!-- LIVING AURORA -->
+<canvas class="aurora-canvas" id="aurora"></canvas>
+
+<!-- ============================================================
+     NAV  —  REUSABLE SITE-WIDE BLOCK (copy verbatim on every page)
+     ============================================================ -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Finn<b>goalie</b>
     </a>
-    <div class="nav-links">
+    <div class="navlinks">
       <a href="train.html">Train</a>
       <a href="xtracker.html">The Xtracker</a>
       <a href="finnpegs.html">Finnpegs</a>
@@ -45,377 +241,443 @@
       <a href="coaches.html" class="active">For Coaches</a>
       <a href="about.html">About</a>
     </div>
-    <div class="nav-r">
-      <button class="nav-ico" aria-label="Search">⌕</button>
-      <button class="nav-ico" aria-label="Cart">Bag <span class="cart-count">0</span></button>
-      <button class="burger" data-open-nav aria-label="Menu">☰</button>
+    <div class="nav-right">
+      <a class="nav-icon search-icon" href="shop.html" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+      </a>
+      <a class="nav-icon" href="shop.html" aria-label="Bag" data-bag-add>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke-linecap="round"/></svg>
+        <span class="count" data-bag-count>0</span>
+      </a>
+      <a class="nav-cta magnetic" href="plan.html">Free Training Plan</a>
+      <button class="burger" id="burger" aria-label="Menu" data-burger><span></span><span></span><span></span></button>
     </div>
-  </nav>
-</div>
+  </div>
+</nav>
 
-<!-- ===== MOBILE DRAWER ===== -->
+<!-- MOBILE DRAWER (mirrors nav) -->
 <div class="drawer" id="drawer">
-  <button class="close" data-close-nav aria-label="Close">✕</button>
-  <a href="train.html" data-close-nav>Train</a>
-  <a href="xtracker.html" data-close-nav>The Xtracker</a>
-  <a href="finnpegs.html" data-close-nav>Finnpegs</a>
-  <a href="shop.html" data-close-nav>Shop</a>
-  <a href="coaches.html" class="active" data-close-nav>For Coaches</a>
-  <a href="about.html" data-close-nav>About</a>
+  <a href="train.html" data-drawer-close>Train</a>
+  <a href="xtracker.html" data-drawer-close>The Xtracker</a>
+  <a href="finnpegs.html" data-drawer-close>Finnpegs</a>
+  <a href="shop.html" data-drawer-close>Shop</a>
+  <a href="coaches.html" data-drawer-close>For Coaches</a>
+  <a href="about.html" data-drawer-close>About</a>
+  <a class="drawer-cta" href="plan.html" data-drawer-close>Free Training Plan</a>
 </div>
 
-<!-- ===== 1 · CINEMATIC HERO ===== -->
-<header class="hero">
-  <div class="hero-bg" style="background-image:url(assets/img/coach.jpg)"></div>
-  <div class="hero-glow"></div>
-  <div class="wrap">
-    <span class="eyebrow" data-reveal="up">For Coaches</span>
-    <h1 class="display balance" data-reveal="up" data-reveal-delay="80">Coach the position <span class="accent">properly.</span></h1>
-    <p class="lead" data-reveal="up" data-reveal-delay="160">Finngoalie is built on a coach-development ecosystem — season-long mentorship, formal certification, the East Coast Goaltender Coaches Convention and a Certified Partner network. We don't just train goalies. We develop the people who develop them.</p>
-    <div class="cta-row" data-reveal="up" data-reveal-delay="240">
-      <a href="#apply" class="btn btn-blue btn-lg">Apply for mentorship</a>
-      <a href="#partner" class="btn-text">Become a certified partner</a>
+<!-- ============================================================
+     HERO  —  cinematic-but-clean, authority / B2B
+     ============================================================ -->
+<header class="chero">
+  <div class="chero-media">
+    <div class="a"></div>
+    <div class="b"></div>
+  </div>
+  <div class="chero-veil"></div>
+
+  <!-- authority chip (mirrors the homepage HUD readout) -->
+  <div class="chero-chip">
+    <div class="ch">PROGRAM // ACTIVE</div>
+    <div class="cl"><span>EST.</span><b>13 yrs</b></div>
+    <div class="cl"><span>CONVENTION</span><b>Host</b></div>
+    <div class="cl"><span>PATENTED TOOLS</span><b>2</b></div>
+    <div class="cl"><span>REACH</span><b>+ Europe</b></div>
+  </div>
+
+  <div class="chero-in">
+    <div class="chero-eyebrow"><span class="dt"></span>FOR COACHES · MENTORSHIP &amp; CERTIFICATION</div>
+    <h1>
+      <span class="l" style="animation-delay:.25s">Coach</span>
+      <span class="l" style="animation-delay:.32s">the</span>
+      <span class="l" style="animation-delay:.39s">position</span><br>
+      <span class="l accent" style="animation-delay:.5s">properly.</span>
+    </h1>
+    <p class="sub">The goalie position is the least-coached in the game. We change that — with a season-long mentorship, a real certification, and the East Coast convention that brings the region's goalie coaches under one roof.</p>
+    <div class="chero-cta">
+      <a class="btn btn-primary magnetic" href="#apply">Apply for mentorship <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="btn btn-ghost magnetic" href="#partner">Become a certified partner</a>
     </div>
   </div>
 </header>
 
-<!-- ===== 2 · PROGRAMS ===== -->
-<section class="section light">
+<!-- ============================================================
+     TRUST
+     ============================================================ -->
+<div class="trust">
   <div class="wrap">
-    <div class="shead" data-reveal="up">
-      <span class="eyebrow">The ecosystem</span>
-      <h2 class="h2">Three ways to develop as a goalie coach.</h2>
-      <p class="lead">Mentorship to sharpen your craft. The Convention to learn from the room. Partnership to bring the Finngoalie method — and its tools — to your own program.</p>
-    </div>
-
-    <div class="grid g3" style="margin-top:48px">
-      <!-- (a) Mentorship & Certification -->
-      <article class="feature" data-reveal="up">
-        <div class="ico" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3 3 7.5 12 12l9-4.5L12 3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7 10v5c0 1.7 2.5 3 5 3s5-1.3 5-3v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </div>
-        <span class="tag">Season Academy 2025–26</span>
-        <h3 class="h3" style="margin-top:10px">Mentorship &amp; Certification</h3>
-        <p class="muted">A season-long mentorship that pairs you with the Finngoalie staff and ends in formal certification — curriculum, drill systems and a coaching philosophy you can run with your own goalies.</p>
-        <ul class="compare-feat" style="margin:14px 0 0">
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Season-long 1:1 + cohort mentorship</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Full drill &amp; progression library</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Finngoalie certification on completion</li>
-        </ul>
-        <div class="card-foot" style="margin-top:22px">
-          <strong style="font-size:1.05rem">From $895</strong>
-          <a href="#apply" class="btn-text">Apply</a>
-        </div>
-      </article>
-
-      <!-- (b) Convention -->
-      <article class="feature" data-reveal="up" data-reveal-delay="120">
-        <div class="ico" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19h16M6 19V9l6-4 6 4v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19v-4h4v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="tag">East Coast · 2026</span>
-        <h3 class="h3" style="margin-top:10px">Goaltender Coaches Convention</h3>
-        <p class="muted">The annual gathering Finngoalie hosts for goalie coaches across Atlantic Canada — on-ice sessions, classroom breakdowns and a room full of people who do exactly what you do.</p>
-        <ul class="compare-feat" style="margin:14px 0 0">
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>On-ice &amp; classroom programming</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Guest pro &amp; college coaches</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Network with regional developers</li>
-        </ul>
-        <div class="card-foot" style="margin-top:22px">
-          <strong style="font-size:1.05rem">$120</strong>
-          <a href="#tiers" class="btn-text">Reserve a seat</a>
-        </div>
-      </article>
-
-      <!-- (c) Certified Partner Program -->
-      <article class="feature" id="partner" data-reveal="up" data-reveal-delay="240">
-        <div class="ico" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.3-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.7-7 10-7 10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="tag">Apply · Dealer access</span>
-        <h3 class="h3" style="margin-top:10px">Certified Partner Program</h3>
-        <p class="muted">Run the Finngoalie method under your own banner. Approved partners get the certification, the curriculum and dealer access to Finnpegs and Finngoalie training products at trade pricing.</p>
-        <ul class="compare-feat" style="margin:14px 0 0">
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Licensed curriculum &amp; branding</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Finnpegs dealer / trade pricing</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Co-marketing &amp; referral pipeline</li>
-        </ul>
-        <div class="card-foot" style="margin-top:22px">
-          <strong style="font-size:1.05rem">By application</strong>
-          <a href="#apply" class="btn-text">Apply</a>
-        </div>
-      </article>
+    <span class="lbl">The authority layer</span>
+    <div class="marks">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/></svg>13 years running camps</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>2 patented training tools</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z" fill="currentColor"/></svg>Host · East Coast Convention</span>
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Finngoalie Europe arm</span>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ===== 3 · CREDIBILITY STATS ===== -->
-<section class="section dark center">
+<!-- ============================================================
+     PROGRAMS  —  3 cards
+     ============================================================ -->
+<section class="section-pad" id="programs">
   <div class="wrap">
-    <div class="shead center" data-reveal="up">
-      <span class="eyebrow">Why learn here</span>
-      <h2 class="h2">An authority you can stand behind.</h2>
+    <div class="head-row reveal">
+      <div class="h-l">
+        <div class="kicker">Three ways to grow as a coach</div>
+        <h2>Mentorship. Certification.<br><span class="mute">A real </span><span class="accent">community.</span></h2>
+      </div>
+      <p class="h-r">Built for the coach who takes goaltending seriously — whether you run a minor program, a AAA bench, or a region's development pathway.</p>
     </div>
-    <div class="grid g4" data-reveal="up" data-reveal-delay="120">
-      <div class="stat">
-        <div class="n"><span data-count="13" data-count-suffix="+"></span></div>
-        <div class="l">Years running goalie camps</div>
+
+    <div class="prog-grid stagger">
+      <!-- card 1 — Season Academy -->
+      <div class="prog-card" data-tilt>
+        <div class="pc-top">
+          <span class="pc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z"/><path d="M5 10v5c0 1.5 3.1 3 7 3s7-1.5 7-3v-5" stroke-linecap="round"/></svg></span>
+          <span class="tag">Season-long</span>
+        </div>
+        <h3>Mentorship &amp; Certification</h3>
+        <p class="lede">The Season Academy — a year-round goalie mentorship that earns you a real Finngoalie coaching certification.</p>
+        <ul class="feat-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Full-season curriculum &amp; film review</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>1:1 mentorship with the Finngoalie staff</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Certification + Xtracker methodology</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Convention seat included</li>
+        </ul>
+        <div class="pc-foot">
+          <div class="p"><small>from $</small>895</div>
+          <a class="go" href="#apply">Apply <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
       </div>
-      <div class="stat">
-        <div class="n"><span data-count="2"></span></div>
-        <div class="l">Patented training tools</div>
+
+      <!-- card 2 — Convention (featured dark) -->
+      <div class="prog-card feat" data-tilt>
+        <div class="pc-top">
+          <span class="pc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.4 2.9-5.6 6.5-5.6S15.5 16.6 15.5 20"/><path d="M16 5.6a3.2 3.2 0 0 1 0 6M22 20c0-2.7-1.6-4.6-3.8-5.4" stroke-linecap="round"/></svg></span>
+          <span class="tag">June 2026</span>
+        </div>
+        <h3>East Coast Coaches Convention</h3>
+        <p class="lede">The region's goalie coaches under one roof — sessions, drills, networking, and the latest in development tech.</p>
+        <ul class="feat-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Full day of on- &amp; off-ice sessions</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Live Xtracker &amp; Finnpegs demos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Network with the East Coast staff</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Sponsorship &amp; dealer opportunities</li>
+        </ul>
+        <div class="pc-foot">
+          <div class="p"><small>$</small>120</div>
+          <a class="go" href="#apply">Reserve a seat <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#7fb0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
       </div>
-      <div class="stat">
-        <div class="n"><span data-count="1"></span></div>
-        <div class="l">Host of the East Coast Convention</div>
-      </div>
-      <div class="stat">
-        <div class="n"><span data-count="1"></span></div>
-        <div class="l">Finngoalie Europe — international arm</div>
+
+      <!-- card 3 — Certified Partner -->
+      <div class="prog-card" id="partner" data-tilt>
+        <div class="pc-top">
+          <span class="pc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.6 6.3L21 9l-5 4.4L17.5 21 12 17.3 6.5 21 8 13.4 3 9l6.4-.7L12 2z"/></svg></span>
+          <span class="tag">B2B · Program</span>
+        </div>
+        <h3>Certified Partner Program</h3>
+        <p class="lede">Run the Finngoalie method at your rink or club — with the brand, the tools, and the dealer access behind you.</p>
+        <ul class="feat-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Licensed Finngoalie curriculum</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Finnpegs dealer pricing access</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Co-marketing &amp; referral network</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Priority Convention placement</li>
+        </ul>
+        <div class="pc-foot">
+          <div class="p"><span class="free">By application</span></div>
+          <a class="go" href="#apply">Get in touch <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 4 · COMPARE — which program fits you ===== -->
-<section class="section alt">
+<!-- ============================================================
+     CREDIBILITY STATS  —  count-up
+     ============================================================ -->
+<section class="specs">
+  <div class="glow-blob"></div>
   <div class="wrap">
-    <div class="shead" data-reveal="up">
-      <span class="eyebrow">Which is right for you</span>
-      <h2 class="h2">Pick the path that matches where you coach.</h2>
-      <p class="lead">Three commitments, three outcomes. Most coaches start at the Convention, mentor through a season, then partner.</p>
+    <div class="section-head">
+      <div class="kicker reveal">The record behind the program</div>
+      <h2 class="reveal d1">Authority you can <span style="color:#7fb0ff">build on.</span></h2>
     </div>
-
-    <div class="compare" style="grid-template-columns:repeat(3,1fr);margin-top:44px" data-reveal="up">
-      <!-- Convention -->
-      <div class="compare-col">
-        <span class="tag">Entry</span>
-        <div class="ct">Convention</div>
-        <div class="cp">$120</div>
-        <p class="muted" style="font-size:.86rem;margin:0">A single weekend to learn from the room.</p>
-        <ul class="compare-feat">
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>On-ice &amp; classroom sessions</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Guest coach lineup</li>
-          <li class="no"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>1:1 season mentorship</li>
-          <li class="no"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Formal certification</li>
-          <li class="no"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Dealer / trade pricing</li>
-        </ul>
-        <a href="#tiers" class="btn btn-ghost btn-sm" style="margin-top:auto">Reserve a seat</a>
-      </div>
-
-      <!-- Season Academy (featured) -->
-      <div class="compare-col featured">
-        <span class="pill">Most coaches choose this</span>
-        <div class="ct">Season Academy</div>
-        <div class="cp">From $895</div>
-        <p class="muted" style="font-size:.86rem;margin:0">A full season of mentorship + certification.</p>
-        <ul class="compare-feat">
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Convention access included</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Guest coach lineup</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>1:1 season mentorship</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Formal certification</li>
-          <li class="no"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Dealer / trade pricing</li>
-        </ul>
-        <a href="#apply" class="btn btn-blue btn-sm" style="margin-top:auto">Apply for mentorship</a>
-      </div>
-
-      <!-- Certified Partner -->
-      <div class="compare-col">
-        <span class="tag">B2B</span>
-        <div class="ct">Certified Partner</div>
-        <div class="cp">By application</div>
-        <p class="muted" style="font-size:.86rem;margin:0">Run the method under your own program.</p>
-        <ul class="compare-feat">
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Convention access included</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Guest coach lineup</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>1:1 season mentorship</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Formal certification</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Finnpegs dealer / trade pricing</li>
-        </ul>
-        <a href="#apply" class="btn btn-ghost btn-sm" style="margin-top:auto">Apply to partner</a>
-      </div>
+    <div class="grid">
+      <div class="spec-cell reveal"><div class="lab">Camps</div><div class="num"><span data-count="13">13</span><span class="u">yrs</span></div><div class="desc">Thirteen years of running goalie camps, clinics, and season programs.</div></div>
+      <div class="spec-cell reveal d1"><div class="lab">Innovation</div><div class="num"><span data-count="2">2</span></div><div class="desc">Patented training tools — the Xtracker and the Finnpegs P3G net system.</div></div>
+      <div class="spec-cell reveal d2"><div class="lab">Convention</div><div class="num">Host</div><div class="desc">We host the East Coast Goaltender Coaches Convention every year.</div></div>
+      <div class="spec-cell reveal d3"><div class="lab">Reach</div><div class="num">+Europe</div><div class="desc">A Finngoalie Europe arm extends the method across the Atlantic.</div></div>
     </div>
   </div>
 </section>
 
-<!-- ===== 5 · FINNPEGS DEALER CALLOUT ===== -->
-<section class="section light">
+<!-- ============================================================
+     COMPARE  —  which program is right for you
+     ============================================================ -->
+<section class="compare">
   <div class="wrap">
-    <div class="split">
-      <div class="split-media" data-parallax="0.08" aria-hidden="true"><img src="assets/img/net.jpg" alt="" loading="lazy" /></div>
-      <div data-reveal="right">
-        <span class="eyebrow">Finnpegs · Dealer access</span>
-        <h2 class="h2">Equip every net you run.</h2>
-        <p class="lead">The patented Finnpegs P3G net-anchoring system at dealer pricing — built for rinks, leagues and teams that set up and tear down nets all season. Stable nets, faster ice resets, fewer injuries.</p>
-        <ul class="compare-feat" style="margin:20px 0 26px;max-width:46ch">
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Multi-set trade pricing for facilities</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Bulk peg + cover combos for full rinks</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Certified Partners qualify automatically</li>
-        </ul>
-        <div class="cta-row">
-          <a href="finnpegs.html#dealer" class="btn btn-blue">See dealer pricing</a>
-          <a href="finnpegs.html" class="btn-text">How Finnpegs works</a>
-        </div>
+    <div class="section-head">
+      <div class="kicker reveal">Which program fits</div>
+      <h2 class="reveal d1">Find your <span class="accent">path.</span></h2>
+      <p class="reveal d2">From a single day at the Convention to a season-long certification to a full partnership.</p>
+    </div>
+    <div class="compare-table reveal d1" data-compare>
+      <div class="compare-row compare-head">
+        <div class="feat">Program</div>
+        <div class="col">Convention</div>
+        <div class="col us">Season Academy</div>
+        <div class="col">Certified Partner</div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">Commitment</div>
+        <div class="col">One day</div>
+        <div class="col us">Full season</div>
+        <div class="col">Ongoing</div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">From</div>
+        <div class="col">$120</div>
+        <div class="col us">$895</div>
+        <div class="col">By application</div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">1:1 mentorship</div>
+        <div class="col no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></div>
+        <div class="col us yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">Earns certification</div>
+        <div class="col no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></div>
+        <div class="col us yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">Finnpegs dealer pricing</div>
+        <div class="col no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></div>
+        <div class="col us no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">Run the brand at your rink</div>
+        <div class="col no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></div>
+        <div class="col us no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></div>
+        <div class="col yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="compare-row">
+        <div class="feat">Best for</div>
+        <div class="col">Any coach</div>
+        <div class="col us">Serious developers</div>
+        <div class="col">Rinks &amp; clubs</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 6 · SPONSORSHIP ===== -->
-<section class="section alt" id="tiers">
+<!-- ============================================================
+     FINNPEGS DEALER  —  split callout → finnpegs.html#dealer
+     ============================================================ -->
+<section class="dealer" id="dealer">
   <div class="wrap">
-    <div class="shead" data-reveal="up">
-      <span class="eyebrow">Sponsorship</span>
-      <h2 class="h2">Put your brand in front of the crease.</h2>
-      <p class="lead">Reach goalie families and coaches across Atlantic Canada — at the Convention, on the boards and across Finngoalie's channels. Three tiers, all built for visibility where it matters.</p>
-    </div>
-
-    <div class="grid g3" style="margin-top:44px">
-      <!-- Tier 1 -->
-      <article class="card" data-reveal="up">
-        <div class="card-body">
-          <span class="tag">Tier 1 · Premier</span>
-          <h3 class="h3" style="margin:6px 0 2px">$500</h3>
-          <p class="muted" style="font-size:.92rem">Top-tier placement for partners who want the room to know the name.</p>
-          <ul class="compare-feat" style="margin:6px 0 0">
-            <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Premier logo at the Convention</li>
-            <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Featured across social channels</li>
-            <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Logo on event &amp; camp signage</li>
-          </ul>
+    <div class="dealer-grid">
+      <div class="dealer-copy reveal r-left">
+        <div class="kicker">Finnpegs dealer access</div>
+        <h2>Stock the net system rinks ask for.</h2>
+        <p>Certified partners and program coaches unlock dealer pricing on the patented Finnpegs P3G system — pro peg covers, three-set anchors, and bulk combos built for facilities, leagues, and teams.</p>
+        <div class="dealer-pills">
+          <span>P3G dealer anchors</span>
+          <span>Pro peg covers</span>
+          <span>8-set bulk combos</span>
+          <span>Rink &amp; league pricing</span>
         </div>
-        <div class="card-foot" style="padding:0 22px 22px">
-          <a href="#apply" class="btn btn-blue btn-sm">Become a sponsor</a>
-        </div>
-      </article>
-
-      <!-- Tier 2 -->
-      <article class="card" data-reveal="up" data-reveal-delay="120">
-        <div class="card-body">
-          <span class="tag">Tier 2 · Supporting</span>
-          <h3 class="h3" style="margin:6px 0 2px">$350</h3>
-          <p class="muted" style="font-size:.92rem">Strong visibility at the Convention and in our event materials.</p>
-          <ul class="compare-feat" style="margin:6px 0 0">
-            <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Logo at the Convention</li>
-            <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Social mention &amp; tag</li>
-            <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Logo in event materials</li>
-          </ul>
-        </div>
-        <div class="card-foot" style="padding:0 22px 22px">
-          <a href="#apply" class="btn btn-ghost btn-sm">Become a sponsor</a>
-        </div>
-      </article>
-
-      <!-- Tier 3 -->
-      <article class="card" data-reveal="up" data-reveal-delay="240">
-        <div class="card-body">
-          <span class="tag">Tier 3 · Community</span>
-          <h3 class="h3" style="margin:6px 0 2px">$100</h3>
-          <p class="muted" style="font-size:.92rem">An accessible way for local businesses to back goalie development.</p>
-          <ul class="compare-feat" style="margin:6px 0 0">
-            <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Logo on the sponsor wall</li>
-            <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Group social shout-out</li>
-            <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="m3 8 3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Community supporter listing</li>
-          </ul>
-        </div>
-        <div class="card-foot" style="padding:0 22px 22px">
-          <a href="#apply" class="btn btn-ghost btn-sm">Become a sponsor</a>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 7 · TESTIMONIAL — coach to coach ===== -->
-<section class="section light">
-  <div class="wrap" style="max-width:760px">
-    <div class="quote" data-reveal="up" style="padding:40px">
-      <span class="eyebrow">Coach to coach</span>
-      <p style="font-size:1.32rem;line-height:1.45">"I'd coached goalies for years on instinct. The Season Academy gave me a system — a way to teach tracking and angles that my kids actually retain. My program looks completely different now, and the certification opened the dealer door for our rink's nets."</p>
-      <div class="q-by">
-        <div class="q-av" aria-hidden="true"></div>
-        <div>
-          <div class="q-name">Marc Cormier</div>
-          <div class="q-role">Goalie Director · U13–U18 AAA · Certified Partner</div>
-        </div>
+        <a class="btn btn-primary magnetic" href="finnpegs.html#dealer">See dealer pricing <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <div class="dealer-visual reveal r-right">
+        <img src="assets/img/net.jpg" alt="Finnpegs patented net system locked to the ice">
+        <span class="badge">Patented · P3G</span>
+        <div class="spot"><b>50+ rinks</b><span>Trusted on the ice</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 8 · APPLY ===== -->
-<section class="section dark center" id="apply">
-  <div class="hero-glow" style="top:auto;bottom:-30%;left:-10%"></div>
-  <div class="wrap" style="position:relative;z-index:2;max-width:820px">
-    <span class="eyebrow" data-reveal="up">Apply</span>
-    <h2 class="h2 balance" data-reveal="up">Start your application.</h2>
-    <p class="lead" data-reveal="up" style="margin:16px auto 0;color:var(--muted-d)">Mentorship, certification or partnership — tell us about your program and we'll be in touch with next steps and the right cohort.</p>
+<!-- ============================================================
+     SPONSORSHIP TIERS  —  3 cards
+     ============================================================ -->
+<section class="sponsor" id="sponsor">
+  <div class="wrap">
+    <div class="head-row reveal">
+      <div class="h-l">
+        <div class="kicker">Back the program</div>
+        <h2>Sponsor the <span class="accent">Convention.</span></h2>
+      </div>
+      <p class="h-r">Put your brand in front of the East Coast's goalie coaches, clubs, and development community. Three tiers, every budget.</p>
+    </div>
 
-    <form class="apply-form" onsubmit="return false" data-reveal="up">
-      <div class="apply-field">
-        <label for="ap-name">Full name</label>
-        <input id="ap-name" type="text" name="name" placeholder="Your name" autocomplete="name" required />
+    <div class="sponsor-grid stagger">
+      <div class="tier-card gold">
+        <span class="feature-flag">Lead</span>
+        <div class="tn">Tier 1</div>
+        <h3>Headline Sponsor</h3>
+        <div class="tp"><small>$</small>500</div>
+        <div class="ts">Per season · lead placement</div>
+        <ul class="feat-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Lead logo — Convention + site</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>On-ice banner placement</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Social + email feature</li>
+        </ul>
+        <a class="go" href="#apply">Become a sponsor <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
-      <div class="apply-field">
-        <label for="ap-org">Organization</label>
-        <input id="ap-org" type="text" name="organization" placeholder="Club, rink or association" autocomplete="organization" />
+
+      <div class="tier-card">
+        <div class="tn">Tier 2</div>
+        <h3>Program Sponsor</h3>
+        <div class="tp"><small>$</small>350</div>
+        <div class="ts">Per season · feature placement</div>
+        <ul class="feat-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Feature logo placement</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Convention program listing</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Social mention</li>
+        </ul>
+        <a class="go" href="#apply">Become a sponsor <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
-      <div class="apply-field">
-        <label for="ap-role">Role</label>
-        <select id="ap-role" name="role">
-          <option value="">Select a role</option>
-          <option>Goalie coach</option>
-          <option>Head / association coach</option>
-          <option>Goalie director</option>
-          <option>Rink / facility operator</option>
-          <option>Prospective certified partner</option>
-        </select>
+
+      <div class="tier-card">
+        <div class="tn">Tier 3</div>
+        <h3>Supporter</h3>
+        <div class="tp"><small>$</small>100</div>
+        <div class="ts">Per season · listed support</div>
+        <ul class="feat-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Logo in supporter wall</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Convention listing</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Community thank-you</li>
+        </ul>
+        <a class="go" href="#apply">Become a sponsor <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
-      <div class="apply-field">
-        <label for="ap-email">Email</label>
-        <input id="ap-email" type="email" name="email" placeholder="you@email.com" autocomplete="email" required />
-      </div>
-      <div class="apply-submit">
-        <button type="submit" class="btn btn-blue btn-lg">Submit application</button>
-      </div>
-    </form>
+    </div>
   </div>
 </section>
 
-<!-- ===== 9 · CTA BAND + NEWSLETTER ===== -->
-<section class="section cta-band">
-  <div class="hero-glow"></div>
-  <div class="wrap" style="position:relative;z-index:2">
-    <span class="eyebrow">Change your game</span>
-    <h2 class="h1 balance" data-reveal="up">Train your eyes.<br>Stop it cold.</h2>
-    <p class="lead" data-reveal="up" style="margin:18px auto 0;color:var(--muted-d)">Drills, camp drops and product news — no spam, just goalie stuff.</p>
-    <form class="news" onsubmit="return false" data-reveal="up">
-      <input type="email" placeholder="you@email.com" aria-label="Email" />
-      <button class="btn btn-blue">Join the list</button>
-    </form>
+<!-- ============================================================
+     TESTIMONIAL  —  coach to coach
+     ============================================================ -->
+<section class="testi">
+  <div class="glow-blob"></div>
+  <div class="wrap">
+    <div class="mark">"</div>
+    <blockquote class="reveal">I came up coaching goalies on instinct. The Season Academy gave me a system — and a network. My goalies develop faster, and so do I. It's the only goalie-coach program on the East Coast that's actually built by goalie coaches.</blockquote>
+    <div class="who reveal d1"><span class="avatar">D</span> <span>— <b>Derek S.</b> · Minor-hockey goalie coordinator · Class of '25</span></div>
   </div>
 </section>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-  <div class="wrap-wide">
-    <div class="footer-top">
-      <div>
-        <a href="index.html" class="brand" style="margin-bottom:14px"><svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg> Finngoalie</a>
-        <p class="muted" style="max-width:34ch">Home of The Xtracker. Elite goaltender training &amp; patented goalie tech — engineered in Nova Scotia, Canada.</p>
-        <div class="socials"><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">TikTok</a></div>
+<!-- ============================================================
+     APPLY  —  form (#apply)
+     ============================================================ -->
+<section class="apply" id="apply">
+  <div class="glow-blob"></div>
+  <div class="wrap">
+    <div class="apply-grid">
+      <div class="apply-copy reveal r-left">
+        <div class="kicker">Apply now</div>
+        <h2>Tell us where you coach.</h2>
+        <p>One short form for every program — mentorship, certification, partnership, or sponsorship. We read every application and reply personally.</p>
+        <ul class="reassure">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>No commitment — we'll talk it through first</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>A real coach replies, not an autoresponder</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>Open to coaches at every level</li>
+        </ul>
       </div>
-      <div><h4>Train</h4><a href="train.html">Camps &amp; Programs</a><a href="train.html">Private Sessions</a><a href="train.html">Season Passes</a><a href="coaches.html">Mentorship</a></div>
-      <div><h4>Shop</h4><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs P3G</a><a href="shop.html">Goalie Gear</a><a href="shop.html">Apparel</a></div>
-      <div><h4>Company</h4><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="#">Contact</a><a href="#">Shipping &amp; Returns</a></div>
+
+      <form class="apply-form reveal r-right" id="coachForm" onsubmit="return false">
+        <div class="frow two">
+          <div>
+            <label for="cf-name">Name</label>
+            <input id="cf-name" name="name" type="text" placeholder="Your name" required>
+          </div>
+          <div>
+            <label for="cf-org">Club / Organization</label>
+            <input id="cf-org" name="org" type="text" placeholder="Where you coach" required>
+          </div>
+        </div>
+        <div class="frow">
+          <label for="cf-role">Program of interest</label>
+          <select id="cf-role" name="role" required>
+            <option value="" selected disabled>Choose a program…</option>
+            <option value="mentorship">Mentorship &amp; Certification — Season Academy</option>
+            <option value="convention">East Coast Coaches Convention</option>
+            <option value="partner">Certified Partner Program</option>
+            <option value="dealer">Finnpegs dealer access</option>
+            <option value="sponsor">Sponsorship (Tier 1 / 2 / 3)</option>
+          </select>
+        </div>
+        <div class="frow">
+          <label for="cf-email">Email</label>
+          <input id="cf-email" name="email" type="email" placeholder="you@club.com" required>
+        </div>
+        <div class="submit-row">
+          <span class="note">We'll reply within two business days.</span>
+          <button type="submit" class="btn btn-primary magnetic" data-coach-submit>Send application <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+        <div class="ok-msg" id="coachOk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg> Thanks — your application is in. A coach will be in touch shortly.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CLOSING
+     ============================================================ -->
+<section class="closing">
+  <div class="wrap">
+    <h2 class="reveal">Coach the position<br><span class="accent">properly.</span></h2>
+    <p class="reveal d1">Join the coaches building the next generation of goaltenders — on the East Coast and beyond.</p>
+    <a class="btn btn-primary btn-lg magnetic reveal d2" href="#apply">Apply for mentorship <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER  —  REUSABLE SITE-WIDE BLOCK (copy verbatim on every page)
+     ============================================================ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Finn<b>goalie</b></a>
+        <p>Vision-led goalie training &amp; gear. Built in Nova Scotia, trusted in the crease across 50+ rinks.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="3.5"/><path d="M11 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.3 1.8 3.9 4 4.2v2.7c-1.5 0-2.9-.4-4-1.1v5.7a5.3 5.3 0 1 1-5.3-5.3c.3 0 .5 0 .8.1v2.8a2.6 2.6 0 1 0 1.8 2.4V3H14z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h3.5l4 5.6L16 4h3l-6 7.8L20 20h-3.5l-4.3-6L7 20H4l6.3-8.2z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col"><h5>Train</h5><a href="train.html">Private</a><a href="train.html">Camps</a><a href="train.html">Weekly</a><a href="train.html">Pro</a></div>
+      <div class="foot-col"><h5>Shop</h5><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs</a><a href="shop.html">Pro Shop</a><a href="shop.html">Bundles</a></div>
+      <div class="foot-col"><h5>Company</h5><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="shop.html">Reviews</a><a href="about.html">Contact</a></div>
+      <div class="foot-col free"><h5>Free Tools</h5><a href="plan.html">Training Plan</a><a href="vision-test.html">Vision Test</a><a href="club.html">Goalie Club</a></div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Finngoalie · Nova Scotia, Canada</span>
-      <span>hello@finngoalie.shop · Concept redesign</span>
+      <span>© 2026 Finngoalie. All rights reserved.</span>
+      <span class="mono">DESIGNED FOR THE CREASE · NS · CA</span>
     </div>
   </div>
 </footer>
 
-<!-- ===== SCRIPT ===== -->
 <script src="app.js"></script>
+<script>
+/* page-local: coach apply form — demo submit, no backend (onsubmit return false) */
+(function(){
+  var form = document.getElementById('coachForm');
+  if(!form) return;
+  var ok = document.getElementById('coachOk');
+  form.addEventListener('submit', function(){
+    if(!form.checkValidity()){ form.reportValidity(); return false; }
+    if(ok) ok.classList.add('show');
+    form.querySelectorAll('input,select,button').forEach(function(el){ el.disabled = true; });
+    return false;
+  });
+})();
+</script>
 </body>
 </html>

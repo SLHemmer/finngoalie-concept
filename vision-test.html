@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Test Your Vision — 30-Second Reaction Test · Finngoalie</title>
+<meta name="description" content="How fast do your eyes really read the play? Take the free 30-second Finngoalie vision test — track pucks, score your reaction time, and see where you rank against elite goalies. The same reaction skill the Xtracker trains.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+<!-- ============================================================
+     PAGE-LOCAL ONLY — composed strictly from existing design tokens.
+     Nothing here invents a token; it only arranges shared primitives
+     into the vision-test layout (game stage, HUD, result card, capture)
+     and pins the nav active state.
+     ============================================================ -->
+<style>
+  /* nav active state (v3 system has no .active rule — compose from tokens) */
+  .navlinks a[data-active]{opacity:1;color:var(--accent)}
+  .navlinks a[data-active]::after{transform:scaleX(1)}
+
+  /* ---- page hero (no full-bleed canvas — interior cadence) ---- */
+  .vt-hero{
+    position:relative;padding:calc(var(--nav-h) + 64px) 28px 56px;
+    text-align:center;display:flex;flex-direction:column;align-items:center;isolation:isolate;
+  }
+  .vt-hero .eyebrow{margin-bottom:22px}
+  .vt-hero h1{
+    font-size:var(--fz-h1);line-height:.98;font-weight:800;letter-spacing:-.045em;max-width:16ch;
+  }
+  .vt-hero h1 .accent{color:var(--accent)}
+  .vt-hero p.lede{
+    font-size:var(--fz-lead);color:var(--mute);max-width:40ch;margin:26px auto 0;
+    line-height:1.5;font-weight:400;
+  }
+  .vt-start{margin-top:38px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center}
+  .vt-trust{
+    margin-top:26px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;
+    color:var(--mute-2);display:inline-flex;align-items:center;gap:9px;
+  }
+  .vt-trust svg{width:15px;height:15px;color:var(--accent)}
+
+  /* ---- the stage shell ---- */
+  .vt-stage-wrap{padding:0 28px 90px}
+  .vt-board{
+    position:relative;max-width:var(--max);margin:0 auto;border-radius:var(--r-lg);
+    overflow:hidden;background:linear-gradient(160deg,var(--ink),var(--ink-2));
+    border:1px solid var(--line-on-dark);box-shadow:var(--sh-float);
+    aspect-ratio:16/9;min-height:420px;
+  }
+  @media(max-width:680px){.vt-board{aspect-ratio:4/5;min-height:520px}}
+
+  .vt-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:none;touch-action:none}
+
+  /* rink hairlines (decorative, behind canvas via ::before on board) */
+  .vt-board::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;
+    background:
+      radial-gradient(120% 90% at 50% 30%,rgba(29,108,255,.10),transparent 60%),
+      linear-gradient(90deg,transparent calc(50% - .5px),var(--line-on-dark-2) 50%,transparent calc(50% + .5px));
+  }
+  /* the "goal line" — right edge crease the puck must not cross */
+  .vt-goal-line{
+    position:absolute;top:0;bottom:0;right:11%;width:2px;z-index:1;pointer-events:none;
+    background:linear-gradient(var(--accent),rgba(29,108,255,.15));opacity:.55;
+  }
+  .vt-goal-line::after{
+    content:"GOAL LINE";position:absolute;top:14px;left:10px;font-family:'JetBrains Mono',monospace;
+    font-size:9px;letter-spacing:.18em;color:var(--accent-up);writing-mode:vertical-rl;
+  }
+
+  /* ---- live HUD ---- */
+  .vt-hud{
+    position:absolute;top:18px;left:18px;z-index:4;display:flex;gap:10px;flex-wrap:wrap;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .vt-hud .cell{
+    background:rgba(10,12,15,.55);backdrop-filter:blur(8px);border:1px solid var(--line-on-dark);
+    border-radius:var(--r-sm);padding:9px 14px;min-width:78px;
+  }
+  .vt-hud .cell .k{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-up)}
+  .vt-hud .cell .v{font-size:19px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.2;margin-top:3px}
+  .vt-hud .cell .v small{font-size:.5em;color:rgba(255,255,255,.5);font-weight:500;margin-left:2px}
+  @media(max-width:680px){.vt-hud .cell{min-width:0;padding:7px 11px}.vt-hud .cell .v{font-size:16px}}
+
+  /* progress rail at the very top of the board */
+  .vt-rail{position:absolute;top:0;left:0;height:2px;background:var(--accent);z-index:5;width:0%;box-shadow:0 0 12px rgba(29,108,255,.5);transition:width .3s var(--ease)}
+
+  /* ---- center overlay (idle / countdown / done) ---- */
+  .vt-overlay{
+    position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;gap:18px;padding:24px;
+    background:rgba(6,8,12,.55);backdrop-filter:blur(3px);color:#fff;
+    transition:opacity .4s var(--ease);
+  }
+  .vt-overlay.gone{opacity:0;pointer-events:none}
+  .vt-overlay h3{font-size:clamp(24px,4vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.05}
+  .vt-overlay p{color:rgba(255,255,255,.62);font-size:15px;max-width:34ch;line-height:1.5}
+  .vt-count{
+    font-size:clamp(72px,14vw,148px);font-weight:800;letter-spacing:-.04em;color:var(--accent-up);
+    line-height:1;font-variant-numeric:tabular-nums;
+  }
+  .vt-overlay .btn-on-dark.btn-ghost{color:#fff;border-color:var(--line-on-dark)}
+  .vt-overlay .btn-on-dark.btn-ghost:hover{background:rgba(255,255,255,.06);border-color:var(--accent-up)}
+
+  /* hit flash ring fired on each successful tap (DOM, GPU-cheap) */
+  .vt-flash{
+    position:absolute;z-index:3;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;
+    border:2px solid var(--accent-up);pointer-events:none;
+    animation:vtFlash .45s var(--ease) forwards;
+  }
+  @keyframes vtFlash{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+
+  /* ---- result card ---- */
+  .vt-result{padding:0 28px 100px}
+  .vt-result-card{
+    max-width:920px;margin:0 auto;border-radius:var(--r-lg);overflow:hidden;
+    background:var(--paper-2);border:1px solid var(--line);box-shadow:var(--sh-3);
+  }
+  .vt-grade{
+    background:linear-gradient(150deg,var(--ink),var(--ink-2));color:#fff;
+    padding:48px 44px;position:relative;overflow:hidden;text-align:center;
+  }
+  .vt-grade .glow-blob{position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:80%;height:120%;background:radial-gradient(circle,rgba(29,108,255,.28),transparent 60%);filter:blur(60px);pointer-events:none}
+  .vt-grade > *{position:relative;z-index:1}
+  .vt-grade .lab{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-up)}
+  .vt-grade .score{font-size:clamp(64px,12vw,118px);font-weight:800;letter-spacing:-.05em;line-height:1;margin-top:10px}
+  .vt-grade .tier{font-size:clamp(22px,3.4vw,34px);font-weight:700;letter-spacing:-.02em;margin-top:8px}
+  .vt-grade .tier .accent{color:var(--accent-up)}
+  .vt-grade .pctl{color:rgba(255,255,255,.62);font-size:15px;margin-top:16px;max-width:42ch;margin-left:auto;margin-right:auto;line-height:1.5}
+
+  .vt-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+  .vt-metric{background:var(--paper-2);padding:28px 24px;text-align:center}
+  .vt-metric .mv{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1}
+  .vt-metric .mv small{font-size:.4em;color:var(--mute);font-weight:600;margin-left:2px}
+  .vt-metric .mk{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute-2);font-weight:600;margin-top:12px}
+  @media(max-width:560px){.vt-metrics{grid-template-columns:1fr}.vt-grade{padding:38px 24px}}
+
+  .vt-readout{padding:40px 44px;text-align:center;border-top:1px solid var(--line-2)}
+  .vt-readout h3{font-size:clamp(24px,3.4vw,34px);font-weight:800;letter-spacing:-.03em;line-height:1.1}
+  .vt-readout h3 .accent{color:var(--accent)}
+  .vt-readout p{color:var(--mute);font-size:16px;margin-top:16px;max-width:52ch;margin-left:auto;margin-right:auto;line-height:1.6}
+  .vt-readout .cta{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .vt-readout .replay{margin-top:22px;font-size:13.5px;color:var(--mute-2);font-weight:500}
+  .vt-readout .replay button{color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+  @media(max-width:560px){.vt-readout{padding:32px 24px}}
+
+  /* ---- email capture ---- */
+  .vt-capture{padding:0 28px 110px}
+  .vt-capture-card{
+    max-width:720px;margin:0 auto;text-align:center;background:var(--paper-2);
+    border:1px solid var(--line);border-radius:var(--r-lg);padding:52px 44px;box-shadow:var(--sh-2);
+  }
+  .vt-capture-card .kicker{margin-bottom:14px}
+  .vt-capture-card h2{font-size:clamp(26px,3.6vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.08}
+  .vt-capture-card p{color:var(--mute);font-size:16px;margin-top:16px;max-width:44ch;margin-left:auto;margin-right:auto;line-height:1.5}
+  .vt-form{margin-top:30px;display:flex;gap:12px;max-width:480px;margin-left:auto;margin-right:auto}
+  .vt-form input{
+    flex:1;border:1px solid var(--line);border-radius:var(--r-pill);padding:14px 22px;
+    font-family:inherit;font-size:15px;color:var(--ink);background:var(--paper);
+    transition:border-color var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease);
+  }
+  .vt-form input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .vt-form .btn{flex-shrink:0}
+  .vt-form-note{font-size:12.5px;color:var(--mute-2);margin-top:16px}
+  .vt-success{
+    display:none;align-items:center;justify-content:center;gap:12px;flex-direction:column;margin-top:8px;
+  }
+  .vt-success.show{display:flex}
+  .vt-success .ring{
+    width:54px;height:54px;border-radius:50%;background:var(--accent-soft);border:1px solid var(--accent-line);
+    display:grid;place-items:center;color:var(--accent);
+  }
+  .vt-success .ring svg{width:26px;height:26px}
+  .vt-success h4{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-top:4px}
+  .vt-success p{color:var(--mute);font-size:14.5px;margin-top:6px}
+  .vt-share{margin-top:24px;display:inline-flex;align-items:center;gap:10px}
+  .vt-share button{
+    display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:var(--r-pill);
+    padding:11px 20px;font-size:13.5px;font-weight:600;color:var(--ink-2);background:var(--paper);
+    transition:border-color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease),transform .3s var(--ease-spring);
+  }
+  .vt-share button:hover{border-color:var(--accent-line);background:#fff}
+  .vt-share button:active{transform:scale(.96)}
+  .vt-share button svg{width:16px;height:16px;color:var(--accent)}
+  @media(max-width:560px){.vt-form{flex-direction:column}.vt-capture-card{padding:40px 24px}}
+
+  /* reveal helper already shipped by styles.css; this page composes .reveal/.d1.. */
+
+  /* reduced-motion: show the non-animated fallback target, hide live canvas chrome */
+  .vt-fallback{display:none}
+  @media(prefers-reduced-motion:reduce){
+    .vt-canvas{cursor:pointer}
+    .vt-board::before{opacity:.3}
+  }
+</style>
+</head>
+<body id="top">
+
+<!-- LIVING AURORA -->
+<canvas class="aurora-canvas" id="aurora"></canvas>
+
+<!-- ============================================================
+     NAV  —  REUSABLE SITE-WIDE BLOCK (copy verbatim on every page)
+     ============================================================ -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Finn<b>goalie</b>
+    </a>
+    <div class="navlinks">
+      <a href="train.html">Train</a>
+      <a href="xtracker.html">The Xtracker</a>
+      <a href="finnpegs.html">Finnpegs</a>
+      <a href="shop.html">Shop</a>
+      <a href="coaches.html">For Coaches</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="nav-right">
+      <a class="nav-icon search-icon" href="shop.html" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+      </a>
+      <a class="nav-icon" href="shop.html" aria-label="Bag" data-bag-add>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke-linecap="round"/></svg>
+        <span class="count" data-bag-count>0</span>
+      </a>
+      <a class="nav-cta magnetic" href="plan.html">Free Training Plan</a>
+      <button class="burger" id="burger" aria-label="Menu" data-burger><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE DRAWER (mirrors nav) -->
+<div class="drawer" id="drawer">
+  <a href="train.html" data-drawer-close>Train</a>
+  <a href="xtracker.html" data-drawer-close>The Xtracker</a>
+  <a href="finnpegs.html" data-drawer-close>Finnpegs</a>
+  <a href="shop.html" data-drawer-close>Shop</a>
+  <a href="coaches.html" data-drawer-close>For Coaches</a>
+  <a href="about.html" data-drawer-close>About</a>
+  <a class="drawer-cta" href="plan.html" data-drawer-close>Free Training Plan</a>
+</div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<header class="vt-hero">
+  <div class="eyebrow reveal">Free · 30-second drill · No sign-up to play</div>
+  <h1 class="reveal d1">How fast do your eyes <span class="accent">really</span> read the play?</h1>
+  <p class="lede reveal d2">A timed puck-tracking test that scores your reaction and read speed against the Finngoalie benchmark. Track every puck before it crosses the line.</p>
+  <div class="vt-start reveal d3">
+    <button class="btn btn-primary magnetic" data-vt-start>Take the 30-second vision test
+      <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div class="vt-trust reveal d3">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+    THE SAME REACTION SKILL THE XTRACKER TRAINS
+  </div>
+</header>
+
+<!-- ============================================================
+     GAME STAGE
+     ============================================================ -->
+<section class="vt-stage-wrap">
+  <div class="vt-board reveal r-scale" id="vtBoard">
+    <div class="vt-rail" id="vtRail"></div>
+    <div class="vt-goal-line"></div>
+
+    <canvas class="vt-canvas" id="vtCanvas" aria-label="Vision reaction test — tap each puck before it crosses the goal line"></canvas>
+
+    <!-- live HUD -->
+    <div class="vt-hud" id="vtHud" style="opacity:0">
+      <div class="cell"><div class="k">Rep</div><div class="v"><span id="hudRep">0</span><small>/ 14</small></div></div>
+      <div class="cell"><div class="k">Hits</div><div class="v" id="hudHits">0</div></div>
+      <div class="cell"><div class="k">Avg react</div><div class="v"><span id="hudAvg">—</span><small>ms</small></div></div>
+    </div>
+
+    <!-- center overlay: idle / countdown / done -->
+    <div class="vt-overlay" id="vtOverlay">
+      <div id="ovIdle">
+        <h3>Tap every puck before it crosses the line.</h3>
+        <p>14 pucks streak in from random angles. Hit them clean. We measure how early you react.</p>
+        <button class="btn btn-primary magnetic" data-vt-start style="margin-top:6px">Start the test</button>
+      </div>
+      <div id="ovCount" style="display:none">
+        <div class="vt-count" id="ovCountNum">3</div>
+        <p id="ovCountLbl">Eyes up. Find the first puck.</p>
+      </div>
+    </div>
+  </div>
+  <p class="mono reveal d2" style="text-align:center;margin-top:22px;font-size:12px;letter-spacing:.04em;color:var(--mute-2)">
+    DESKTOP: MOVE THE RETICLE, CLICK THE PUCK · MOBILE: TAP THE PUCK
+  </p>
+</section>
+
+<!-- ============================================================
+     RESULT  (hidden until the test ends)
+     ============================================================ -->
+<section class="vt-result" id="vtResult" style="display:none">
+  <div class="vt-result-card">
+    <div class="vt-grade">
+      <div class="glow-blob"></div>
+      <div class="lab">Your reflex score</div>
+      <div class="score" id="resScore">—</div>
+      <div class="tier" id="resTier">—</div>
+      <div class="pctl" id="resPctl">—</div>
+    </div>
+    <div class="vt-metrics">
+      <div class="vt-metric"><div class="mv" id="resReact">—<small>ms</small></div><div class="mk">Avg reaction</div></div>
+      <div class="vt-metric"><div class="mv" id="resAccuracy">—<small>%</small></div><div class="mk">Accuracy</div></div>
+      <div class="vt-metric"><div class="mv" id="resHits">—</div><div class="mk">Pucks tracked</div></div>
+    </div>
+    <div class="vt-readout">
+      <h3 id="resHead">Elite goalies see the puck <span class="accent">sooner.</span></h3>
+      <p id="resBody">The Xtracker trains exactly this — the read, not the reach. Twelve reactive vision targets that fire faster than instinct, so your eyes learn to find the puck a heartbeat early.</p>
+      <div class="cta">
+        <a class="btn btn-primary magnetic" href="shop.html" data-bag-add>Get the Xtracker — $99.99
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="btn btn-ghost magnetic" href="xtracker.html">See how it works</a>
+      </div>
+      <div class="replay">Or <button type="button" data-vt-replay>run the test again</button>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CAPTURE  (hidden until the test ends)
+     ============================================================ -->
+<section class="vt-capture" id="vtCapture" style="display:none">
+  <div class="vt-capture-card">
+    <div class="kicker">Your full breakdown</div>
+    <h2>Email me my full results <span style="color:var(--mute-2)">+</span> a free vision drill.</h2>
+    <p>Your reaction profile, how you stack up by age &amp; level, and one drill you can run on the ice tonight — free.</p>
+
+    <form class="vt-form" id="vtForm" novalidate>
+      <input type="email" id="vtEmail" placeholder="you@email.com" autocomplete="email" aria-label="Email address" required>
+      <button class="btn btn-primary magnetic" type="submit">Send my results</button>
+    </form>
+    <div class="vt-form-note">No spam. One email with your results + drill. Unsubscribe anytime.</div>
+
+    <div class="vt-success" id="vtSuccess">
+      <div class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h4>On its way.</h4>
+      <p id="vtSuccessMsg">Check your inbox for your full vision breakdown and free drill.</p>
+    </div>
+
+    <div class="vt-share">
+      <button type="button" id="vtShare">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" stroke-linecap="round"/><path d="M12 3v13M8 7l4-4 4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="vtShareLbl">Share your score</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER  —  REUSABLE SITE-WIDE BLOCK (copy verbatim on every page)
+     ============================================================ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Finn<b>goalie</b></a>
+        <p>Vision-led goalie training &amp; gear. Built in Nova Scotia, trusted in the crease across 50+ rinks.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="3.5"/><path d="M11 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.3 1.8 3.9 4 4.2v2.7c-1.5 0-2.9-.4-4-1.1v5.7a5.3 5.3 0 1 1-5.3-5.3c.3 0 .5 0 .8.1v2.8a2.6 2.6 0 1 0 1.8 2.4V3H14z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h3.5l4 5.6L16 4h3l-6 7.8L20 20h-3.5l-4.3-6L7 20H4l6.3-8.2z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col"><h5>Train</h5><a href="train.html">Private</a><a href="train.html">Camps</a><a href="train.html">Weekly</a><a href="train.html">Pro</a></div>
+      <div class="foot-col"><h5>Shop</h5><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs</a><a href="shop.html">Pro Shop</a><a href="shop.html">Bundles</a></div>
+      <div class="foot-col"><h5>Company</h5><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="shop.html">Reviews</a><a href="about.html">Contact</a></div>
+      <div class="foot-col free"><h5>Free Tools</h5><a href="plan.html">Training Plan</a><a href="vision-test.html">Vision Test</a><a href="club.html">Goalie Club</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Finngoalie. All rights reserved.</span>
+      <span class="mono">DESIGNED FOR THE CREASE · NS · CA</span>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+
+<!-- ============================================================
+     VISION-TEST GAME  —  own canvas, own rAF loop.
+     Fully independent of the hero puck-tracker module in app.js.
+     Reduced-motion: swaps to a no-animation click-the-target version.
+     ============================================================ -->
+<script>
+(function(){
+  "use strict";
+
+  var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FINE = window.matchMedia && window.matchMedia('(pointer:fine)').matches;
+  var ACCENT = '#1d6cff', ACCENT_UP = '#7fb0ff';
+  var TOTAL_REPS = 14;
+
+  function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+
+  /* ---- element refs ---- */
+  var board   = document.getElementById('vtBoard');
+  var canvas  = document.getElementById('vtCanvas');
+  var hud     = document.getElementById('vtHud');
+  var rail    = document.getElementById('vtRail');
+  var overlay = document.getElementById('vtOverlay');
+  var ovIdle  = document.getElementById('ovIdle');
+  var ovCount = document.getElementById('ovCount');
+  var ovCountNum = document.getElementById('ovCountNum');
+  var ovCountLbl = document.getElementById('ovCountLbl');
+
+  var hudRep = document.getElementById('hudRep');
+  var hudHits = document.getElementById('hudHits');
+  var hudAvg = document.getElementById('hudAvg');
+
+  var resultSec  = document.getElementById('vtResult');
+  var captureSec = document.getElementById('vtCapture');
+
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+
+  /* ---- canvas sizing (DPR-aware) ---- */
+  var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 2);
+  function resize(){
+    var r = board.getBoundingClientRect();
+    W = r.width; H = r.height;
+    canvas.width = W*DPR; canvas.height = H*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  resize();
+  window.addEventListener('resize', resize, {passive:true});
+
+  /* ---- game state ---- */
+  var STATE = 'idle';        // idle | countdown | playing | done
+  var puck = null;           // active animated puck
+  var rep = 0;               // reps shown so far
+  var hits = 0;
+  var reactions = [];        // ms reaction times for hits
+  var trail = [];
+  var reticle = {x:W*0.5, y:H*0.5, has:false};
+  var puckSpawnTime = 0;     // when current puck entered
+  var raf = 0;
+
+  var GOAL_X_FRAC = 0.89;    // goal line at 89% width (matches .vt-goal-line right:11%)
+
+  /* ============================================================
+     ANIMATED MODE  (default)
+     ============================================================ */
+  function launchPuck(){
+    rep++;
+    if(rep > TOTAL_REPS){ endGame(); return; }
+    hudRep.textContent = rep;
+
+    var fromTop = Math.random() > 0.5;
+    var startY = fromTop ? -30 : H+30;
+    var goalX  = W*GOAL_X_FRAC;
+    // start somewhere on the left 0–45% so there's runway before the goal line
+    var startX = W*(0.02 + Math.random()*0.42);
+    var endX   = goalX + W*0.06;             // crosses just past the line = a miss
+    var endY   = H*(0.18 + Math.random()*0.64);
+
+    // speed ramps up over the test (later reps = faster)
+    var pace = 0.0042 + (rep/TOTAL_REPS)*0.0042 + Math.random()*0.0014;
+    puck = {
+      x:startX, y:startY, sx:startX, sy:startY,
+      tx:endX, ty:endY, t:0, speed:pace,
+      arc:(Math.random()-0.5)*0.5, r:13, alive:true, missed:false
+    };
+    trail = [];
+    puckSpawnTime = performance.now();
+  }
+
+  function puckPos(p, tt){
+    var mx = (p.sx + p.tx)/2;
+    var my = (p.sy + p.ty)/2 + p.arc*H;
+    var x = (1-tt)*(1-tt)*p.sx + 2*(1-tt)*tt*mx + tt*tt*p.tx;
+    var y = (1-tt)*(1-tt)*p.sy + 2*(1-tt)*tt*my + tt*tt*p.ty;
+    return {x:x, y:y};
+  }
+
+  function drawReticle(x,y){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.strokeStyle = ACCENT; ctx.globalAlpha = 0.65; ctx.lineWidth = 1.3;
+    ctx.save();
+    ctx.rotate(performance.now()*0.0012);
+    ctx.setLineDash([8,6]);
+    ctx.beginPath(); ctx.arc(0,0,18,0,Math.PI*2); ctx.stroke();
+    ctx.restore();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 0.5;
+    ctx.beginPath(); ctx.arc(0,0,4,0,Math.PI*2); ctx.stroke();
+    var t = 30;
+    ctx.beginPath();
+    ctx.moveTo(-t,0); ctx.lineTo(-11,0);
+    ctx.moveTo(11,0); ctx.lineTo(t,0);
+    ctx.moveTo(0,-t); ctx.lineTo(0,-11);
+    ctx.moveTo(0,11); ctx.lineTo(0,t);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function frame(){
+    raf = requestAnimationFrame(frame);
+    ctx.clearRect(0,0,W,H);
+    if(STATE !== 'playing') return;
+    if(!puck){ return; }
+
+    puck.t += puck.speed;
+    var tt = Math.min(puck.t, 1);
+    var pos = puckPos(puck, tt);
+    puck.x = pos.x; puck.y = pos.y;
+
+    // motion trail
+    trail.push({x:pos.x, y:pos.y});
+    if(trail.length > 22) trail.shift();
+    for(var i=0;i<trail.length;i++){
+      var a = i/trail.length;
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(29,108,255,'+(a*0.32)+')';
+      ctx.arc(trail[i].x, trail[i].y, 1.5 + a*7, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // the puck
+    ctx.save();
+    ctx.shadowColor = ACCENT; ctx.shadowBlur = 18;
+    ctx.fillStyle = '#0a0d12';
+    ctx.beginPath(); ctx.arc(puck.x, puck.y, puck.r, 0, Math.PI*2); ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = ACCENT_UP; ctx.lineWidth = 1.6; ctx.stroke();
+    // inner ring for readability
+    ctx.strokeStyle = 'rgba(127,176,255,.5)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(puck.x, puck.y, puck.r*0.55, 0, Math.PI*2); ctx.stroke();
+    ctx.restore();
+
+    // reticle (desktop only — follows cursor)
+    if(FINE && reticle.has) drawReticle(reticle.x, reticle.y);
+
+    // crossed the goal line → miss
+    if(puck.x >= W*GOAL_X_FRAC && !puck.missed){
+      puck.missed = true;
+      registerMiss();
+    }
+    // fully off-board → next puck
+    if(puck.t >= 1){
+      puck = null;
+      setTimeout(launchPuck, 240 + Math.random()*420);
+    }
+  }
+
+  /* ---- hit/miss handling ---- */
+  function fireFlash(x,y){
+    if(RM) return;
+    var f = document.createElement('div');
+    f.className = 'vt-flash';
+    f.style.left = x + 'px'; f.style.top = y + 'px';
+    board.appendChild(f);
+    setTimeout(function(){ if(f.parentNode) f.parentNode.removeChild(f); }, 470);
+  }
+
+  function registerHit(rt){
+    hits++;
+    reactions.push(rt);
+    hudHits.textContent = hits;
+    var avg = Math.round(reactions.reduce(function(s,v){return s+v;},0)/reactions.length);
+    hudAvg.textContent = avg;
+    fireFlash(puck.x, puck.y);
+    puck = null;
+    setTimeout(launchPuck, 200 + Math.random()*360);
+  }
+  function registerMiss(){
+    // crossed the line — leave it to fly off; no penalty beyond not counting as a hit
+  }
+
+  function handleHit(cx, cy){
+    if(STATE !== 'playing' || !puck || puck.missed) return;
+    var d = Math.hypot(cx - puck.x, cy - puck.y);
+    var pad = FINE ? 8 : 16;   // generous touch target on mobile
+    if(d <= puck.r + pad){
+      var rt = performance.now() - puckSpawnTime;
+      registerHit(rt);
+    }
+  }
+
+  /* ---- pointer wiring (animated mode) ---- */
+  function relPoint(e){
+    var r = canvas.getBoundingClientRect();
+    var p = (e.touches && e.touches[0]) ? e.touches[0] : e;
+    return { x:p.clientX - r.left, y:p.clientY - r.top };
+  }
+  canvas.addEventListener('pointermove', function(e){
+    var p = relPoint(e); reticle.x = p.x; reticle.y = p.y; reticle.has = true;
+  });
+  canvas.addEventListener('pointerleave', function(){ reticle.has = false; });
+  canvas.addEventListener('pointerdown', function(e){
+    e.preventDefault();
+    var p = relPoint(e);
+    reticle.x = p.x; reticle.y = p.y; reticle.has = true;
+    if(RM){ handleHitFallback(p.x, p.y); } else { handleHit(p.x, p.y); }
+  });
+
+  /* ---- progress rail ---- */
+  function updateRail(){
+    var frac = clamp((rep-1)/TOTAL_REPS, 0, 1);
+    rail.style.width = (frac*100) + '%';
+  }
+
+  /* ============================================================
+     REDUCED-MOTION MODE  (no animation — click a static target)
+     A target dot appears at a random spot; click it as fast as you
+     can. Same scoring (reaction = time from appear to click).
+     ============================================================ */
+  var fbTarget = null, fbShownAt = 0;
+
+  function fbSpawn(){
+    rep++;
+    if(rep > TOTAL_REPS){ endGame(); return; }
+    hudRep.textContent = rep;
+    updateRail();
+    // delay then show
+    var delay = 500 + Math.random()*900;
+    setTimeout(function(){
+      if(STATE !== 'playing') return;
+      var r = 26;
+      fbTarget = {
+        x: r + Math.random()*(W - r*2),
+        y: r + Math.random()*(H - r*2),
+        r: r
+      };
+      fbShownAt = performance.now();
+      drawFallback();
+    }, delay);
+  }
+  function drawFallback(){
+    ctx.clearRect(0,0,W,H);
+    if(!fbTarget) return;
+    ctx.save();
+    ctx.fillStyle = ACCENT;
+    ctx.beginPath(); ctx.arc(fbTarget.x, fbTarget.y, fbTarget.r, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#0a0d12';
+    ctx.beginPath(); ctx.arc(fbTarget.x, fbTarget.y, fbTarget.r*0.42, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+  function handleHitFallback(cx, cy){
+    if(STATE !== 'playing' || !fbTarget) return;
+    var d = Math.hypot(cx - fbTarget.x, cy - fbTarget.y);
+    if(d <= fbTarget.r + 10){
+      var rt = performance.now() - fbShownAt;
+      hits++; reactions.push(rt);
+      hudHits.textContent = hits;
+      var avg = Math.round(reactions.reduce(function(s,v){return s+v;},0)/reactions.length);
+      hudAvg.textContent = avg;
+      fbTarget = null;
+      ctx.clearRect(0,0,W,H);
+      setTimeout(fbSpawn, 250);
+    }
+  }
+
+  /* ============================================================
+     FLOW: start → countdown → play → done
+     ============================================================ */
+  function resetState(){
+    STATE = 'idle'; puck = null; fbTarget = null;
+    rep = 0; hits = 0; reactions = []; trail = [];
+    hudRep.textContent = '0'; hudHits.textContent = '0'; hudAvg.textContent = '—';
+    rail.style.width = '0%';
+  }
+
+  function startTest(){
+    resetState();
+    resize();
+    ovIdle.style.display = 'none';
+    ovCount.style.display = '';
+    overlay.classList.remove('gone');
+    hud.style.opacity = '1';
+    resultSec.style.display = 'none';
+    captureSec.style.display = 'none';
+
+    STATE = 'countdown';
+    var n = 3;
+    ovCountNum.textContent = n;
+    ovCountLbl.textContent = 'Eyes up. Find the first puck.';
+    var iv = setInterval(function(){
+      n--;
+      if(n <= 0){
+        clearInterval(iv);
+        ovCountNum.textContent = 'GO';
+        setTimeout(function(){
+          overlay.classList.add('gone');
+          STATE = 'playing';
+          if(RM){ fbSpawn(); }
+          else { launchPuck(); }
+        }, 450);
+      } else {
+        ovCountNum.textContent = n;
+      }
+    }, 800);
+
+    // keep the rail in sync during animated mode
+    if(!RM){
+      var railIv = setInterval(function(){
+        if(STATE === 'done' || STATE === 'idle'){ clearInterval(railIv); return; }
+        updateRail();
+      }, 120);
+    }
+  }
+
+  /* ---- scoring ---- */
+  function computeResults(){
+    var accuracy = Math.round((hits / TOTAL_REPS) * 100);
+    var avgReact = reactions.length
+      ? Math.round(reactions.reduce(function(s,v){return s+v;},0)/reactions.length)
+      : 0;
+
+    // Reflex score 0–100. Blend of accuracy (read coverage) + reaction speed.
+    // Faster reaction & higher accuracy → higher score.
+    // reaction component: 1200ms = 0pts, 350ms = full. clamp.
+    var reactPts = reactions.length
+      ? clamp((1200 - avgReact) / (1200 - 350), 0, 1) * 100
+      : 0;
+    var score = Math.round(accuracy * 0.55 + reactPts * 0.45);
+    score = clamp(score, 4, 99);
+
+    // grade tiers + honest percentile
+    var tier, pctl, head, body;
+    if(score >= 88){
+      tier = 'Elite read'; pctl = 'Top 10% — you read the play before it develops.';
+    } else if(score >= 74){
+      tier = 'Sharp eyes'; pctl = 'Top 25% — strong tracking, real upside on the fastest pucks.';
+    } else if(score >= 58){
+      tier = 'Solid tracker'; pctl = 'Top 50% — you see it, the edge is reacting a beat sooner.';
+    } else if(score >= 40){
+      tier = 'Reacting late'; pctl = 'You\'re catching pucks after they commit — trainable, fast.';
+    } else {
+      tier = 'Untrained eye'; pctl = 'Biggest opportunity here — vision is a skill, not a gift.';
+    }
+    head = 'Elite goalies see the puck <span class="accent">sooner.</span>';
+    body = 'Your reaction averaged ' + (avgReact || '—') + 'ms across ' + hits + ' clean reads. '
+         + 'The Xtracker trains exactly this — the read, not the reach. Twelve reactive vision targets '
+         + 'that fire faster than instinct, so your eyes learn to find the puck a heartbeat early.';
+
+    return { score:score, accuracy:accuracy, avgReact:avgReact, tier:tier, pctl:pctl, head:head, body:body };
+  }
+
+  var lastResults = null;
+
+  function endGame(){
+    STATE = 'done';
+    if(raf) cancelAnimationFrame(raf);
+    ctx.clearRect(0,0,W,H);
+    rail.style.width = '100%';
+
+    var R = computeResults();
+    lastResults = R;
+
+    document.getElementById('resScore').textContent = R.score;
+    document.getElementById('resTier').textContent = R.tier;
+    document.getElementById('resPctl').textContent = R.pctl;
+    document.getElementById('resReact').innerHTML = (R.avgReact || '—') + '<small>ms</small>';
+    document.getElementById('resAccuracy').innerHTML = R.accuracy + '<small>%</small>';
+    document.getElementById('resHits').textContent = hits + ' / ' + TOTAL_REPS;
+    document.getElementById('resHead').innerHTML = R.head;
+    document.getElementById('resBody').textContent = R.body;
+
+    // reveal result + capture, fade the board overlay back in with a recap
+    overlay.classList.remove('gone');
+    ovCount.style.display = 'none';
+    ovIdle.style.display = '';
+    ovIdle.innerHTML = '<h3>Reflex score ' + R.score + ' — ' + R.tier + '.</h3>'
+      + '<p>Your full breakdown is below.</p>'
+      + '<button class="btn btn-primary magnetic" data-vt-replay style="margin-top:6px">Run it again</button>';
+    bindReplay();
+
+    resultSec.style.display = '';
+    captureSec.style.display = '';
+
+    // smooth-scroll to the result
+    setTimeout(function(){
+      resultSec.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block:'start' });
+    }, 350);
+  }
+
+  /* ---- bindings ---- */
+  function bindStart(){
+    document.querySelectorAll('[data-vt-start]').forEach(function(b){
+      b.addEventListener('click', startTest);
+    });
+  }
+  function bindReplay(){
+    document.querySelectorAll('[data-vt-replay]').forEach(function(b){
+      if(b.__bound) return; b.__bound = true;
+      b.addEventListener('click', function(){
+        window.scrollTo({ top:0, behavior: RM ? 'auto' : 'smooth' });
+        startTest();
+      });
+    });
+  }
+  bindStart();
+  bindReplay();
+
+  /* keep a render loop alive for the animated mode (idle clears are cheap) */
+  if(!RM){ raf = requestAnimationFrame(frame); }
+
+  /* ============================================================
+     EMAIL CAPTURE  (demo — JS var, no network)
+     ============================================================ */
+  var CAPTURED_EMAIL = null;
+  var form = document.getElementById('vtForm');
+  var emailEl = document.getElementById('vtEmail');
+  var success = document.getElementById('vtSuccess');
+  var successMsg = document.getElementById('vtSuccessMsg');
+
+  function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var v = (emailEl.value || '').trim();
+      if(!validEmail(v)){
+        emailEl.focus();
+        emailEl.style.borderColor = 'var(--signal)';
+        emailEl.style.boxShadow = '0 0 0 3px rgba(255,207,107,.18)';
+        return;
+      }
+      CAPTURED_EMAIL = v;
+      form.style.display = 'none';
+      document.querySelector('.vt-form-note').style.display = 'none';
+      success.classList.add('show');
+      var sc = lastResults ? (' (Reflex score ' + lastResults.score + ')') : '';
+      successMsg.textContent = 'We sent your full vision breakdown' + sc + ' and a free drill to ' + CAPTURED_EMAIL + '.';
+    });
+  }
+
+  /* ============================================================
+     SHARE  (Web Share API → clipboard fallback)
+     ============================================================ */
+  var shareBtn = document.getElementById('vtShare');
+  var shareLbl = document.getElementById('vtShareLbl');
+  if(shareBtn){
+    shareBtn.addEventListener('click', function(){
+      var sc = lastResults ? lastResults.score : '—';
+      var tier = lastResults ? lastResults.tier : '';
+      var text = 'I scored ' + sc + ' on the Finngoalie vision test — ' + tier + '. How fast do your eyes read the play?';
+      var url = window.location.href;
+      if(navigator.share){
+        navigator.share({ title:'Finngoalie Vision Test', text:text, url:url }).catch(function(){});
+      } else if(navigator.clipboard){
+        navigator.clipboard.writeText(text + ' ' + url).then(function(){
+          shareLbl.textContent = 'Copied to clipboard';
+          setTimeout(function(){ shareLbl.textContent = 'Share your score'; }, 1800);
+        }).catch(function(){
+          shareLbl.textContent = 'Press Ctrl+C to copy';
+        });
+      } else {
+        shareLbl.textContent = 'Copy: ' + text;
+      }
+    });
+  }
+
+})();
+</script>
+</body>
+</html>
