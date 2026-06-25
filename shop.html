@@ -23,18 +23,55 @@
 
   /* ---- page top spacing under the fixed nav ---- */
   .shop-head{padding:calc(var(--nav-h) + 86px) 0 var(--s-8);position:relative}
+  /* balanced 2-column band: copy left, featured visual right (fills the dead air) */
+  .shop-head .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  .shop-head .sh-copy{min-width:0}
   .shop-head .eyebrow{display:inline-block;margin-bottom:20px}
   .shop-head h1{
-    font-size:var(--fz-h1);line-height:.98;letter-spacing:-.045em;font-weight:800;max-width:15ch;
+    font-size:var(--fz-h1);line-height:.98;letter-spacing:-.045em;font-weight:800;max-width:14ch;
   }
   .shop-head h1 .accent{color:var(--accent)}
   .shop-head p.lead{
-    font-size:var(--fz-lead);color:var(--mute);margin-top:24px;max-width:54ch;
+    font-size:var(--fz-lead);color:var(--mute);margin-top:24px;max-width:50ch;
     line-height:1.5;font-weight:400;
   }
   .shop-head .meta-row{display:flex;gap:28px;flex-wrap:wrap;margin-top:34px}
   .shop-head .meta-row .mi{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--mute);font-weight:500}
   .shop-head .meta-row .mi svg{width:16px;height:16px;color:var(--accent);flex-shrink:0}
+
+  /* ---- featured visual on the right side of the header band ---- */
+  .shop-head .sh-feature{
+    position:relative;border-radius:var(--r-lg);overflow:hidden;isolation:isolate;
+    aspect-ratio:4/3.4;background:radial-gradient(120% 100% at 50% 30%, #1a2230, #0a0c10);
+    box-shadow:var(--sh-3);border:1px solid var(--line);
+    transition:transform .55s var(--ease),box-shadow .55s var(--ease);will-change:transform;
+  }
+  .shop-head .sh-feature:hover{transform:translateY(-5px);box-shadow:var(--sh-float)}
+  .shop-head .sh-feature img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;
+    transition:transform 1.2s var(--ease);
+  }
+  .shop-head .sh-feature:hover img{transform:scale(1.05)}
+  .shop-head .sh-feature::after{
+    content:"";position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg,rgba(6,8,15,.10) 0%,rgba(6,8,15,.42) 60%,rgba(6,8,15,.86) 100%);
+  }
+  .shop-head .sh-feature .ftag{
+    position:absolute;top:20px;left:22px;z-index:2;
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    font-weight:600;color:#fff;background:rgba(29,108,255,.22);border:1px solid var(--accent-line);
+    backdrop-filter:blur(6px);border-radius:var(--r-pill);padding:6px 14px;
+  }
+  .shop-head .sh-feature .fcap{position:absolute;left:24px;right:24px;bottom:22px;z-index:2;color:#fff}
+  .shop-head .sh-feature .fcap .fn{font-size:clamp(20px,2.2vw,27px);font-weight:800;letter-spacing:-.03em;line-height:1.05}
+  .shop-head .sh-feature .fcap .fr{display:flex;align-items:center;gap:14px;margin-top:12px}
+  .shop-head .sh-feature .fcap .fp{font-size:19px;font-weight:800;letter-spacing:-.02em}
+  .shop-head .sh-feature .fcap .fgo{
+    margin-left:auto;font-size:13px;font-weight:600;color:var(--accent-up);
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .shop-head .sh-feature .fcap .fgo .chev{transition:transform .35s var(--ease-spring)}
+  .shop-head .sh-feature:hover .fcap .fgo .chev{transform:translateX(5px)}
 
   /* ============= FEATURED HIGHLIGHT STRIP ============= */
   .featured{padding:var(--s-8) 0 var(--s-9)}
@@ -160,12 +197,18 @@
     .feat-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;min-height:0}
     .feat-tile.lead-tile{grid-row:auto;grid-column:1/-1;min-height:320px}
     .pgrid{grid-template-columns:repeat(2,1fr)}
+    /* stack header: copy on top, featured visual below */
+    .shop-head .wrap{grid-template-columns:1fr;gap:40px}
+    .shop-head h1,.shop-head p.lead{max-width:none}
+    .shop-head .sh-feature{aspect-ratio:16/9;max-height:340px}
   }
   @media(max-width:560px){
     .feat-grid{grid-template-columns:1fr}
     .feat-tile.lead-tile{grid-column:auto}
     .pgrid{grid-template-columns:1fr 1fr;gap:14px}
     .shop-head{padding-top:calc(var(--nav-h) + 60px)}
+    /* phone: drop the featured visual to keep the band tight */
+    .shop-head .sh-feature{display:none}
     .chips{gap:8px}
     .chip{padding:9px 15px;font-size:13px}
     .pcard .pbody{padding:16px 15px 15px}
@@ -187,10 +230,7 @@
      ============================================================ -->
 <nav class="nav" id="nav">
   <div class="wrap">
-    <a class="brand" href="index.html">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Finn<b>goalie</b>
-    </a>
+    <a class="brand" href="index.html"><img class="brand-logo" src="assets/img/logo.png" alt="Finngoalie"></a>
     <div class="navlinks">
       <a href="train.html">Train</a>
       <a href="xtracker.html">The Xtracker</a>
@@ -230,14 +270,27 @@
 <header class="shop-head has-bg">
   <div class="bg-media wash"><img src="assets/img/hero-arena.jpg" alt=""></div>
   <div class="wrap">
-    <span class="eyebrow reveal">The Pro Shop</span>
-    <h1 class="reveal d1">Gear that earns<br>its <span class="accent">spot.</span></h1>
-    <p class="lead reveal d2">Pads, skates, sticks and the small things that win games — the Xtracker and Finnpegs we build, the gear we trust, vetted by goalie coaches and priced honestly. The same kit we run in the crease.</p>
-    <div class="meta-row reveal d3">
-      <span class="mi"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Free shipping over $75</span>
-      <span class="mi"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-6 9 6v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Built in Nova Scotia</span>
-      <span class="mi"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Ships in 2 days</span>
+    <div class="sh-copy">
+      <span class="eyebrow reveal">The Pro Shop</span>
+      <h1 class="reveal d1">Gear that earns<br>its <span class="accent">spot.</span></h1>
+      <p class="lead reveal d2">Pads, skates, sticks and the small things that win games — the Xtracker and Finnpegs we build, the gear we trust, vetted by goalie coaches and priced honestly. The same kit we run in the crease.</p>
+      <div class="meta-row reveal d3">
+        <span class="mi"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Free shipping over $75</span>
+        <span class="mi"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-6 9 6v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Built in Nova Scotia</span>
+        <span class="mi"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Ships in 2 days</span>
+      </div>
     </div>
+    <a class="sh-feature reveal d2" href="xtracker.html" aria-label="The Xtracker — vision trainer, $99.99">
+      <img src="assets/img/product/xtracker-5.jpg" alt="The Xtracker vision trainer">
+      <span class="ftag">Signature</span>
+      <div class="fcap">
+        <div class="fn">The Xtracker</div>
+        <div class="fr">
+          <span class="fp">$99.99</span>
+          <span class="fgo">View <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+      </div>
+    </a>
   </div>
 </header>
 
@@ -590,7 +643,7 @@
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <a class="brand" href="index.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6.5v6c0 5 3.8 8.4 9 9.5 5.2-1.1 9-4.5 9-9.5v-6L12 2z" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="#1d6cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Finn<b>goalie</b></a>
+        <a class="brand" href="index.html"><img class="brand-logo" src="assets/img/logo.png" alt="Finngoalie"></a>
         <p>Vision-led goalie training &amp; gear. Built in Nova Scotia, trusted in the crease across 50+ rinks.</p>
         <div class="foot-social">
           <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>

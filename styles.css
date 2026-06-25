@@ -154,7 +154,7 @@ body::after{
 }
 .section-head{text-align:center;max-width:720px;margin:0 auto;padding:0 20px}
 .section-head h2{font-size:var(--fz-h2);line-height:1.02;letter-spacing:-.035em;font-weight:800}
-.section-head h2 .mute{color:var(--mute-2)}
+.section-head h2 .mute{color:inherit}  /* gray two-tone headings read cheap → solid ink */
 .section-head h2 .accent{color:var(--accent)}
 .section-head p{font-size:var(--fz-lead);color:var(--mute);margin-top:22px;line-height:1.5;font-weight:400}
 
@@ -852,3 +852,41 @@ footer{background:var(--paper-2);border-top:1px solid var(--line);padding:70px 0
 @media(max-width:780px){
   .hero-media::after{ background:linear-gradient(0deg, rgba(6,8,15,.9) 0%, rgba(6,8,15,.4) 60%, rgba(6,8,15,.55) 100%); }
 }
+
+/* ============================================================
+   28. REAL BRAND LOGO + heading polish
+   ============================================================ */
+/* real Finngoalie wordmark (replaces the SVG+text brand) */
+.brand{ display:inline-flex; align-items:center; }
+.brand-logo{ height:30px; width:auto; display:block; }
+.footer .brand-logo{ height:34px; margin-bottom:6px; }
+.hero.has-media .brand-logo,
+.nav .brand-logo{ height:30px; }
+@media(max-width:600px){ .brand-logo{ height:26px; } }
+
+/* never render two-tone gray headings (reads cheap) — keep only the blue .accent */
+h1 .mute, h2 .mute, h3 .mute, .h1 .mute, .h2 .mute, .display .mute{ color:inherit; }
+
+/* ---- premium feature icon (replaces weak pale-tile monoline icons) ----
+   filled brand-blue gradient squircle + crisp white on-brand glyph.
+   Apply class "fico" to any feature/value icon tile; glyph svg uses white stroke. */
+.fico{ width:54px; height:54px; border-radius:16px; display:grid; place-items:center; flex:none;
+  background:linear-gradient(150deg,#2d80ff,#0b46c4);
+  box-shadow:0 10px 24px -10px rgba(29,108,255,.65), inset 0 1px 0 rgba(255,255,255,.25); }
+.fico svg{ width:26px; height:26px; display:block; stroke:#fff; stroke-width:1.8; fill:none;
+  stroke-linecap:round; stroke-linejoin:round; }
+.fico.solid svg{ fill:#fff; stroke:none; }
+.dark .fico, .has-media .fico{ box-shadow:0 10px 24px -10px rgba(45,156,255,.7); }
+/* win over the per-page pale-tile rules (.fp-feature .ico / .recard .ri /
+   .value-card .vi / .prog-card .pc-ico) while keeping their layout (margin,
+   hover, grid placement). Visual = brand gradient + white glyph. */
+.fp-feature .ico.fico, .recard .ri.fico, .value-card .vi.fico,
+.prog-card .pc-ico.fico{
+  background:linear-gradient(150deg,#2d80ff,#0b46c4); border:none; color:#fff;
+  box-shadow:0 10px 24px -10px rgba(29,108,255,.65), inset 0 1px 0 rgba(255,255,255,.25); }
+.prog-card.feat .pc-ico.fico{
+  background:linear-gradient(150deg,#2d80ff,#0b46c4); border:none; color:#fff;
+  box-shadow:0 10px 24px -10px rgba(45,156,255,.7), inset 0 1px 0 rgba(255,255,255,.25); }
+.fp-feature .ico.fico svg, .recard .ri.fico svg, .value-card .vi.fico svg,
+.prog-card .pc-ico.fico svg{ stroke:#fff; fill:none; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round; }
