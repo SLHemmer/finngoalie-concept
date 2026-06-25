@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ===== HEAD (from partials.html, verbatim) ===== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finnpegs P3G — Patented Net Anchoring System · Finngoalie</title>
+  <meta name="description" content="The Finnpegs P3G patented net-anchoring system keeps the goal where it belongs — through every drill and every game. Pro & rink adopted, 60-second install. Dealer & bulk pricing for rinks, teams and leagues." />
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Page-local only: dealer-form inputs styled like .news but for the light bg.
+       Composed strictly from existing design tokens. -->
+  <style>
+    .dealer-form{display:grid;gap:14px;max-width:480px;margin-top:26px}
+    .dealer-form .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .dealer-form input{
+      width:100%;background:var(--canvas);border:1px solid var(--line);color:var(--ink);
+      padding:14px 18px;border-radius:var(--r-pill);font-size:.95rem;font-family:var(--ff);
+      transition:border-color .2s,box-shadow .2s}
+    .dealer-form input::placeholder{color:var(--muted)}
+    .dealer-form input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,113,206,.12)}
+    .dealer-form .btn{justify-content:center}
+    .dealer-note{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:2px 0 0}
+    .deal-row{flex-direction:row;align-items:center}
+    .deal-row .card-body{flex-direction:row;align-items:center;justify-content:space-between;gap:18px;padding:24px}
+    @media(max-width:520px){.dealer-form .row{grid-template-columns:1fr}.deal-row .card-body{flex-wrap:wrap}}
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER (from partials.html, verbatim · active = Finnpegs) ===== -->
+  <div class="announce">Pro Week 2026 · June 25–28 · <a href="train.html">12 spots left — reserve now ›</a></div>
+  <div class="nav-wrap">
+    <nav class="nav wrap-wide">
+      <a href="index.html" class="brand">
+        <svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg>
+        Finngoalie
+      </a>
+      <div class="nav-links">
+        <a href="train.html">Train</a>
+        <a href="xtracker.html">The Xtracker</a>
+        <a href="finnpegs.html" class="active">Finnpegs</a>
+        <a href="shop.html">Shop</a>
+        <a href="coaches.html">For Coaches</a>
+        <a href="about.html">About</a>
+      </div>
+      <div class="nav-r">
+        <button class="nav-ico" aria-label="Search">⌕</button>
+        <button class="nav-ico" aria-label="Cart">Bag <span class="cart-count">0</span></button>
+        <button class="burger" data-open-nav aria-label="Menu">☰</button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ===== MOBILE DRAWER (from partials.html, verbatim · active = Finnpegs) ===== -->
+  <div class="drawer" id="drawer">
+    <button class="close" data-close-nav aria-label="Close">✕</button>
+    <a href="train.html" data-close-nav>Train</a>
+    <a href="xtracker.html" data-close-nav>The Xtracker</a>
+    <a href="finnpegs.html" data-close-nav class="active">Finnpegs</a>
+    <a href="shop.html" data-close-nav>Shop</a>
+    <a href="coaches.html" data-close-nav>For Coaches</a>
+    <a href="about.html" data-close-nav>About</a>
+  </div>
+
+  <!-- =====================================================================
+       1 · CINEMATIC HERO (dark, full-bleed)
+       ===================================================================== -->
+  <header class="hero">
+    <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1580692475446-c2fabbbbf835?auto=format&fit=crop&w=1920&q=80')"></div>
+    <div class="hero-glow"></div>
+    <div class="wrap">
+      <span class="eyebrow" data-reveal="fade">Finnpegs P3G · Patented</span>
+      <h1 class="display balance" data-reveal="up" data-reveal-delay="80">The net stays put.<br>The reps stay <span class="accent">real.</span></h1>
+      <p class="lead" data-reveal="up" data-reveal-delay="180">A patented anchoring system that locks the goal to the ice. No drifting, no resets, no wasted reps — through every drill and every game.</p>
+      <div class="cta-row" data-reveal="up" data-reveal-delay="260">
+        <button class="btn btn-blue btn-lg" data-add><span data-add-label>Shop P3G — $189</span></button>
+        <a class="btn-text" href="#dealer">Dealer &amp; bulk pricing</a>
+      </div>
+    </div>
+    <div class="scroll-cue">Scroll</div>
+  </header>
+
+  <!-- =====================================================================
+       2 · WHY IT MATTERS
+       ===================================================================== -->
+  <section class="section light">
+    <div class="wrap">
+      <div class="shead" data-reveal="up">
+        <span class="eyebrow">Why it matters</span>
+        <h2 class="h1 balance">A net that moves is a habit you'll unlearn.</h2>
+        <p class="lead">Finnpegs holds the goal exactly where the drill demands — so every angle, every post-integration, every push is trained against the real thing.</p>
+      </div>
+
+      <div class="grid g4" style="margin-top:56px">
+        <div class="feature" data-reveal="up" data-reveal-delay="0">
+          <div class="ico" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6v6c0 5 3.4 7.4 8 9 4.6-1.6 8-4 8-9V6l-8-4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Patented anchoring</h3>
+          <p class="muted">The P3G mechanism is patent-protected — a holding system you can't buy anywhere else.</p>
+        </div>
+        <div class="feature" data-reveal="up" data-reveal-delay="80">
+          <div class="ico" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Holds through every drill &amp; game</h3>
+          <p class="muted">Game-speed contact, full sessions, real shots — the net doesn't shift, ride up, or pop loose.</p>
+        </div>
+        <div class="feature" data-reveal="up" data-reveal-delay="160">
+          <div class="ico" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Pro &amp; rink adopted</h3>
+          <p class="muted">In use by professional environments and multi-sheet facilities across the region.</p>
+        </div>
+        <div class="feature" data-reveal="up" data-reveal-delay="240">
+          <div class="ico" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>60-second install</h3>
+          <p class="muted">Anchors set fast and pull clean. One person, one minute, every time you hit the ice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       3 · PRODUCTS
+       ===================================================================== -->
+  <section class="section alt">
+    <div class="wrap">
+      <div class="shead center" data-reveal="up">
+        <span class="eyebrow">The P3G line</span>
+        <h2 class="h1 balance">Built for the crease. Priced for the season.</h2>
+      </div>
+
+      <div class="grid g3">
+        <!-- Card 1 -->
+        <article class="card" data-reveal="up" data-reveal-delay="0">
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1580692475446-c2fabbbbf835?auto=format&fit=crop&w=900&q=80" alt="Hockey goal net anchored to the ice" loading="lazy" />
+            <span class="tag">Patented</span>
+          </div>
+          <div class="card-body">
+            <h3>Finnpegs P3G Net System</h3>
+            <p class="muted">The complete patented anchoring kit — the original system that keeps your net locked.</p>
+            <div class="card-foot">
+              <span class="pricetag"><span class="save">$220</span>$189</span>
+              <button class="btn btn-blue btn-sm" data-add><span data-add-label>Add to Bag</span></button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="card" data-reveal="up" data-reveal-delay="100">
+          <div class="card-media" style="background:linear-gradient(150deg,#13335c,#070d18)">
+            <span class="tag">Bundle</span>
+          </div>
+          <div class="card-body">
+            <h3>Pegs + Post Protectors Combo</h3>
+            <p class="muted">P3G pegs paired with GoaliesEdge post protectors — anchor and protect in one kit.</p>
+            <div class="card-foot">
+              <span class="pricetag">From $220</span>
+              <button class="btn btn-blue btn-sm" data-add><span data-add-label>Add to Bag</span></button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card" data-reveal="up" data-reveal-delay="200">
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1578926375605-eaf7559b1458?auto=format&fit=crop&w=900&q=80" alt="Goalie net post inside an ice rink" loading="lazy" />
+            <span class="tag">Pro use</span>
+          </div>
+          <div class="card-body">
+            <h3>Pro-Use Peg Covers</h3>
+            <p class="muted">Professional-grade peg covers built for daily, high-volume facility use.</p>
+            <div class="card-foot">
+              <span class="pricetag"><span class="save">$290</span>$220</span>
+              <button class="btn btn-blue btn-sm" data-add><span data-add-label>Add to Bag</span></button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       4 · BIG STATEMENT
+       ===================================================================== -->
+  <section class="section light center">
+    <div class="wrap">
+      <h2 class="h1 balance" data-reveal="up" style="max-width:18ch;margin:0 auto">A net that moves trains the wrong habits.</h2>
+      <p class="lead balance" data-reveal="up" data-reveal-delay="120" style="margin:22px auto 0">Anchor it once and every rep counts. Finnpegs turns a wandering goal into a fixed point your goalie can finally trust.</p>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       5 · STATS (count-up)
+       ===================================================================== -->
+  <section class="section dark center">
+    <div class="wrap">
+      <div class="shead center" data-reveal="up">
+        <span class="eyebrow">The numbers</span>
+        <h2 class="h1 balance">Trusted where the ice is busy.</h2>
+      </div>
+      <div class="grid g4">
+        <div class="stat" data-reveal="up" data-reveal-delay="0">
+          <div class="n"><span data-count="50" data-count-suffix="+">0</span></div>
+          <div class="l">Rinks &amp; facilities on P3G</div>
+        </div>
+        <div class="stat" data-reveal="up" data-reveal-delay="80">
+          <div class="n"><span data-count="1">0</span></div>
+          <div class="l">Patented anchoring system</div>
+        </div>
+        <div class="stat" data-reveal="up" data-reveal-delay="160">
+          <div class="n"><span data-count="60" data-count-suffix="s">0</span></div>
+          <div class="l">Average install time</div>
+        </div>
+        <div class="stat" data-reveal="up" data-reveal-delay="240">
+          <div class="n"><span data-count="0">0</span></div>
+          <div class="l">Mid-drill net resets</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       6 · B2B / DEALER
+       ===================================================================== -->
+  <section class="section light" id="dealer">
+    <div class="wrap">
+      <div class="split">
+        <!-- left: copy + dealer form -->
+        <div data-reveal="left">
+          <span class="eyebrow">For rinks · teams · leagues</span>
+          <h2 class="h1 balance">Outfit every sheet of ice.</h2>
+          <p class="lead">Bulk and dealer pricing for facilities running multiple nets — and for leagues standardising every barn on the same patented anchor. One spec, every rink, all season.</p>
+          <ul class="featlist" style="margin-top:22px">
+            <li>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Volume tiers for 3-set, 8-set and full-facility orders</span>
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Certified-partner &amp; dealer program for pro shops</span>
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Custom facility quotes with install guidance</span>
+            </li>
+          </ul>
+
+          <form class="dealer-form" onsubmit="return false" aria-label="Request bulk quote">
+            <input type="text" name="name" placeholder="Your name" aria-label="Your name" required />
+            <div class="row">
+              <input type="text" name="org" placeholder="Rink / organisation" aria-label="Rink or organisation" required />
+              <input type="number" name="qty" min="1" placeholder="Quantity (sets)" aria-label="Quantity" required />
+            </div>
+            <input type="email" name="email" placeholder="you@email.com" aria-label="Email" required />
+            <button class="btn btn-blue" type="submit">Request bulk quote</button>
+            <p class="dealer-note">No spam · Dealer team replies within 2 business days</p>
+          </form>
+        </div>
+
+        <!-- right: dealer / bulk pricing cards -->
+        <div class="split-media" style="background:none;aspect-ratio:auto;overflow:visible;border-radius:0" data-reveal="right">
+          <div class="grid" style="gap:18px">
+            <article class="card deal-row">
+              <div class="card-body">
+                <div>
+                  <h3 style="margin:0 0 4px">3-Set Peg Anchors</h3>
+                  <p class="muted" style="margin:0">Dealer pack · pickup / freight</p>
+                </div>
+                <span class="pricetag">$479</span>
+              </div>
+            </article>
+
+            <article class="card deal-row" style="border-color:var(--blue)">
+              <div class="card-body">
+                <div>
+                  <span class="pill" style="margin-bottom:8px">Best value</span>
+                  <h3 style="margin:0 0 4px">8-Set Pegs + Covers Combo</h3>
+                  <p class="muted" style="margin:0">Full-facility bulk · lowest per-set price</p>
+                </div>
+                <span class="pricetag"><span class="save">$1,820</span>$1,280</span>
+              </div>
+            </article>
+
+            <article class="card deal-row">
+              <div class="card-body">
+                <div>
+                  <h3 style="margin:0 0 4px">Custom facility quote</h3>
+                  <p class="muted" style="margin:0">Leagues &amp; multi-rink standardisation</p>
+                </div>
+                <a class="btn-text" href="#dealer">Get a quote</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       7 · TECH SPECS ACCORDION
+       ===================================================================== -->
+  <section class="section alt">
+    <div class="wrap" style="max-width:880px">
+      <div class="shead" data-reveal="up">
+        <span class="eyebrow">Tech specs</span>
+        <h2 class="h1 balance">The detail behind the hold.</h2>
+      </div>
+
+      <div data-specs class="specs" style="margin-top:40px">
+        <div data-specs-item>
+          <button data-specs-head>Materials &amp; durability <span class="pm">+</span></button>
+          <div class="specs-body"><div class="specs-body-inner">
+            Cold-rated, impact-resistant components engineered for arena conditions. The P3G anchor mechanism withstands repeated game-speed contact, daily install/removal cycles and a full season of facility use without fatigue or loosening.
+          </div></div>
+        </div>
+        <div data-specs-item>
+          <button data-specs-head>Net compatibility <span class="pm">+</span></button>
+          <div class="specs-body"><div class="specs-body-inner">
+            Designed for standard regulation goal frames used in minor-hockey, junior, college and professional rinks. Works across the common net profiles found on North American ice sheets — confirm your frame in the dealer enquiry for facility orders.
+          </div></div>
+        </div>
+        <div data-specs-item>
+          <button data-specs-head>Install &amp; removal <span class="pm">+</span></button>
+          <div class="specs-body"><div class="specs-body-inner">
+            One-person, roughly 60-second setup. Anchors seat firmly into the ice and pull clean at the end of session — no tools, no drilling, no surface damage. The net holds position through pushes, post-integration and contact, then releases when you want it to.
+          </div></div>
+        </div>
+        <div data-specs-item>
+          <button data-specs-head>Warranty &amp; support <span class="pm">+</span></button>
+          <div class="specs-body"><div class="specs-body-inner">
+            Backed by a manufacturer warranty against defects in materials and workmanship. Facility and dealer orders include direct support and replacement-part access. Reach the team anytime at hello@finngoalie.shop.
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       8 · TESTIMONIAL
+       ===================================================================== -->
+  <section class="section light">
+    <div class="wrap">
+      <div class="shead center" data-reveal="up">
+        <span class="eyebrow">From the operators</span>
+        <h2 class="h1 balance">The people who run the ice.</h2>
+      </div>
+      <div class="grid g2">
+        <figure class="quote" data-reveal="up" data-reveal-delay="0">
+          <p>"We run goalie sessions on three sheets a day. Before Finnpegs, half the drill was someone walking back to square the net. Now it just doesn't move. Best fifteen minutes a rink can save."</p>
+          <figcaption class="q-by">
+            <span class="q-av" aria-hidden="true"></span>
+            <span>
+              <span class="q-name" style="display:block">Dave Marchand</span>
+              <span class="q-role" style="display:block">Operations Manager · East Coast Ice Centre</span>
+            </span>
+          </figcaption>
+        </figure>
+        <figure class="quote" data-reveal="up" data-reveal-delay="120">
+          <p>"We standardised every barn in the league on the P3G anchors. One spec, every rink — the goalies get the same locked net wherever they play. Install is genuinely under a minute."</p>
+          <figcaption class="q-by">
+            <span class="q-av" aria-hidden="true"></span>
+            <span>
+              <span class="q-name" style="display:block">Karen Sproule</span>
+              <span class="q-role" style="display:block">League Director · Atlantic Minor Hockey</span>
+            </span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA BAND + NEWSLETTER (from partials.html, verbatim) ===== -->
+  <section class="section cta-band">
+    <div class="hero-glow"></div>
+    <div class="wrap" style="position:relative;z-index:2">
+      <span class="eyebrow">Change your game</span>
+      <h2 class="h1 balance" data-reveal="up">Train your eyes.<br>Stop it cold.</h2>
+      <p class="lead" data-reveal="up" style="margin:18px auto 0;color:var(--muted-d)">Drills, camp drops and product news — no spam, just goalie stuff.</p>
+      <form class="news" onsubmit="return false" data-reveal="up">
+        <input type="email" placeholder="you@email.com" aria-label="Email" />
+        <button class="btn btn-blue">Join the list</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER (from partials.html, verbatim) ===== -->
+  <footer class="footer">
+    <div class="wrap-wide">
+      <div class="footer-top">
+        <div>
+          <a href="index.html" class="brand" style="margin-bottom:14px"><svg class="crest" viewBox="0 0 32 32" fill="none"><path d="M16 2 4 7v9c0 7 5 11 12 14 7-3 12-7 12-14V7L16 2Z" stroke="#0071CE" stroke-width="2" fill="rgba(0,113,206,.08)"/><path d="M16 9v8M11 13h10" stroke="#0071CE" stroke-width="2.2" stroke-linecap="round"/></svg> Finngoalie</a>
+          <p class="muted" style="max-width:34ch">Home of The Xtracker. Elite goaltender training &amp; patented goalie tech — engineered in Nova Scotia, Canada.</p>
+          <div class="socials"><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">TikTok</a></div>
+        </div>
+        <div><h4>Train</h4><a href="train.html">Camps &amp; Programs</a><a href="train.html">Private Sessions</a><a href="train.html">Season Passes</a><a href="coaches.html">Mentorship</a></div>
+        <div><h4>Shop</h4><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs P3G</a><a href="shop.html">Goalie Gear</a><a href="shop.html">Apparel</a></div>
+        <div><h4>Company</h4><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="#">Contact</a><a href="#">Shipping &amp; Returns</a></div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 Finngoalie · Nova Scotia, Canada</span>
+        <span>hello@finngoalie.shop · Concept redesign</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== SCRIPT (from partials.html, verbatim) ===== -->
+  <script src="app.js"></script>
+</body>
+</html>
