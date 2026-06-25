@@ -118,10 +118,28 @@
      BAG — demo cart counter
      ========================================================== */
   var bagN = 0;
+  function bumpBag(){
+    bagN++;
+    document.querySelectorAll('[data-bag-count]').forEach(function(c){
+      c.textContent = bagN;
+      c.classList.add('has-items');
+      c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');
+    });
+  }
   document.querySelectorAll('[data-bag-add]').forEach(function(b){
-    b.addEventListener('click', function(){
-      bagN++;
-      document.querySelectorAll('[data-bag-count]').forEach(function(c){ c.textContent = bagN; });
+    /* the bag icon in the nav is just a link to the bag/shop — it must not add */
+    if(b.classList.contains('nav-icon')) return;
+    b.addEventListener('click', function(e){
+      /* these CTAs are <a href="shop.html"> — navigating away wiped the counter,
+         so the bag never visibly updated. Keep the user here and confirm instead. */
+      e.preventDefault();
+      bumpBag();
+      if(b.dataset.busy) return;
+      b.dataset.busy = '1';
+      var original = b.innerHTML;
+      b.innerHTML = 'Added ✓';
+      b.classList.add('is-added');
+      setTimeout(function(){ b.innerHTML = original; b.classList.remove('is-added'); b.dataset.busy = ''; }, 1400);
     });
   });
 

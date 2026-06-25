@@ -235,6 +235,10 @@ section{position:relative}
   border-radius:8px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;
   display:grid;place-items:center;line-height:1;
 }
+/* add-to-bag feedback: pop the cart badge + briefly confirm on the button */
+.nav-icon .count.bump{animation:bagBump .4s var(--ease-spring)}
+@keyframes bagBump{0%{transform:scale(1)}40%{transform:scale(1.45)}100%{transform:scale(1)}}
+.btn.is-added{background:#16a34a;border-color:#16a34a;color:#fff}
 .nav-cta{
   font-size:13px;font-weight:600;padding:8px 16px;border-radius:var(--r-pill);
   background:var(--accent);color:#fff;opacity:1!important;white-space:nowrap;
@@ -353,7 +357,7 @@ section{position:relative}
 /* ============================================================
    9. PRODUCT STAGE  (pinned scroll-scrub sequence)
    ============================================================ */
-.pin-section{height:240vh;position:relative}  /* tightened 560→300→240vh — minimize image-before-content */
+.pin-section{height:160vh;position:relative}  /* tightened 560→300→240→160vh — minimize image-before-content */
 .pin-stage{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .pin-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(120% 90% at 50% 30%,#fff 0%,var(--paper) 55%,var(--paper-3) 100%)}
 .pin-progress{position:absolute;top:0;left:0;height:2px;background:var(--accent);z-index:8;width:0%;box-shadow:0 0 12px rgba(29,108,255,.5)}
@@ -590,9 +594,14 @@ section{position:relative}
 .endorse-card{border-radius:var(--r);overflow:hidden;aspect-ratio:4/5;
   border:1px solid var(--line-on-dark);background:#0d1118;text-align:left;margin:0}
 .endorse-card > img{object-fit:cover;object-position:top center}
-.endorse-card figcaption{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 24px}
-.endorse-card figcaption b{display:block;color:#fff;font-size:19px;font-weight:700;letter-spacing:-.02em}
-.endorse-card figcaption span{display:block;margin-top:3px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-up);font-weight:600}
+/* keep the caption pinned to the BOTTOM — without this higher-specificity rule the
+   generic `.card-photo > *:not(img){position:relative}` ties on specificity, wins by
+   source-order, and drops the caption into the top-left where it collides with the
+   name baked into the scraped endorsement image (double, unreadable text). */
+.endorse-card.card-photo > figcaption{position:absolute;left:0;right:0;bottom:0;z-index:2;
+  padding:48px 24px 20px;background:linear-gradient(180deg,transparent 0%,rgba(6,8,15,.62) 45%,rgba(6,8,15,.9) 100%)}
+.endorse-card figcaption b{display:block;color:#fff;font-size:19px;font-weight:700;letter-spacing:-.02em;text-shadow:0 1px 10px rgba(6,8,15,.8)}
+.endorse-card figcaption span{display:block;margin-top:3px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-up);font-weight:600;text-shadow:0 1px 10px rgba(6,8,15,.8)}
 @media(max-width:780px){
   .endorse-grid{grid-template-columns:1fr;gap:16px}
 }
@@ -706,6 +715,10 @@ footer{background:var(--paper-2);border-top:1px solid var(--line);padding:70px 0
 .reveal.r-scale{transform:scale(.94)}
 .reveal.r-left{transform:translateX(-44px)}
 .reveal.r-right{transform:translateX(44px)}
+/* the directional rules above tie .reveal.in on specificity and win by source-order,
+   so a revealed element stayed translated (e.g. timeline thumbs slid under the rail line).
+   This higher-specificity reset lets the revealed state actually clear the transform. */
+.reveal.r-scale.in,.reveal.r-left.in,.reveal.r-right.in{transform:none}
 .reveal.r-clip{clip-path:inset(0 100% 0 0);transform:none;opacity:1;transition:clip-path 1s var(--ease)}
 .reveal.r-clip.in{clip-path:inset(0 0 0 0)}
 .reveal.r-mask{clip-path:inset(0 0 100% 0);transform:none;opacity:1;transition:clip-path 1s var(--ease)}
@@ -750,7 +763,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--line);padding:70px 0
   .burger{display:flex}
   .nav-cta{display:none}
   .trust .wrap{flex-direction:column;gap:18px}
-  .pin-section{height:260vh}
+  .pin-section{height:180vh}
   .setup-grid{grid-template-columns:1fr}
   .specs .grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr 1fr}
