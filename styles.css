@@ -353,7 +353,7 @@ section{position:relative}
 /* ============================================================
    9. PRODUCT STAGE  (pinned scroll-scrub sequence)
    ============================================================ */
-.pin-section{height:560vh;position:relative}
+.pin-section{height:300vh;position:relative}  /* was 560vh — too much scroll/image before content arrived */
 .pin-stage{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .pin-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(120% 90% at 50% 30%,#fff 0%,var(--paper) 55%,var(--paper-3) 100%)}
 .pin-progress{position:absolute;top:0;left:0;height:2px;background:var(--accent);z-index:8;width:0%;box-shadow:0 0 12px rgba(29,108,255,.5)}
@@ -742,7 +742,7 @@ footer{background:var(--paper-2);border-top:1px solid var(--line);padding:70px 0
   .burger{display:flex}
   .nav-cta{display:none}
   .trust .wrap{flex-direction:column;gap:18px}
-  .pin-section{height:480vh}
+  .pin-section{height:260vh}
   .setup-grid{grid-template-columns:1fr}
   .specs .grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr 1fr}
@@ -877,6 +877,11 @@ h1 .mute, h2 .mute, h3 .mute, .h1 .mute, .h2 .mute, .display .mute{ color:inheri
   stroke-linecap:round; stroke-linejoin:round; }
 .fico.solid svg{ fill:#fff; stroke:none; }
 .dark .fico, .has-media .fico{ box-shadow:0 10px 24px -10px rgba(45,156,255,.7); }
+
+/* promo band sits on a DARK photo bg → its heading + copy must be light (was dark/unreadable) */
+.promo .section-head h2{ color:#fff; }
+.promo .section-head h2 .mute{ color:rgba(255,255,255,.72); }
+.promo .section-head p{ color:rgba(255,255,255,.85); }
 /* win over the per-page pale-tile rules (.fp-feature .ico / .recard .ri /
    .value-card .vi / .prog-card .pc-ico) while keeping their layout (margin,
    hover, grid placement). Visual = brand gradient + white glyph. */
