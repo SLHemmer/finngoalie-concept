@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=20260626b">
+<style>html.reveal-failsafe .reveal{opacity:1!important;transform:none!important}</style>
+<script>setTimeout(function(){document.documentElement.classList.add("reveal-failsafe");},2000);</script>
 
 <!-- ============================================================
      SHOP-SCOPED COMPONENTS  —  composed entirely from the shared
@@ -696,31 +698,16 @@
   var FALLBACK = {xtracker:'assets/img/mask.jpg',finnpegs:'assets/img/net.jpg',gear:'assets/img/pads.jpg',accessories:'assets/img/puck.jpg',apparel:'assets/img/youth.jpg',camps:'assets/img/training.jpg',sponsorship:'assets/img/ice-rink.jpg'};
   function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   var PLUS = '<svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+  // reveal above-the-fold content IMMEDIATELY — don't wait for the scroll IO,
+  // which gets delayed under heavy layout (252-card insert) on slow devices.
+  ['.shop-head .reveal', '.featured .reveal'].forEach(function(sel){
+    document.querySelectorAll(sel).forEach(function(e){ e.classList.add('in'); });
+  });
   var grid = document.getElementById('shopGrid');
   if(!grid) return;
-  var counts = {all:DATA.length}, html = [];
-  for(var i=0;i<DATA.length;i++){
-    var p = DATA[i];
-    counts[p.c] = (counts[p.c]||0)+1;
-    var img = p.img || FALLBACK[p.c] || 'assets/img/goalie-action.jpg';
-    var sale = p.cmp ? ' sale' : '';
-    var tag = esc(p.v || LABEL[p.c] || 'Finngoalie');
-    var priceInner = p.cmp ? ('<span class="save">'+esc(p.cmp)+'</span>'+esc(p.p)) : (p.p ? esc(p.p) : 'See options');
-    html.push(
-      '<a class="pcard" href="product.html?handle='+encodeURIComponent(p.h)+'" data-tag="'+p.c+'">'+
-        '<div class="pmedia"><img class="pphoto" loading="lazy" decoding="async" src="'+esc(img)+'" alt="'+esc(p.t)+'"'+
-          ' onerror="this.onerror=null;this.src=\''+ (FALLBACK[p.c]||'assets/img/goalie-action.jpg') +'\'">'+
-          '<span class="ptag'+sale+'">'+tag+'</span></div>'+
-        '<div class="pbody"><div class="pcat">'+esc(LABEL[p.c]||p.c)+'</div>'+
-          '<h3>'+esc(p.t)+'</h3>'+
-          '<div class="pfoot"><span class="pprice">'+priceInner+'</span>'+
-          '<button class="add-btn magnetic" data-bag-add>Add '+PLUS+'</button></div>'+
-        '</div>'+
-      '</a>'
-    );
-  }
-  grid.innerHTML = html.join('');
-  // inject chip counts + total
+  var counts = {all:DATA.length};
+  for(var i=0;i<DATA.length;i++){ var cc=DATA[i].c; counts[cc]=(counts[cc]||0)+1; }
+  // chip counts + total (cheap, set immediately)
   document.querySelectorAll('[data-cc]').forEach(function(el){ var k=el.getAttribute('data-cc'); if(counts[k]) el.textContent=counts[k]; });
   var rc = document.querySelector('[data-rescount]'); if(rc) rc.textContent = DATA.length;
   document.querySelectorAll('[data-filter="shop"] [data-chip]').forEach(function(chip){
@@ -729,6 +716,46 @@
       if(rc) rc.textContent = (v==='all') ? DATA.length : (counts[v]||0);
     });
   });
+  function localBump(){
+    document.querySelectorAll('[data-bag-count]').forEach(function(c){
+      c.textContent = (parseInt(c.textContent,10)||0)+1;
+      c.classList.add('has-items'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');
+    });
+  }
+  // DEFER the heavy 252-card build so it never blocks first paint or the reveal pass
+  function buildGrid(){
+    var html = [];
+    for(var i=0;i<DATA.length;i++){
+      var p = DATA[i];
+      var img = p.img || FALLBACK[p.c] || 'assets/img/goalie-action.jpg';
+      var sale = p.cmp ? ' sale' : '';
+      var tag = esc(p.v || LABEL[p.c] || 'Finngoalie');
+      var priceInner = p.cmp ? ('<span class="save">'+esc(p.cmp)+'</span>'+esc(p.p)) : (p.p ? esc(p.p) : 'See options');
+      html.push(
+        '<a class="pcard" href="product.html?handle='+encodeURIComponent(p.h)+'" data-tag="'+p.c+'">'+
+          '<div class="pmedia"><img class="pphoto" loading="lazy" decoding="async" src="'+esc(img)+'" alt="'+esc(p.t)+'"'+
+            ' onerror="this.onerror=null;this.src=\''+ (FALLBACK[p.c]||'assets/img/goalie-action.jpg') +'\'">'+
+            '<span class="ptag'+sale+'">'+tag+'</span></div>'+
+          '<div class="pbody"><div class="pcat">'+esc(LABEL[p.c]||p.c)+'</div>'+
+            '<h3>'+esc(p.t)+'</h3>'+
+            '<div class="pfoot"><span class="pprice">'+priceInner+'</span>'+
+            '<button class="add-btn magnetic" data-bag-add>Add '+PLUS+'</button></div>'+
+          '</div>'+
+        '</a>'
+      );
+    }
+    grid.innerHTML = html.join('');
+    grid.querySelectorAll('[data-bag-add]').forEach(function(b){
+      b.addEventListener('click', function(e){
+        e.preventDefault(); localBump();
+        if(b.dataset.busy) return; b.dataset.busy='1';
+        var o=b.innerHTML; b.innerHTML='Added \u2713'; b.classList.add('is-added');
+        setTimeout(function(){ b.innerHTML=o; b.classList.remove('is-added'); b.dataset.busy=''; },1400);
+      });
+    });
+  }
+  if('requestAnimationFrame' in window){ requestAnimationFrame(function(){ setTimeout(buildGrid,0); }); }
+  else { setTimeout(buildGrid,0); }
 })();
 </script>
 
