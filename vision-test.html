@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260625b">
+<link rel="stylesheet" href="styles.css?v=20260626a">
 
 <!-- ============================================================
      PAGE-LOCAL ONLY — composed strictly from existing design tokens.
@@ -391,7 +391,7 @@
   </div>
 </footer>
 
-<script src="app.js?v=20260625b"></script>
+<script src="app.js?v=20260626a"></script>
 
 <!-- ============================================================
      VISION-TEST GAME  —  own canvas, own rAF loop.
@@ -681,6 +681,9 @@
   function startTest(){
     resetState();
     resize();
+    /* the hero CTA sits far above the board — bring the board on-screen first,
+       otherwise the countdown runs off-screen and the button looks dead. */
+    if(board){ board.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' }); }
     ovIdle.style.display = 'none';
     ovCount.style.display = '';
     overlay.classList.remove('gone');
@@ -748,8 +751,8 @@
     }
     head = 'Elite goalies see the puck <span class="accent">sooner.</span>';
     body = 'Your reaction averaged ' + (avgReact || '—') + 'ms across ' + hits + ' clean reads. '
-         + 'The Xtracker trains exactly this — the read, not the reach. Twelve reactive vision targets '
-         + 'that fire faster than instinct, so your eyes learn to find the puck a heartbeat early.';
+         + 'The Xtracker trains exactly this — the read, not the reach. A vision band that lifts your '
+         + 'eyes to the puck and keeps you square, so you learn to find it a heartbeat early.';
 
     return { score:score, accuracy:accuracy, avgReact:avgReact, tier:tier, pctl:pctl, head:head, body:body };
   }

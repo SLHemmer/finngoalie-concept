@@ -389,6 +389,15 @@ section{position:relative}
 .call-label.sub{fill:var(--mute);font-size:10.5px}
 .call-grp{opacity:0;transition:opacity .5s var(--ease)}
 .call-grp.show{opacity:1}
+/* PRODUCT-TRUTH FIX: the real Xtracker is a passive vision-training mask, not a smart
+   device. Hide the fictional rendered device, its scan/glow chrome, the fake-spec
+   callouts (also misaligned on mobile / overlapping on small screens), and the
+   REAL/RENDER compare-tags. The real product PHOTO is now the sole hero everywhere. */
+.tracker-body,.tracker .stage-render,.tracker .scan,.tracker .reflection,
+.phero-stage .render-view,.render-chip,.calls{display:none!important}
+.pthumb[data-shot="__render__"]{display:none!important}
+.tracker .stage-real::after{display:none!important}     /* the "REAL" badge */
+.story-real-tag{display:none!important}                  /* the "THE REAL UNIT" badge */
 
 /* THE XTRACKER — CSS/SVG sculpted product object (rendered, not a photo) */
 .tracker{position:relative;width:100%;aspect-ratio:1/1.05;display:flex;align-items:center;justify-content:center}
@@ -591,9 +600,11 @@ section{position:relative}
 /* real pro endorsements (image + name credibility cards) */
 .testi .wrap:has(.endorse-grid){max-width:1140px}
 .endorse-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
-.endorse-card{border-radius:var(--r);overflow:hidden;aspect-ratio:4/5;
+/* 3:2 ≈ the source graphics' native ratio, so the baked-in names show in full
+   (4/5 portrait was cropping "CARTER HUTTON"/"MACIEJ SZWOCH" to "ER HUTTON" etc.) */
+.endorse-card{border-radius:var(--r);overflow:hidden;aspect-ratio:3/2;
   border:1px solid var(--line-on-dark);background:#0d1118;text-align:left;margin:0}
-.endorse-card > img{object-fit:cover;object-position:top center}
+.endorse-card > img{object-fit:cover;object-position:center}
 /* keep the caption pinned to the BOTTOM — without this higher-specificity rule the
    generic `.card-photo > *:not(img){position:relative}` ties on specificity, wins by
    source-order, and drops the caption into the top-left where it collides with the
@@ -613,9 +624,9 @@ section{position:relative}
 .founder-grid{display:grid;grid-template-columns:.82fr 1.18fr;gap:60px;align-items:center}
 .founder-photo{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/5;position:relative;background:var(--ink)}
 .founder-photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(.15) contrast(1.04)}
-.founder-photo .name{position:absolute;bottom:0;left:0;right:0;padding:26px;background:linear-gradient(transparent,rgba(10,12,15,.85));color:#fff}
-.founder-photo .name b{display:block;font-size:18px;font-weight:700}
-.founder-photo .name span{font-size:12.5px;color:rgba(255,255,255,.6);letter-spacing:.04em}
+.founder-photo .name{position:absolute;bottom:0;left:0;right:0;padding:32px 26px 24px;background:linear-gradient(transparent,rgba(10,12,15,.55) 40%,rgba(10,12,15,.92));color:#fff}
+.founder-photo .name b{display:block;font-size:18px;font-weight:700;text-shadow:0 1px 12px rgba(6,8,15,.7)}
+.founder-photo .name span{font-size:12.5px;color:rgba(255,255,255,.85);letter-spacing:.04em;text-shadow:0 1px 10px rgba(6,8,15,.8)}
 .founder-copy .kicker{margin-bottom:16px}
 .founder-copy h2{font-size:clamp(30px,4vw,48px);letter-spacing:-.03em;line-height:1.06;font-weight:800}
 .founder-copy p{color:var(--mute);margin-top:24px;font-size:17px;line-height:1.6}
@@ -806,6 +817,9 @@ footer{background:var(--paper-2);border-top:1px solid var(--line);padding:70px 0
 .hero.has-media{ color:var(--on-night); background:var(--night); }
 .hero.has-media .kicker,
 .hero.has-media .eyebrow{ color:var(--accent-up); }
+/* eyebrow/mono label sat low-contrast over the bright part of the photo — brighten + halo */
+.hero.has-media .hero-eyebrow,
+.hero.has-media .mono{ color:#bcd6ff; text-shadow:0 1px 16px rgba(6,8,15,.95),0 0 2px rgba(6,8,15,.8); }
 .hero.has-media h1,
 .hero.has-media .display,
 .hero.has-media h2{ color:#fff; }

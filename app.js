@@ -35,46 +35,10 @@
      THE XTRACKER — injected SVG product (sculpted object)
      Rendered, not stock. Reused in hero whisper + pinned stage.
      ========================================================== */
-  var TRACKER_SVG =
-    '<svg class="tracker-svg" viewBox="0 0 240 252" xmlns="http://www.w3.org/2000/svg">'+
-    '<defs>'+
-      '<linearGradient id="bodyG" x1="0" y1="0" x2="0" y2="1">'+
-        '<stop offset="0" stop-color="#2a2f37"/><stop offset=".5" stop-color="#15181d"/><stop offset="1" stop-color="#070809"/>'+
-      '</linearGradient>'+
-      '<linearGradient id="rimG" x1="0" y1="0" x2="1" y2="1">'+
-        '<stop offset="0" stop-color="#454b54"/><stop offset="1" stop-color="#1a1d22"/>'+
-      '</linearGradient>'+
-      '<radialGradient id="faceG" cx="50%" cy="38%" r="70%">'+
-        '<stop offset="0" stop-color="#222730"/><stop offset="1" stop-color="#0c0e12"/>'+
-      '</radialGradient>'+
-      '<radialGradient id="lensG" cx="42%" cy="36%" r="65%">'+
-        '<stop offset="0" stop-color="#5b8bff"/><stop offset=".4" stop-color="#1d6cff"/><stop offset="1" stop-color="#0a2f7a"/>'+
-      '</radialGradient>'+
-      '<linearGradient id="hiG" x1="0" y1="0" x2="0" y2="1">'+
-        '<stop offset="0" stop-color="#ffffff" stop-opacity=".5"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>'+
-      '</linearGradient>'+
-    '</defs>'+
-    '<rect x="24" y="20" width="192" height="212" rx="40" fill="url(#bodyG)"/>'+
-    '<rect x="24" y="20" width="192" height="212" rx="40" fill="none" stroke="url(#rimG)" stroke-width="2.5"/>'+
-    '<rect x="40" y="36" width="160" height="180" rx="30" fill="url(#faceG)"/>'+
-    '<rect x="40" y="36" width="160" height="180" rx="30" fill="url(#hiG)" opacity=".5"/>'+
-    '<circle cx="120" cy="118" r="46" fill="url(#lensG)"/>'+
-    '<circle cx="120" cy="118" r="46" fill="none" stroke="#0a2f7a" stroke-width="2"/>'+
-    '<circle cx="120" cy="118" r="22" fill="#0a0c10" opacity=".55"/>'+
-    '<circle cx="106" cy="104" r="10" fill="#cfe0ff" opacity=".7"/>'+
-    '<g class="leds">'+
-      '<circle cx="120" cy="62" r="4.5" fill="#1d6cff"/>'+
-      '<circle cx="166" cy="80" r="4.5" fill="#1d6cff"/>'+
-      '<circle cx="178" cy="130" r="4.5" fill="#1d6cff"/>'+
-      '<circle cx="162" cy="178" r="4.5" fill="#1d6cff"/>'+
-      '<circle cx="120" cy="196" r="4.5" fill="#1d6cff"/>'+
-      '<circle cx="78" cy="178" r="4.5" fill="#1d6cff"/>'+
-      '<circle cx="62" cy="130" r="4.5" fill="#1d6cff"/>'+
-      '<circle cx="74" cy="80" r="4.5" fill="#1d6cff"/>'+
-    '</g>'+
-    '<text x="120" y="206" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#5a6470" letter-spacing="2">XTRACKER</text>'+
-    '</svg>';
-
+  /* The fictional "smart device" render was wrong — the real Xtracker is a passive
+     vision-training mask band. We now show the real product photo everywhere instead,
+     so this mount is intentionally empty (containers are hidden via CSS). */
+  var TRACKER_SVG = '';
   document.querySelectorAll('[data-tracker-mount]').forEach(function(el){ el.innerHTML = TRACKER_SVG; });
 
   /* twinkle the LEDs (subtle, sequential) */
@@ -375,7 +339,9 @@
     copies.forEach(function(c,i){
       var center = (i+0.5)*seg;
       var d = Math.abs(prog-center);
-      var op = clamp(1-(d/(seg*0.62)),0,1);
+      /* divisor = half-segment → each copy fades to exactly 0 at its segment edges,
+         so the last beat fully disappears as you scroll past (no lingering text). */
+      var op = clamp(1-(d/(seg*0.5)),0,1);
       c.style.opacity = op;
       c.style.transform = 'translateY('+((1-op)*18)+'px)';
     });
