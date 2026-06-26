@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Finngoalie — Product</title>
+<meta name="description" content="Finngoalie product detail — real description, specs and pricing from the Finngoalie pro shop.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20260626b">
+
+<style>
+  .navlinks a.active{opacity:1}
+  .navlinks a.active::after{transform:scaleX(1)}
+
+  /* ---- breadcrumb ---- */
+  .pd-crumb{padding:calc(var(--nav-h) + 40px) 0 0}
+  .pd-crumb .wrap{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--mute);font-weight:500}
+  .pd-crumb a{color:var(--mute);transition:color .25s var(--ease)}
+  .pd-crumb a:hover{color:var(--accent)}
+  .pd-crumb .sep{color:var(--mute-2)}
+  .pd-crumb .cur{color:var(--ink-2);font-weight:600}
+
+  /* ---- product hero ---- */
+  .pd-hero{padding:30px 0 var(--s-8)}
+  .pd-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:start}
+
+  /* gallery */
+  .pd-gallery{position:sticky;top:calc(var(--nav-h) + 24px)}
+  .pd-main{
+    position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--ink);
+    aspect-ratio:4/3.4;border:1px solid var(--line);box-shadow:var(--sh-3);
+  }
+  .pd-main img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+  .pd-thumbs{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .pd-thumbs button{
+    width:72px;height:72px;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--line);
+    background:var(--ink);padding:0;cursor:pointer;opacity:.7;transition:opacity .25s var(--ease),border-color .25s var(--ease),transform .25s var(--ease-spring);
+  }
+  .pd-thumbs button img{width:100%;height:100%;object-fit:cover}
+  .pd-thumbs button:hover{opacity:1;transform:translateY(-2px)}
+  .pd-thumbs button.active{opacity:1;border-color:var(--accent)}
+
+  /* info column */
+  .pd-cat{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  .pd-vendor{font-size:13px;color:var(--mute);font-weight:500;margin-left:10px;letter-spacing:0;text-transform:none}
+  .pd-info h1{font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-.035em;line-height:1.04;margin-top:14px}
+  .pd-price{display:flex;align-items:baseline;gap:14px;margin-top:22px}
+  .pd-price .now{font-size:30px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+  .pd-price .was{font-size:19px;color:var(--mute-2);text-decoration:line-through;font-weight:500}
+  .pd-price .badge{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#fff;background:var(--accent);border-radius:var(--r-pill);padding:5px 12px}
+  .pd-stock{margin-top:12px;font-size:13.5px;font-weight:600;display:inline-flex;align-items:center;gap:8px}
+  .pd-stock.in{color:#16a34a}
+  .pd-stock.out{color:var(--mute)}
+  .pd-stock .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+  .pd-excerpt{font-size:15.5px;color:var(--mute);line-height:1.55;margin-top:22px;max-width:46ch}
+
+  .pd-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+  .pd-cta .btn-buy{
+    font-size:15px;font-weight:700;color:#fff;background:var(--accent);border:1px solid transparent;
+    border-radius:var(--r-pill);padding:15px 30px;display:inline-flex;align-items:center;gap:9px;line-height:1;
+    box-shadow:var(--sh-accent);transition:transform .35s var(--ease-spring),box-shadow .3s var(--ease),filter .25s var(--ease);
+  }
+  .pd-cta .btn-buy svg{width:17px;height:17px}
+  .pd-cta .btn-buy:hover{filter:brightness(1.06);box-shadow:var(--sh-float)}
+  .pd-cta .btn-buy:active{transform:scale(.97)}
+  .pd-cta .btn-buy.is-added{background:#16a34a;box-shadow:none}
+  .pd-cta .btn-ext{
+    font-size:14px;font-weight:600;color:var(--ink-2);background:var(--paper);border:1px solid var(--line);
+    border-radius:var(--r-pill);padding:15px 24px;display:inline-flex;align-items:center;gap:8px;line-height:1;
+    transition:border-color .25s var(--ease),color .25s var(--ease),transform .3s var(--ease-spring);
+  }
+  .pd-cta .btn-ext:hover{border-color:var(--accent-line);color:var(--accent);transform:translateY(-1px)}
+  .pd-cta .btn-ext svg{width:14px;height:14px}
+
+  .pd-trust{display:flex;gap:24px;flex-wrap:wrap;margin-top:28px;padding-top:26px;border-top:1px solid var(--line)}
+  .pd-trust .ti{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--mute);font-weight:500}
+  .pd-trust .ti svg{width:16px;height:16px;color:var(--accent);flex-shrink:0}
+
+  /* ---- description block ---- */
+  .pd-desc{padding:var(--s-7) 0 var(--s-8);background:var(--paper-2);border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+  .pd-desc .wrap{max-width:760px}
+  .pd-desc .kicker{margin-bottom:18px}
+  .pd-desc .body{font-size:16px;line-height:1.7;color:var(--ink-2)}
+  .pd-desc .body p{margin:0 0 16px}
+  .pd-desc .body ul,.pd-desc .body ol{margin:0 0 16px;padding-left:22px}
+  .pd-desc .body li{margin:0 0 8px}
+  .pd-desc .body h2,.pd-desc .body h3,.pd-desc .body h4{font-weight:800;letter-spacing:-.02em;margin:26px 0 12px;color:var(--ink)}
+  .pd-desc .body strong{color:var(--ink);font-weight:700}
+  .pd-desc .body img{max-width:100%;border-radius:var(--r);margin:10px 0}
+
+  /* ---- related ---- */
+  .pd-related{padding:var(--s-8) 0}
+  .rel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:38px}
+  .pcard{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease)}
+  .pcard:hover{transform:translateY(-6px);box-shadow:var(--sh-3);border-color:var(--accent-line)}
+  .pcard .pmedia{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--ink)}
+  .pcard .pphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
+  .pcard:hover .pphoto{transform:scale(1.07)}
+  .pcard .ptag{position:absolute;top:12px;left:12px;z-index:2;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#fff;background:rgba(10,12,15,.5);border:1px solid var(--line-on-dark);backdrop-filter:blur(6px);border-radius:var(--r-pill);padding:5px 11px}
+  .pcard .pbody{padding:18px 18px 16px;display:flex;flex-direction:column;flex:1}
+  .pcard .pcat{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:9px}
+  .pcard h3{font-size:15px;font-weight:700;letter-spacing:-.018em;line-height:1.22;color:var(--ink)}
+  .pcard .pprice{font-size:16px;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-top:auto;padding-top:16px}
+  .pcard .pprice .save{font-size:.72em;color:var(--mute-2);text-decoration:line-through;font-weight:500;margin-right:7px}
+
+  /* loading / not-found */
+  .pd-load{padding:calc(var(--nav-h) + 120px) 0 var(--s-9);text-align:center;color:var(--mute);font-size:15px}
+  .pd-404 h1{font-size:clamp(30px,5vw,52px);font-weight:800;letter-spacing:-.04em}
+  .pd-404 p{color:var(--mute);font-size:16px;margin-top:16px}
+  .pd-404 a{color:var(--accent);font-weight:600}
+
+  @media(max-width:920px){
+    .pd-hero .wrap{grid-template-columns:1fr;gap:34px}
+    .pd-gallery{position:static}
+    .pd-main{aspect-ratio:16/11;max-height:420px}
+    .rel-grid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:560px){
+    .rel-grid{grid-template-columns:1fr 1fr;gap:14px}
+    .pd-cta{flex-direction:column;align-items:stretch}
+    .pd-cta .btn-buy,.pd-cta .btn-ext{justify-content:center}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .pcard,.pcard .pphoto{transition:none!important;transform:none!important}
+  }
+</style>
+</head>
+<body id="top">
+
+<canvas class="aurora-canvas" id="aurora"></canvas>
+
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img class="brand-logo" src="assets/img/logo.png" alt="Finngoalie"></a>
+    <div class="navlinks">
+      <a href="train.html">Train</a>
+      <a href="xtracker.html">The Xtracker</a>
+      <a href="finnpegs.html">Finnpegs</a>
+      <a href="shop.html" class="active">Shop</a>
+      <a href="coaches.html">For Coaches</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="nav-right">
+      <a class="nav-icon search-icon" href="shop.html" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+      </a>
+      <a class="nav-icon" href="shop.html" aria-label="Bag" data-bag-add>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke-linecap="round"/></svg>
+        <span class="count" data-bag-count>0</span>
+      </a>
+      <a class="nav-cta magnetic" href="plan.html">Free Training Plan</a>
+      <button class="burger" id="burger" aria-label="Menu" data-burger><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="drawer" id="drawer">
+  <a href="train.html" data-drawer-close>Train</a>
+  <a href="xtracker.html" data-drawer-close>The Xtracker</a>
+  <a href="finnpegs.html" data-drawer-close>Finnpegs</a>
+  <a href="shop.html" class="active" data-drawer-close>Shop</a>
+  <a href="coaches.html" data-drawer-close>For Coaches</a>
+  <a href="about.html" data-drawer-close>About</a>
+  <a class="drawer-cta" href="plan.html" data-drawer-close>Free Training Plan</a>
+</div>
+
+<!-- product mounts here -->
+<main id="pdRoot">
+  <div class="pd-load">Loading product…</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html"><img class="brand-logo" src="assets/img/logo.png" alt="Finngoalie"></a>
+        <p>Vision-led goalie training &amp; gear. Built in Nova Scotia, trusted in the crease across 50+ rinks.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="3.5"/><path d="M11 9.5l4 2.5-4 2.5z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.3 1.8 3.9 4 4.2v2.7c-1.5 0-2.9-.4-4-1.1v5.7a5.3 5.3 0 1 1-5.3-5.3c.3 0 .5 0 .8.1v2.8a2.6 2.6 0 1 0 1.8 2.4V3H14z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h3.5l4 5.6L16 4h3l-6 7.8L20 20h-3.5l-4.3-6L7 20H4l6.3-8.2z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col"><h5>Train</h5><a href="train.html">Private</a><a href="train.html">Camps</a><a href="train.html">Weekly</a><a href="train.html">Pro</a></div>
+      <div class="foot-col"><h5>Shop</h5><a href="xtracker.html">The Xtracker</a><a href="finnpegs.html">Finnpegs</a><a href="shop.html">Pro Shop</a><a href="shop.html">Bundles</a></div>
+      <div class="foot-col"><h5>Company</h5><a href="about.html">About</a><a href="coaches.html">For Coaches</a><a href="shop.html">Reviews</a><a href="about.html">Contact</a></div>
+      <div class="foot-col free"><h5>Free Tools</h5><a href="plan.html">Training Plan</a><a href="vision-test.html">Vision Test</a><a href="club.html">Goalie Club</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Finngoalie. All rights reserved.</span>
+      <span class="mono">DESIGNED FOR THE CREASE · NS · CA</span>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js?v=20260626b"></script>
+<script>
+/* ============================================================
+   PRODUCT DETAIL  ·  reads ?handle= and renders from the real
+   finngoalie.shop catalog (assets/data/products.json).
+   ============================================================ */
+(function(){
+  var LABEL = {xtracker:'The Xtracker',finnpegs:'Finnpegs',gear:'Goalie Gear',accessories:'Accessories',apparel:'Apparel',camps:'Camps & Training',sponsorship:'Sponsorship'};
+  var FALLBACK = {xtracker:'assets/img/mask.jpg',finnpegs:'assets/img/net.jpg',gear:'assets/img/pads.jpg',accessories:'assets/img/puck.jpg',apparel:'assets/img/youth.jpg',camps:'assets/img/training.jpg',sponsorship:'assets/img/ice-rink.jpg'};
+  function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function money(n){ return (n==null)?'':'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function qp(k){ return new URLSearchParams(location.search).get(k); }
+  var root = document.getElementById('pdRoot');
+  var handle = qp('handle');
+
+  function bumpBag(){
+    document.querySelectorAll('[data-bag-count]').forEach(function(c){
+      c.textContent = (parseInt(c.textContent,10)||0)+1;
+      c.classList.add('has-items');
+      c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');
+    });
+  }
+
+  function notFound(){
+    document.title = 'Finngoalie — Product not found';
+    root.innerHTML =
+      '<section class="pd-load pd-404"><div class="wrap">'+
+        '<h1>Product not found</h1>'+
+        '<p>That product isn’t in the catalog. <a href="shop.html">Back to the shop →</a></p>'+
+      '</div></section>';
+  }
+
+  function plus(){ return '<svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'; }
+
+  function render(p, all){
+    document.title = 'Finngoalie — ' + p.title;
+    var md = document.querySelector('meta[name=description]'); if(md) md.setAttribute('content', p.excerpt || ('Finngoalie — '+p.title));
+    var gallery = (p.gallery && p.gallery.length) ? p.gallery : (p.image ? [p.image] : []);
+    if(!gallery.length) gallery = [FALLBACK[p.category] || 'assets/img/goalie-action.jpg'];
+    var onerr = ' onerror="this.onerror=null;this.src=\''+(FALLBACK[p.category]||'assets/img/goalie-action.jpg')+'\'"';
+    var thumbs = gallery.map(function(g,i){
+      return '<button class="thumb'+(i===0?' active':'')+'" data-i="'+i+'"><img src="'+esc(g)+'" alt=""'+onerr+'></button>';
+    }).join('');
+    var priceBlock = p.price ? (
+      '<div class="pd-price">'+
+        (p.compare_at ? '<span class="was">'+esc(money(p.compare_at))+'</span>' : '')+
+        '<span class="now">'+esc(p.price_str || money(p.price))+'</span>'+
+        (p.compare_at ? '<span class="badge">Save '+esc(money(p.compare_at - p.price))+'</span>' : '')+
+      '</div>'
+    ) : '<div class="pd-price"><span class="now" style="font-size:20px">See options</span></div>';
+    var stock = p.available
+      ? '<div class="pd-stock in"><span class="dot"></span>In stock · ships in 2 days</div>'
+      : '<div class="pd-stock out"><span class="dot"></span>Currently unavailable</div>';
+
+    var related = all.filter(function(x){ return x.category===p.category && x.handle!==p.handle; }).slice(0,4);
+    var relHtml = related.map(function(r){
+      var img = r.image || FALLBACK[r.category] || 'assets/img/goalie-action.jpg';
+      return '<a class="pcard" href="product.html?handle='+encodeURIComponent(r.handle)+'">'+
+        '<div class="pmedia"><img class="pphoto" loading="lazy" src="'+esc(img)+'" alt="'+esc(r.title)+'"'+
+        ' onerror="this.onerror=null;this.src=\''+(FALLBACK[r.category]||'assets/img/goalie-action.jpg')+'\'">'+
+        '<span class="ptag">'+esc(r.vendor||LABEL[r.category])+'</span></div>'+
+        '<div class="pbody"><div class="pcat">'+esc(LABEL[r.category]||r.category)+'</div><h3>'+esc(r.title)+'</h3>'+
+        '<div class="pprice">'+(r.compare_at?'<span class="save">'+esc(money(r.compare_at))+'</span>':'')+esc(r.price_str||money(r.price)||'')+'</div>'+
+        '</div></a>';
+    }).join('');
+
+    root.innerHTML =
+      '<nav class="pd-crumb"><div class="wrap">'+
+        '<a href="index.html">Home</a><span class="sep">/</span>'+
+        '<a href="shop.html">Shop</a><span class="sep">/</span>'+
+        '<span class="cur">'+esc(LABEL[p.category]||p.category)+'</span>'+
+      '</div></nav>'+
+
+      '<section class="pd-hero"><div class="wrap">'+
+        '<div class="pd-gallery">'+
+          '<div class="pd-main"><img id="pdMain" src="'+esc(gallery[0])+'" alt="'+esc(p.title)+'"'+onerr+'></div>'+
+          (gallery.length>1 ? '<div class="pd-thumbs" id="pdThumbs">'+thumbs+'</div>' : '')+
+        '</div>'+
+        '<div class="pd-info">'+
+          '<div class="pd-cat">'+esc(LABEL[p.category]||p.category)+(p.vendor?'<span class="pd-vendor">'+esc(p.vendor)+'</span>':'')+'</div>'+
+          '<h1>'+esc(p.title)+'</h1>'+
+          priceBlock + stock +
+          (p.excerpt?'<p class="pd-excerpt">'+esc(p.excerpt)+'</p>':'')+
+          '<div class="pd-cta">'+
+            '<button class="btn-buy" id="pdBuy">Add to bag '+plus()+'</button>'+
+            '<a class="btn-ext" href="'+esc(p.url)+'" target="_blank" rel="noopener">View on finngoalie.shop <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>'+
+          '</div>'+
+          '<div class="pd-trust">'+
+            '<span class="ti"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Free shipping over $75</span>'+
+            '<span class="ti"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-6 9 6v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Built in Nova Scotia</span>'+
+            '<span class="ti"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Ships in 2 days</span>'+
+          '</div>'+
+        '</div>'+
+      '</div></section>'+
+
+      (p.description_html ?
+        '<section class="pd-desc"><div class="wrap">'+
+          '<div class="kicker">Product details</div>'+
+          '<div class="body">'+p.description_html+'</div>'+
+        '</div></section>' : '')+
+
+      (relHtml ?
+        '<section class="pd-related"><div class="wrap">'+
+          '<div class="section-head" style="text-align:left;margin:0;max-width:none;padding:0">'+
+            '<div class="kicker">More in '+esc(LABEL[p.category]||p.category)+'</div>'+
+            '<h2 style="font-size:var(--fz-h2);line-height:1.02;letter-spacing:-.035em;font-weight:800">Pairs well<br>with this.</h2>'+
+          '</div>'+
+          '<div class="rel-grid">'+relHtml+'</div>'+
+        '</div></section>' : '');
+
+    // gallery thumb switching
+    var main = document.getElementById('pdMain');
+    var thumbsEl = document.getElementById('pdThumbs');
+    if(thumbsEl){
+      thumbsEl.querySelectorAll('.thumb').forEach(function(b){
+        b.addEventListener('click', function(){
+          thumbsEl.querySelectorAll('.thumb').forEach(function(x){ x.classList.remove('active'); });
+          b.classList.add('active');
+          main.src = gallery[parseInt(b.getAttribute('data-i'),10)] || gallery[0];
+        });
+      });
+    }
+    // add to bag (app.js already ran; bind locally)
+    var buy = document.getElementById('pdBuy');
+    if(buy){
+      buy.addEventListener('click', function(){
+        bumpBag();
+        if(buy.dataset.busy) return; buy.dataset.busy='1';
+        var orig = buy.innerHTML; buy.innerHTML='Added ✓'; buy.classList.add('is-added');
+        setTimeout(function(){ buy.innerHTML=orig; buy.classList.remove('is-added'); buy.dataset.busy=''; }, 1400);
+      });
+    }
+  }
+
+  if(!handle){ notFound(); return; }
+  fetch('assets/data/products.json?v=20260626b')
+    .then(function(r){ if(!r.ok) throw new Error('http '+r.status); return r.json(); })
+    .then(function(all){
+      var p = all.find(function(x){ return x.handle===handle; });
+      if(!p) return notFound();
+      render(p, all);
+    })
+    .catch(function(){ notFound(); });
+})();
+</script>
+</body>
+</html>
